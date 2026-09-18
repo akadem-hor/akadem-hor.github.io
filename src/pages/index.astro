@@ -373,16 +373,18 @@ const faqSchema = {
 
     {
       сайт.счётчик_метрики && (
-        <script is:inline set:html={метрика} />
-        <noscript>
-          <div>
-            <img
-              src={`https://mc.yandex.ru/watch/${сайт.счётчик_метрики}`}
-              style="position:absolute; left:-9999px;"
-              alt=""
-            />
-          </div>
-        </noscript>
+        <Fragment>
+          <script is:inline set:html={метрика} />
+          <noscript>
+            <div>
+              <img
+                src={`https://mc.yandex.ru/watch/${сайт.счётчик_метрики}`}
+                style="position:absolute; left:-9999px;"
+                alt=""
+              />
+            </div>
+          </noscript>
+        </Fragment>
       )
     }
   </body>
