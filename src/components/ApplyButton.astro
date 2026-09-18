@@ -1,0 +1,31 @@
+---
+import content from '../content.json'
+
+interface Props {
+  size?: 'normal' | 'large'
+  class?: string
+}
+
+const { size = 'normal', class: extra = '' } = Astro.props
+const { ссылка_на_форму, текст_кнопки } = content.заявка
+
+// Минимум 44px по высоте — иначе по кнопке трудно попасть пальцем.
+const sizes = {
+  normal: 'px-7 py-3.5 text-lg',
+  large: 'px-9 py-4.5 text-xl',
+}
+---
+
+<a
+  href={ссылка_на_форму}
+  target="_blank"
+  rel="noopener"
+  class:list={[
+    'inline-block rounded-md bg-accent font-semibold text-white',
+    'hover:bg-accent-dark',
+    sizes[size],
+    extra,
+  ]}
+>
+  {текст_кнопки}
+</a>

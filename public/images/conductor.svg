@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 500" role="img" aria-label="Место для фотографии хормейстера">
+  <rect width="400" height="500" fill="#f4e9e6"/>
+  <circle cx="200" cy="200" r="70" fill="#e3dcd2"/>
+  <path d="M90 400c0-60 50-100 110-100s110 40 110 100z" fill="#e3dcd2"/>
+  <text x="200" y="460" text-anchor="middle" font-family="Georgia, serif" font-size="22" fill="#7a2233">Фото хормейстера</text>
+</svg>

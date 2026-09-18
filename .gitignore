@@ -1,0 +1,14 @@
+# Доступы и пароли — никогда не попадают в публичный репозиторий
+SECRETS.local.md
+*.local.md
+.env
+.env.*
+
+# Сборка и зависимости
+node_modules/
+dist/
+.astro/
+
+# Системное
+.DS_Store
+Thumbs.db

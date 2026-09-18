@@ -1,0 +1,28 @@
+---
+interface Props {
+  id: string
+  title?: string
+  tone?: 'paper' | 'surface' | 'accent'
+}
+
+const { id, title, tone = 'paper' } = Astro.props
+
+const tones = {
+  paper: 'bg-paper',
+  surface: 'bg-surface',
+  accent: 'bg-accent-soft',
+}
+---
+
+<section id={id} class:list={['py-14 md:py-20', tones[tone]]}>
+  <div class="mx-auto w-full max-w-3xl px-5">
+    {
+      title && (
+        <h2 class="font-display text-3xl md:text-4xl leading-tight text-ink mb-8">
+          {title}
+        </h2>
+      )
+    }
+    <slot />
+  </div>
+</section>

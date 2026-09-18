@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+/*
+  Оформление сайта. Аудитория — взрослые 30–70 лет, в основном с телефона.
+  Отсюда крупный шрифт, высокий контраст и отсутствие анимации.
+*/
+
+@theme {
+  /* Цвета. Контраст каждой пары проверен, все выше уровня AA. */
+  --color-ink: #16161a;
+  --color-muted: #4a4a52;
+  --color-paper: #faf7f2;
+  --color-surface: #ffffff;
+  --color-accent: #7a2233;
+  --color-accent-dark: #5c1926;
+  --color-accent-soft: #f4e9e6;
+  --color-line: #e3dcd2;
+
+  /* Системные шрифты: грузятся мгновенно и не зависят от Google Fonts,
+     который в России открывается нестабильно. */
+  --font-display: Georgia, "Times New Roman", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Базовый размер 18px вместо стандартных 16. Весь макет масштабируется
+   вместе с ним, потому что размеры заданы в rem. */
+:root {
+  font-size: 18px;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.65;
+}
+
+/* Уважаем системную настройку «уменьшить движение». */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Заметная рамка фокуса — для тех, кто ходит по сайту с клавиатуры. */
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
