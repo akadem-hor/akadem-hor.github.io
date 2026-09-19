@@ -26,15 +26,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Без cache: npm — кэширование требует package-lock.json, а его нет
-      # по той же причине, по которой ниже стоит npm install вместо npm ci.
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
-      # npm install, а не npm ci: файла package-lock.json нет, потому что
-      # Node.js на компьютере не установлен и зависимости локально не ставились.
-      - run: npm install
+      # npm ci, а не npm install: ставит зависимости строго по package-lock.json.
+      # Значит, на GitHub собирается ровно то же, что проверено локально.
+      - run: npm ci
       - run: npm run build
 
       - uses: actions/upload-pages-artifact@v3

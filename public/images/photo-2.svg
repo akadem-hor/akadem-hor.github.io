@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Место для фотографии">
-  <rect width="800" height="600" fill="#f4e9e6"/>
-  <text x="400" y="290" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#7a2233">Фотография 2</text>
-  <text x="400" y="335" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#4a4a52">public/images/photo-2.svg</text>
+  <rect width="800" height="600" fill="#f3e9d7"/>
+  <text x="400" y="290" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#7a5220">Фотография 2</text>
+  <text x="400" y="335" text-anchor="middle" font-family="Georgia, serif" font-size="20" fill="#464f63">public/images/photo-2.svg</text>
 </svg>

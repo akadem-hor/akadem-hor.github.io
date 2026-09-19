@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Место для фотографии хора">
-  <rect width="1600" height="900" fill="#f4e9e6"/>
-  <text x="800" y="430" text-anchor="middle" font-family="Georgia, serif" font-size="56" fill="#7a2233">Здесь будет фотография хора</text>
-  <text x="800" y="500" text-anchor="middle" font-family="Georgia, serif" font-size="32" fill="#4a4a52">Замените файл public/images/hero.svg на свой снимок</text>
+  <rect width="1600" height="900" fill="#f3e9d7"/>
+  <text x="800" y="430" text-anchor="middle" font-family="Georgia, serif" font-size="56" fill="#7a5220">Здесь будет фотография хора</text>
+  <text x="800" y="500" text-anchor="middle" font-family="Georgia, serif" font-size="32" fill="#464f63">Замените файл public/images/hero.svg на свой снимок</text>
 </svg>

@@ -1,0 +1,104 @@
+---
+// Только кириллица и латиница: латиница нужна ради цифр, остальные
+// наборы символов (latin-ext и прочие) на русской странице не
+// пригодятся, а весят суммарно больше полусотни килобайт.
+import '@fontsource/playfair-display/cyrillic-400.css'
+import '@fontsource/playfair-display/latin-400.css'
+import '@fontsource/pt-sans/cyrillic-400.css'
+import '@fontsource/pt-sans/cyrillic-700.css'
+import '@fontsource/pt-sans/latin-400.css'
+import '@fontsource/pt-sans/latin-700.css'
+import '../styles/global.css'
+import content from '../content.json'
+import PageBody from '../components/PageBody.astro'
+
+
+const {
+  сайт,
+  обложка,
+  о_хоре,
+  хормейстеры,
+  кого_ждём,
+  репетиции,
+  видео,
+  галерея,
+  анонсы,
+  достижения,
+  вопросы,
+  контакты,
+} = content
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href
+
+// Разметка для поисковиков: помогает Яндексу понять, что это за организация,
+// где она находится и когда работает.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'MusicGroup',
+  name: `Хор «${обложка.название}»`,
+  description: сайт.описание,
+  url: сайт.адрес,
+  genre: ['Академическое хоровое пение', 'Хоровая музыка'],
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Екатеринбург',
+    addressCountry: 'RU',
+    streetAddress: репетиции.адрес,
+  },
+  ...(контакты.телефон_для_ссылки && { telephone: контакты.телефон_для_ссылки }),
+}
+
+// Счётчик Яндекс Метрики. Собирается строкой, чтобы номер счётчика попадал
+// в код на этапе сборки, а не подставлялся в браузере.
+const метрика = `
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,
+k.src=r,a.parentNode.insertBefore(k,a)})
+(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
+ym(${сайт.счётчик_метрики},'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
+`
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: вопросы.список.map((пункт) => ({
+    '@type': 'Question',
+    name: пункт.вопрос,
+    acceptedAnswer: { '@type': 'Answer', text: пункт.ответ },
+  })),
+}
+---
+
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="canonical" href={canonical} />
+
+    <title>{сайт.заголовок}</title>
+    <meta name="description" content={сайт.описание} />
+    <meta name="keywords" content={сайт.ключевые_слова} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={сайт.заголовок} />
+    <meta property="og:description" content={сайт.описание} />
+    <meta property="og:url" content={сайт.адрес} />
+    <meta property="og:image" content={new URL(обложка.фото, сайт.адрес).href} />
+    <meta property="og:locale" content="ru_RU" />
+
+    {
+      сайт.код_вебмастера && (
+        <meta name="yandex-verification" content={сайт.код_вебмастера} />
+      )
+    }
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  </head>
+
+  <body class="pb-20 md:pb-0">
+    <PageBody />
+  </body>
+</html>

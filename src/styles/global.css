@@ -6,20 +6,29 @@
 */
 
 @theme {
-  /* Цвета. Контраст каждой пары проверен, все выше уровня AA. */
-  --color-ink: #16161a;
-  --color-muted: #4a4a52;
-  --color-paper: #faf7f2;
+  /* Оформление «Афиша»: выбрано из пяти вариантов 19.09.2026.
+     Тёмно-синий с охрой, прямые углы — как у типографской концертной афиши.
+     Контраст каждой пары проверен, все выше уровня AA. */
+  --color-ink: #14203a;
+  --color-muted: #464f63;
+  --color-paper: #f7f4ec;
   --color-surface: #ffffff;
-  --color-accent: #7a2233;
-  --color-accent-dark: #5c1926;
-  --color-accent-soft: #f4e9e6;
-  --color-line: #e3dcd2;
+  --color-accent: #7a5220;
+  --color-accent-dark: #5d3e16;
+  --color-accent-soft: #f3e9d7;
+  --color-line: #ded3bd;
 
-  /* Системные шрифты: грузятся мгновенно и не зависят от Google Fonts,
-     который в России открывается нестабильно. */
-  --font-display: Georgia, "Times New Roman", serif;
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  /* Шрифты лежат в самой сборке (пакеты @fontsource), а не грузятся с
+     серверов Google: те из России открываются нестабильно, и текст на
+     медленном соединении либо мигает, либо не появляется вовсе.
+     Подключение — в src/layouts/Base.astro. */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-sans: 'PT Sans', 'Segoe UI', sans-serif;
+
+  /* Прямые углы у кнопок, карточек и рамок. */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
 }
 
 /* Базовый размер 18px вместо стандартных 16. Весь макет масштабируется

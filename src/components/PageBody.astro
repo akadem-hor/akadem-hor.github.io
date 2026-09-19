@@ -1,0 +1,353 @@
+---
+import content from '../content.json'
+import Section from './Section.astro'
+import ApplyButton from './ApplyButton.astro'
+
+const {
+  сайт,
+  обложка,
+  о_хоре,
+  хормейстеры,
+  кого_ждём,
+  репетиции,
+  видео,
+  галерея,
+  анонсы,
+  достижения,
+  вопросы,
+  контакты,
+} = content
+---
+
+    <!-- Обложка -->
+    <header class="bg-surface border-b border-line">
+      <div class="mx-auto w-full max-w-3xl px-5 py-12 md:py-16">
+        <p class="text-accent font-semibold tracking-wide uppercase text-sm mb-3">
+          {обложка.подзаголовок}
+        </p>
+        <h1 class="font-display text-4xl md:text-6xl leading-tight text-ink mb-6">
+          {обложка.название}
+        </h1>
+        <p class="text-xl md:text-2xl text-muted leading-relaxed mb-8">
+          {обложка.главная_фраза}
+        </p>
+        <ApplyButton size="large" />
+      </div>
+      <img
+        src={обложка.фото}
+        alt={обложка.описание_фото}
+        width="1600"
+        height="900"
+        class="w-full h-auto object-cover"
+      />
+    </header>
+
+    <!-- О хоре -->
+    <Section id="about" title={о_хоре.заголовок}>
+      {
+        о_хоре.абзацы.map((абзац) => (
+          <p class="text-lg md:text-xl text-muted mb-5 last:mb-0">{абзац}</p>
+        ))
+      }
+    </Section>
+
+    <!-- Хормейстеры -->
+    {
+      хормейстеры.люди.length > 0 && (
+        <Section id="conductor" title={хормейстеры.заголовок} tone="surface">
+          <div class="grid gap-8 sm:grid-cols-2">
+            {хормейстеры.люди.map((человек) => (
+              <div>
+                {человек.фото && (
+                  <img
+                    src={человек.фото}
+                    alt={человек.имя}
+                    width="400"
+                    height="500"
+                    class="w-full h-auto rounded-md object-cover mb-5"
+                  />
+                )}
+                <p class="font-display text-2xl text-ink mb-1">{человек.имя}</p>
+                <p class="text-accent font-semibold mb-4">{человек.должность}</p>
+                {человек.о_нём.map((абзац) => (
+                  <p class="text-lg text-muted mb-4 last:mb-0">{абзац}</p>
+                ))}
+              </div>
+            ))}
+          </div>
+        </Section>
+      )
+    }
+
+    <!-- Кого ждём -->
+    <Section id="who" title={кого_ждём.заголовок} tone="accent">
+      <p class="text-xl text-muted mb-8">{кого_ждём.вступление}</p>
+
+      <ul class="grid sm:grid-cols-2 gap-5 mb-10">
+        {
+          кого_ждём.пункты.map((пункт) => (
+            <li class="bg-surface rounded-md p-6 border border-line">
+              <p class="font-sans font-semibold text-xl text-ink mb-2">{пункт.заголовок}</p>
+              <p class="text-lg text-muted">{пункт.текст}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="border-l-4 border-accent pl-5">
+        <p class="font-display text-2xl text-ink mb-2">
+          {кого_ждём.прослушивание.заголовок}
+        </p>
+        <p class="text-lg md:text-xl text-muted">{кого_ждём.прослушивание.текст}</p>
+      </div>
+    </Section>
+
+    <!-- Репетиции -->
+    <Section id="rehearsals" title={репетиции.заголовок}>
+      <dl class="mb-8">
+        {
+          репетиции.расписание.map((строка) => (
+            <div class="flex justify-between gap-4 py-3 border-b border-line text-lg md:text-xl">
+              <dt class="font-semibold text-ink">{строка.день}</dt>
+              <dd class="text-muted">{строка.время}</dd>
+            </div>
+          ))
+        }
+      </dl>
+
+      <p class="font-display text-2xl text-ink mb-2">{репетиции.адрес}</p>
+      <p class="text-lg text-muted mb-6">{репетиции.как_добраться}</p>
+
+      <a
+        href={репетиции.ссылка_на_карту}
+        target="_blank"
+        rel="noopener"
+        class="inline-block rounded-md border-2 border-accent px-6 py-3 text-lg font-semibold text-accent hover:bg-accent-soft"
+      >
+        Посмотреть на карте
+      </a>
+
+      <div class="mt-10">
+        <h3 class="font-display text-2xl text-ink mb-4">
+          {репетиции.стоимость.заголовок}
+        </h3>
+
+        <table class="w-full text-lg md:text-xl border-collapse">
+          <tbody>
+            {
+              репетиции.стоимость.строки.map((строка) => (
+                <tr class="border-b border-line">
+                  <th scope="row" class="text-left font-normal text-muted py-3 pr-4 align-top">
+                    {строка.что}
+                  </th>
+                  <td class="text-right font-semibold text-ink py-3 whitespace-nowrap align-top">
+                    {строка.цена}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+
+        {
+          репетиции.стоимость.примечание && (
+            <p class="text-lg text-muted mt-4">{репетиции.стоимость.примечание}</p>
+          )
+        }
+      </div>
+    </Section>
+
+    <!-- Видео -->
+    {
+      видео.записи.length > 0 && (
+        <Section id="video" title={видео.заголовок} tone="surface">
+          <p class="text-xl text-muted mb-8">{видео.вступление}</p>
+          <ul class="grid sm:grid-cols-2 gap-6">
+            {видео.записи.map((запись) => (
+              <li>
+                <a href={запись.ссылка} target="_blank" rel="noopener" class="block group">
+                  <img
+                    src={запись.обложка}
+                    alt={запись.название}
+                    width="800"
+                    height="450"
+                    class="w-full h-auto rounded-md mb-3"
+                  />
+                  <p class="font-display text-xl text-accent group-hover:underline">
+                    {запись.название}
+                  </p>
+                  <p class="text-muted">{запись.где_когда}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )
+    }
+
+    <!-- Фотографии -->
+    {
+      галерея.снимки.length > 0 && (
+        <Section id="gallery" title={галерея.заголовок}>
+          <ul class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {галерея.снимки.map((снимок) => (
+              <li>
+                <img
+                  src={снимок.файл}
+                  alt={снимок.подпись}
+                  width="800"
+                  height="600"
+                  loading="lazy"
+                  class="w-full h-auto rounded-md"
+                />
+                <p class="text-muted mt-2">{снимок.подпись}</p>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )
+    }
+
+    <!-- Анонсы -->
+    {
+      анонсы.события.length > 0 && (
+        <Section id="events" title={анонсы.заголовок} tone="accent">
+          <ul>
+            {анонсы.события.map((событие) => (
+              <li class="bg-surface rounded-md p-6 border border-line mb-5 last:mb-0">
+                <p class="text-accent font-semibold text-lg mb-1">
+                  {событие.дата}, {событие.время}
+                </p>
+                <p class="font-display text-2xl text-ink mb-2">{событие.название}</p>
+                <p class="text-lg text-muted mb-1">{событие.место}</p>
+                <p class="text-lg text-muted">{событие.описание}</p>
+                {событие.ссылка && (
+                  <a
+                    href={событие.ссылка}
+                    target="_blank"
+                    rel="noopener"
+                    class="inline-block mt-3 text-lg font-semibold text-accent underline"
+                  >
+                    Подробнее
+                  </a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )
+    }
+
+    <!-- Достижения -->
+    {
+      достижения.пункты.length > 0 && (
+        <Section id="achievements" title={достижения.заголовок} tone="surface">
+          <ul>
+            {достижения.пункты.map((пункт) => (
+              <li class="flex gap-5 py-4 border-b border-line last:border-0">
+                <span class="font-display text-2xl text-accent shrink-0 w-20">
+                  {пункт.год}
+                </span>
+                <span class="text-lg md:text-xl text-muted">{пункт.текст}</span>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )
+    }
+
+    <!-- Вопросы -->
+    <Section id="faq" title={вопросы.заголовок}>
+      <ul>
+        {
+          вопросы.список.map((пункт) => (
+            <li class="py-5 border-b border-line last:border-0">
+              <p class="font-display text-xl md:text-2xl text-ink mb-2">
+                {пункт.вопрос}
+              </p>
+              <p class="text-lg md:text-xl text-muted">{пункт.ответ}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </Section>
+
+    <!-- Контакты -->
+    <Section id="contacts" title={контакты.заголовок} tone="accent">
+      <p class="text-xl text-muted mb-8">{контакты.вступление}</p>
+
+      <div class="mb-8">
+        <ApplyButton size="large" />
+      </div>
+
+      <ul class="text-lg md:text-xl">
+        {
+          контакты.телефон && (
+            <li class="py-3 border-b border-line">
+              <a href={`tel:${контакты.телефон_для_ссылки}`} class="text-accent font-semibold">
+                {контакты.телефон}
+              </a>
+            </li>
+          )
+        }
+        {
+          контакты.телеграм && (
+            <li class="py-3 border-b border-line">
+              <a href={контакты.телеграм} target="_blank" rel="noopener" class="text-accent font-semibold">
+                Телеграм
+              </a>
+            </li>
+          )
+        }
+        {
+          контакты.вконтакте && (
+            <li class="py-3 border-b border-line">
+              <a href={контакты.вконтакте} target="_blank" rel="noopener" class="text-accent font-semibold">
+                ВКонтакте
+              </a>
+            </li>
+          )
+        }
+        {
+          контакты.почта && (
+            <li class="py-3 border-b border-line">
+              <a href={`mailto:${контакты.почта}`} class="text-accent font-semibold">
+                {контакты.почта}
+              </a>
+            </li>
+          )
+        }
+      </ul>
+    </Section>
+
+    <footer class="bg-ink text-paper py-10">
+      <div class="mx-auto w-full max-w-3xl px-5">
+        <p class="text-lg">{контакты.подпись}</p>
+      </div>
+    </footer>
+
+    <!-- Кнопка заявки, закреплённая внизу экрана телефона -->
+    <div
+      class="md:hidden fixed bottom-0 inset-x-0 bg-surface border-t border-line px-4 pt-3"
+      style="padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));"
+    >
+      <ApplyButton class="w-full text-center" />
+    </div>
+
+    {
+      сайт.счётчик_метрики && (
+        <Fragment>
+          <script is:inline set:html={метрика} />
+          <noscript>
+            <div>
+              <img
+                src={`https://mc.yandex.ru/watch/${сайт.счётчик_метрики}`}
+                style="position:absolute; left:-9999px;"
+                alt=""
+              />
+            </div>
+          </noscript>
+        </Fragment>
+      )
+    }
+  
