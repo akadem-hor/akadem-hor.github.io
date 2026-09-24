@@ -14,12 +14,17 @@ const sizes = {
   normal: 'px-7 py-3.5 text-lg',
   large: 'px-9 py-4.5 text-xl',
 }
+
+// Кнопка может вести и наружу, и на блок этой же страницы. Внутреннюю ссылку
+// нельзя открывать в новой вкладке: человек получит вторую копию страницы
+// вместо перехода к расписанию.
+const внешняя = !ссылка_на_форму.startsWith('#')
 ---
 
 <a
   href={ссылка_на_форму}
-  target="_blank"
-  rel="noopener"
+  target={внешняя ? '_blank' : undefined}
+  rel={внешняя ? 'noopener' : undefined}
   class:list={[
     'inline-block rounded-md bg-accent font-semibold text-white',
     'hover:bg-accent-dark',
