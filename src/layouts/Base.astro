@@ -76,11 +76,20 @@ const faqSchema = {
     <meta name="description" content={сайт.описание} />
     <meta name="keywords" content={сайт.ключевые_слова} />
 
+    <!--
+      Превью ссылки в мессенджерах. Размеры картинки указаны явно: без них
+      Телеграм и ВКонтакте иногда рисуют маленькую иконку сбоку вместо
+      широкого изображения.
+    -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={`Хор «${обложка.название}»`} />
     <meta property="og:title" content={сайт.заголовок} />
     <meta property="og:description" content={сайт.описание} />
     <meta property="og:url" content={сайт.адрес} />
     <meta property="og:image" content={new URL(обложка.фото, сайт.адрес).href} />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="543" />
+    <meta property="og:image:alt" content={обложка.описание_фото} />
     <meta property="og:locale" content="ru_RU" />
 
     {
