@@ -226,14 +226,27 @@ document.addEventListener('click',function(e){
           <ul class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {галерея.снимки.map((снимок) => (
               <li>
-                <img
-                  src={снимок.файл}
-                  alt={снимок.подпись}
-                  width="800"
-                  height="600"
-                  loading="lazy"
-                  class="w-full h-auto rounded-md"
-                />
+                {/*
+                  Обычная ссылка на файл, а не кнопка: если скрипт не сработает
+                  или браузер окажется старым, снимок всё равно откроется —
+                  просто отдельной страницей. Окно просмотра подключается
+                  поверх этого, в скрипте внизу.
+                */}
+                <a
+                  href={снимок.файл}
+                  data-full={снимок.файл}
+                  data-caption={снимок.подпись}
+                  class="block cursor-zoom-in"
+                >
+                  <img
+                    src={снимок.файл}
+                    alt={снимок.подпись}
+                    width="800"
+                    height="600"
+                    loading="lazy"
+                    class="w-full h-auto rounded-md"
+                  />
+                </a>
                 <p class="text-muted mt-2">{снимок.подпись}</p>
               </li>
             ))}
@@ -367,6 +380,66 @@ document.addEventListener('click',function(e){
     >
       <ApplyButton class="w-full text-center" />
     </div>
+
+    <!--
+      Окно просмотра фотографии. Открывается только по нажатию на снимок —
+      само не появляется. Кнопка закрытия подписана словом и сделана крупной:
+      крестик в углу для нашей аудитории не очевиден. Закрыть можно ещё
+      клавишей Esc и нажатием мимо снимка — это умеет сам элемент dialog.
+    -->
+    <dialog
+      id="lightbox"
+      class="w-[95vw] max-w-5xl bg-surface p-0 border border-line backdrop:bg-ink/85"
+    >
+      <div class="p-4">
+        <img
+          id="lightbox-img"
+          src=""
+          alt=""
+          class="w-full h-auto max-h-[72vh] object-contain"
+        />
+        <p id="lightbox-caption" class="text-lg text-muted mt-3"></p>
+        <button
+          type="button"
+          id="lightbox-close"
+          class="mt-4 w-full sm:w-auto px-9 py-3.5 text-lg font-semibold bg-accent text-white hover:bg-accent-dark"
+        >
+          Закрыть
+        </button>
+      </div>
+    </dialog>
+
+    <script is:inline>
+      ;(function () {
+        var d = document.getElementById('lightbox')
+        if (!d || typeof d.showModal !== 'function') return
+
+        var img = document.getElementById('lightbox-img')
+        var cap = document.getElementById('lightbox-caption')
+
+        document.addEventListener('click', function (e) {
+          var t = e.target
+          if (!t || !t.closest) return
+
+          var link = t.closest('a[data-full]')
+          if (link) {
+            e.preventDefault()
+            img.src = link.getAttribute('data-full')
+            img.alt = link.getAttribute('data-caption') || ''
+            cap.textContent = link.getAttribute('data-caption') || ''
+            d.showModal()
+            return
+          }
+
+          if (t.id === 'lightbox-close') d.close()
+        })
+
+        // Нажатие мимо снимка — по затемнённому фону — тоже закрывает.
+        d.addEventListener('click', function (e) {
+          if (e.target === d) d.close()
+        })
+      })()
+    </script>
 
     {
       сайт.счётчик_метрики && (
