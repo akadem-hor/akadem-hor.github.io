@@ -5,6 +5,7 @@ import ApplyButton from './ApplyButton.astro'
 
 const {
   сайт,
+  заявка,
   обложка,
   о_хоре,
   хормейстеры,
@@ -17,6 +18,38 @@ const {
   вопросы,
   контакты,
 } = content
+
+// Фон блоков чередуется, чтобы соседние не сливались в одно полотно.
+//
+// Раньше цвет был проставлен у каждого блока вручную — и ломался, как только
+// блок исчезал. Так и случилось: после удаления анонсов и достижений
+// «Фотографии» и «Частые вопросы» оказались рядом с одинаковым фоном.
+//
+// Теперь цвет вычисляется по факту: перебираем блоки в том порядке, в каком
+// они стоят на странице, пропускаем пустые и раздаём фон так, чтобы он всегда
+// отличался от предыдущего. Добавление и удаление блоков больше ничего
+// не портит.
+const порядок_блоков = [
+  { id: 'about' },
+  { id: 'conductor', есть: хормейстеры.люди.length > 0 },
+  { id: 'who', фон: 'accent' },
+  { id: 'rehearsals' },
+  { id: 'video', есть: видео.записи.length > 0 },
+  { id: 'gallery', есть: галерея.снимки.length > 0 },
+  { id: 'events', есть: анонсы.события.length > 0 },
+  { id: 'achievements', есть: достижения.пункты.length > 0 },
+  { id: 'contacts', фон: 'accent' },
+  { id: 'faq' },
+]
+
+const тон: Record<string, 'paper' | 'surface' | 'accent'> = {}
+let предыдущий = ''
+for (const блок of порядок_блоков) {
+  if (блок.есть === false) continue
+  const цвет = блок.фон ?? (предыдущий === 'paper' ? 'surface' : 'paper')
+  тон[блок.id] = цвет as 'paper' | 'surface' | 'accent'
+  предыдущий = цвет
+}
 
 // Счётчик Яндекс Метрики. Собирается строкой, чтобы номер счётчика попадал
 // в код на этапе сборки, а не подставлялся в браузере.
@@ -77,7 +110,7 @@ document.addEventListener('click',function(e){
     </header>
 
     <!-- О хоре -->
-    <Section id="about" title={о_хоре.заголовок}>
+    <Section id="about" title={о_хоре.заголовок} tone={тон.about}>
       {
         о_хоре.абзацы.map((абзац) => (
           <p class="text-lg md:text-xl text-muted mb-5 last:mb-0">{абзац}</p>
@@ -88,17 +121,22 @@ document.addEventListener('click',function(e){
     <!-- Хормейстеры -->
     {
       хормейстеры.люди.length > 0 && (
-        <Section id="conductor" title={хормейстеры.заголовок} tone="surface">
+        <Section id="conductor" title={хормейстеры.заголовок} tone={тон.conductor}>
           <div class="grid gap-8 sm:grid-cols-2">
             {хормейстеры.люди.map((человек) => (
               <div>
                 {человек.фото && (
+                  /*
+                    Единая форма кадра для всех портретов: снимки приходят
+                    разных пропорций — вертикальные, квадратные, — и без этого
+                    колонки получаются разной высоты, блок выглядит рваным.
+                  */
                   <img
                     src={человек.фото}
                     alt={человек.имя}
                     width="400"
                     height="500"
-                    class="w-full h-auto rounded-md object-cover mb-5"
+                    class="w-full aspect-[4/5] rounded-md object-cover object-top mb-5"
                   />
                 )}
                 <p class="font-display text-2xl text-ink mb-1">{человек.имя}</p>
@@ -114,7 +152,7 @@ document.addEventListener('click',function(e){
     }
 
     <!-- Кого ждём -->
-    <Section id="who" title={кого_ждём.заголовок} tone="accent">
+    <Section id="who" title={кого_ждём.заголовок} tone={тон.who}>
       <p class="text-xl text-muted mb-8">{кого_ждём.вступление}</p>
 
       <ul class="grid sm:grid-cols-2 gap-5 mb-10">
@@ -137,7 +175,7 @@ document.addEventListener('click',function(e){
     </Section>
 
     <!-- Репетиции -->
-    <Section id="rehearsals" title={репетиции.заголовок}>
+    <Section id="rehearsals" title={репетиции.заголовок} tone={тон.rehearsals}>
       <dl class="mb-8">
         {
           репетиции.расписание.map((строка) => (
@@ -194,7 +232,7 @@ document.addEventListener('click',function(e){
     <!-- Видео -->
     {
       видео.записи.length > 0 && (
-        <Section id="video" title={видео.заголовок} tone="surface">
+        <Section id="video" title={видео.заголовок} tone={тон.video}>
           <p class="text-xl text-muted mb-8">{видео.вступление}</p>
           <ul class="grid sm:grid-cols-2 gap-6">
             {видео.записи.map((запись) => (
@@ -222,7 +260,7 @@ document.addEventListener('click',function(e){
     <!-- Фотографии -->
     {
       галерея.снимки.length > 0 && (
-        <Section id="gallery" title={галерея.заголовок}>
+        <Section id="gallery" title={галерея.заголовок} tone={тон.gallery}>
           <ul class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {галерея.снимки.map((снимок) => (
               <li>
@@ -258,7 +296,7 @@ document.addEventListener('click',function(e){
     <!-- Анонсы -->
     {
       анонсы.события.length > 0 && (
-        <Section id="events" title={анонсы.заголовок} tone="accent">
+        <Section id="events" title={анонсы.заголовок} tone={тон.events}>
           <ul>
             {анонсы.события.map((событие) => (
               <li class="bg-surface rounded-md p-6 border border-line mb-5 last:mb-0">
@@ -288,7 +326,7 @@ document.addEventListener('click',function(e){
     <!-- Достижения -->
     {
       достижения.пункты.length > 0 && (
-        <Section id="achievements" title={достижения.заголовок} tone="surface">
+        <Section id="achievements" title={достижения.заголовок} tone={тон.achievements}>
           <ul>
             {достижения.пункты.map((пункт) => (
               <li class="flex gap-5 py-4 border-b border-line last:border-0">
@@ -303,28 +341,17 @@ document.addEventListener('click',function(e){
       )
     }
 
-    <!-- Вопросы -->
-    <Section id="faq" title={вопросы.заголовок}>
-      <ul>
-        {
-          вопросы.список.map((пункт) => (
-            <li class="py-5 border-b border-line last:border-0">
-              <p class="font-display text-xl md:text-2xl text-ink mb-2">
-                {пункт.вопрос}
-              </p>
-              <p class="text-lg md:text-xl text-muted">{пункт.ответ}</p>
-            </li>
-          ))
-        }
-      </ul>
-    </Section>
-
     <!-- Контакты -->
-    <Section id="contacts" title={контакты.заголовок} tone="accent">
+    <Section id="contacts" title={контакты.заголовок} tone={тон.contacts}>
       <p class="text-xl text-muted mb-8">{контакты.вступление}</p>
 
       <div class="mb-8">
         <ApplyButton size="large" />
+        {
+          заявка.после_заявки && (
+            <p class="text-lg text-muted mt-4 max-w-xl">{заявка.после_заявки}</p>
+          )
+        }
       </div>
 
       <ul class="text-lg md:text-xl">
@@ -367,6 +394,31 @@ document.addEventListener('click',function(e){
       </ul>
     </Section>
 
+    <!-- Вопросы -->
+    <Section id="faq" title={вопросы.заголовок} tone={тон.faq}>
+      <ul>
+        {
+          вопросы.список.map((пункт) => (
+            <li class="py-5 border-b border-line last:border-0">
+              <p class="font-display text-xl md:text-2xl text-ink mb-2">
+                {пункт.вопрос}
+              </p>
+              <p class="text-lg md:text-xl text-muted">{пункт.ответ}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      {/*
+        Кнопка повторена в конце страницы: контакты теперь стоят выше вопросов,
+        и без неё человек, дочитавший до последнего ответа, упирается в подвал
+        без единого способа действовать.
+      */}
+      <div class="mt-10">
+        <ApplyButton size="large" />
+      </div>
+    </Section>
+
     <footer class="bg-ink text-paper py-10">
       <div class="mx-auto w-full max-w-3xl px-5">
         <p class="text-lg">{контакты.подпись}</p>
@@ -387,9 +439,14 @@ document.addEventListener('click',function(e){
       крестик в углу для нашей аудитории не очевиден. Закрыть можно ещё
       клавишей Esc и нажатием мимо снимка — это умеет сам элемент dialog.
     -->
+    <!--
+      fixed inset-0 m-auto h-fit — окно встаёт ровно посередине экрана
+      и по горизонтали, и по вертикали. Браузеры по-разному располагают
+      dialog по умолчанию, чаще прижимают кверху, поэтому положение задано явно.
+    -->
     <dialog
       id="lightbox"
-      class="w-[95vw] max-w-5xl bg-surface p-0 border border-line backdrop:bg-ink/85"
+      class="fixed inset-0 m-auto h-fit w-[95vw] max-w-5xl bg-surface p-0 border border-line backdrop:bg-ink/85"
     >
       <div class="p-4">
         <img
