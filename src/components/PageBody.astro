@@ -43,16 +43,28 @@ document.addEventListener('click',function(e){
 
     <!-- Обложка -->
     <header class="bg-surface border-b border-line">
+      <!--
+        Порядок как на концертной афише: сначала имя, под ним черта, затем
+        кто это такие, и только потом приглашение. Раньше строчка «любительский
+        академический хор» стояла и над названием, и в первой фразе под ним —
+        одно и то же дважды в трёх строках, из-за чего короткое имя выглядело
+        зажатым между двумя подписями.
+      -->
       <div class="mx-auto w-full max-w-3xl px-5 py-12 md:py-16">
-        <p class="text-accent font-semibold tracking-wide uppercase text-sm mb-3">
-          {обложка.подзаголовок}
-        </p>
-        <h1 class="font-display text-4xl md:text-6xl leading-tight text-ink mb-6">
+        <h1 class="font-display text-6xl md:text-8xl leading-none text-ink">
           {обложка.название}
         </h1>
+
+        <div class="w-24 h-0.5 bg-accent mt-6 mb-5"></div>
+
+        <p class="font-display text-2xl md:text-3xl text-accent leading-snug mb-5">
+          {обложка.подзаголовок}
+        </p>
+
         <p class="text-xl md:text-2xl text-muted leading-relaxed mb-8">
           {обложка.главная_фраза}
         </p>
+
         <ApplyButton size="large" />
       </div>
       <img
