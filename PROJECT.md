@@ -392,15 +392,15 @@ Git работает на обеих машинах: на рабочей он у
 
 | Что | Ссылка |
 |-----|--------|
-| **Сайт** | https://akadem-hor.github.io |
+| **Сайт** | http://akadem-hor.ru (HTTPS пока не работает) |
 | **Репозиторий** | https://github.com/akadem-hor/akadem-hor.github.io |
 | **Журнал сборок** | https://github.com/akadem-hor/akadem-hor.github.io/actions |
+| **Карточка в Яндекс Картах** | https://yandex.ru/maps/org/147679891268/ |
+| Google Форма заявки | https://docs.google.com/forms/d/e/1FAIpQLScFiUOtp3UuH4kRvmIiYwM9aY228KHABXo0FK0d0By-R_iwYg/viewform |
 | **Яндекс Метрика** | счётчик № 113041387 |
-| Google Форма заявки | _не нужна, см. раздел 2_ |
-| Адрес сайта (свой домен) | _не куплен_ |
-| Видео хора | _нет_ |
-| Соцсети / мессенджер | _нет_ |
-| Яндекс Карты — точка репетиций | _нет_ |
+| Домен у регистратора | reg.ru, akadem-hor.ru |
+| Видео хора | _не выложено, оригиналы в папке исходники_ |
+| Соцсети / мессенджеры | _нет, со страницы убраны_ |
 
 ---
 
