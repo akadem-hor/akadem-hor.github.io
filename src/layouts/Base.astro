@@ -86,14 +86,16 @@ const faqSchema = {
     <meta name="keywords" content={сайт.ключевые_слова} />
 
     <!--
-      Превью ссылки в мессенджерах. Размеры картинки указаны явно: без них
+      Превью ссылки в мессенджерах. Заголовок и описание здесь свои,
+      отличные от поисковых: в переписке работает приглашение, а не
+      перечисление ключевых слов. Размеры картинки указаны явно: без них
       Телеграм и ВКонтакте иногда рисуют маленькую иконку сбоку вместо
       широкого изображения.
     -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={`Хор «${обложка.название}»`} />
-    <meta property="og:title" content={сайт.заголовок} />
-    <meta property="og:description" content={сайт.описание} />
+    <meta property="og:title" content={сайт.заголовок_превью || сайт.заголовок} />
+    <meta property="og:description" content={сайт.описание_превью || сайт.описание} />
     <meta property="og:url" content={сайт.адрес} />
     <meta property="og:image" content={new URL(обложка.фото, сайт.адрес).href} />
     <meta property="og:image:width" content="1280" />
