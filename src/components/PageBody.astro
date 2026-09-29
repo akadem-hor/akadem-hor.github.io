@@ -2,6 +2,7 @@
 import content from '../content.json'
 import Section from './Section.astro'
 import ApplyButton from './ApplyButton.astro'
+import NameWithLaurel from './NameWithLaurel.astro'
 
 const {
   сайт,
@@ -98,7 +99,7 @@ document.addEventListener('click',function(e){
         */}
         <h1 class="text-ink mb-5">
           <span class="block font-display text-6xl md:text-8xl leading-none">
-            {обложка.название_на_обложке || обложка.название}
+            <NameWithLaurel название={обложка.название} />
           </span>
           <span class="block w-24 h-0.5 bg-accent mt-6 mb-5" aria-hidden="true"></span>
           <span class="block font-display text-2xl md:text-3xl text-accent leading-snug">

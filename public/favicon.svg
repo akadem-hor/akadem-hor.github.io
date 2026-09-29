@@ -1,17 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Хор Голоса">
   <!--
-    Знак хора: строчная «а» с ударением — та самая буква из названия.
-    Значок вкладки рисуется без веб-шрифтов, поэтому Playfair здесь недоступен:
-    буква берётся из Georgia, она есть почти везде и близка по рисунку.
-    Ударение нарисовано отдельной чёрточкой, а не символом, — так оно встаёт
-    ровно на любом устройстве и не зависит от того, как шрифт обрабатывает
-    сочетание буквы со знаком.
+    Знак хора: буква «а» из названия с лавровой ветвью вместо ударения.
+    Значок вкладки рисуется без веб-шрифтов, поэтому буква берётся
+    из Georgia — она есть почти везде и близка по рисунку к Playfair.
   -->
-  <rect width="64" height="64" fill="#7a5220"/>
-  <rect x="29.5" y="10" width="5.5" height="13" rx="1" transform="rotate(22 32 16)" fill="#f7f4ec"/>
-  <text x="32" y="49"
-        text-anchor="middle"
+  <rect width="64" height="64" fill="#1b3a6b"/>
+  <text x="27" y="50" text-anchor="middle"
         font-family="Georgia, 'Times New Roman', 'PT Serif', serif"
-        font-size="44"
-        fill="#f7f4ec">а</text>
+        font-size="42" fill="#f7f4ec">а</text>
+  <g transform="translate(25 9) scale(0.40)" fill="#f7f4ec">
+    <g fill="#f7f4ec"><path d="M2 26Q22 4 52 2" fill="none" stroke="#f7f4ec" stroke-width="2.6" stroke-linecap="round"/><path d="M0 0C3.42 -7 12.16 -5.88 19 -2.28C12.16 2.2 3.8 4.37 0 0Z" transform="translate(6.1 21.8) rotate(-105.6)"/><path d="M0 0C3.13 -6.4 11.13 -5.38 17.39 -2.09C11.13 2.01 3.48 4 0 0Z" transform="translate(15.36 14.28) rotate(-96.37)"/><path d="M0 0C2.84 -5.81 10.09 -4.88 15.77 -1.89C10.09 1.83 3.15 3.63 0 0Z" transform="translate(25.5 8.53) rotate(-86.72)"/><path d="M0 0C2.55 -5.21 9.06 -4.38 14.15 -1.7C9.06 1.64 2.83 3.25 0 0Z" transform="translate(36.53 4.54) rotate(-77.17)"/><path d="M0 0C2.26 -4.62 8.03 -3.88 12.54 -1.5C8.03 1.45 2.51 2.88 0 0Z" transform="translate(48.44 2.31) rotate(-68.21)"/></g>
+  </g>
 </svg>
