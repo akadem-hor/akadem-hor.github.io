@@ -11,8 +11,8 @@ const { ссылка_на_форму, текст_кнопки } = content.зая
 
 // Минимум 44px по высоте — иначе по кнопке трудно попасть пальцем.
 const sizes = {
-  normal: 'px-7 py-3.5 text-lg',
-  large: 'px-9 py-4.5 text-xl',
+  normal: 'px-6 py-3 text-lg',
+  large: 'px-8 py-3.5 text-lg',
 }
 
 // Кнопка может вести и наружу, и на блок этой же страницы. Внутреннюю ссылку
@@ -27,8 +27,12 @@ const внешняя = !ссылка_на_форму.startsWith('#')
   rel={внешняя ? 'noopener' : undefined}
   data-goal="prihod"
   class:list={[
-    'inline-block rounded-md bg-accent font-semibold text-white',
-    'hover:bg-accent-dark',
+    // Контурная, как «Посмотреть на карте» (решено 08.10.2026). Залитая
+    // кнопка крупным шрифтом выглядела грубо рядом со спокойной страницей.
+    // Подсветка при наведении полупрозрачная, а не цветом accent-soft:
+    // в блоке контактов фон и так accent-soft, и подсветка там пропадала.
+    'inline-block rounded-md border-2 border-accent font-bold text-accent',
+    'hover:bg-accent/10',
     sizes[size],
     extra,
   ]}

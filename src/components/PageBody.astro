@@ -152,7 +152,7 @@ document.addEventListener('click',function(e){
                     class="w-full aspect-[4/5] rounded-md object-cover object-top mb-5"
                   />
                 )}
-                <p class="font-display text-2xl text-ink mb-1">{человек.имя}</p>
+                <p class="font-bold text-xl text-ink mb-1">{человек.имя}</p>
                 <p class="text-accent font-semibold mb-4">{человек.должность}</p>
                 {человек.о_нём.map((абзац) => (
                   <p class="text-lg text-muted mb-4 last:mb-0">{абзац}</p>
@@ -172,7 +172,7 @@ document.addEventListener('click',function(e){
         {
           кого_ждём.пункты.map((пункт) => (
             <li class="bg-surface rounded-md p-6 border border-line">
-              <p class="font-sans font-semibold text-xl text-ink mb-2">{пункт.заголовок}</p>
+              <p class="font-bold text-xl text-ink mb-2">{пункт.заголовок}</p>
               <p class="text-lg text-muted">{пункт.текст}</p>
             </li>
           ))
@@ -180,7 +180,7 @@ document.addEventListener('click',function(e){
       </ul>
 
       <div class="border-l-4 border-accent pl-5">
-        <p class="font-display text-2xl text-ink mb-2">
+        <p class="font-bold text-xl text-ink mb-2">
           {кого_ждём.прослушивание.заголовок}
         </p>
         <p class="text-lg md:text-xl text-muted">{кого_ждём.прослушивание.текст}</p>
@@ -193,27 +193,15 @@ document.addEventListener('click',function(e){
         {
           репетиции.расписание.map((строка) => (
             <div class="flex justify-between gap-4 py-3 border-b border-line text-lg md:text-xl">
-              <dt class="font-semibold text-ink">{строка.день}</dt>
+              <dt class="text-ink">{строка.день}</dt>
               <dd class="text-muted">{строка.время}</dd>
             </div>
           ))
         }
       </dl>
 
-      <p class="font-display text-2xl text-ink mb-2">{репетиции.адрес}</p>
-      <p class="text-lg text-muted mb-6">{репетиции.как_добраться}</p>
-
-      <a
-        href={репетиции.ссылка_на_карту}
-        target="_blank"
-        rel="noopener"
-        class="inline-block rounded-md border-2 border-accent px-6 py-3 text-lg font-semibold text-accent hover:bg-accent-soft"
-      >
-        Посмотреть на карте
-      </a>
-
-      <div class="mt-10">
-        <h3 class="font-display text-2xl text-ink mb-4">
+      <div>
+        <h3 class="font-bold text-xl text-ink mb-4">
           {репетиции.стоимость.заголовок}
         </h3>
 
@@ -225,7 +213,7 @@ document.addEventListener('click',function(e){
                   <th scope="row" class="text-left font-normal text-muted py-3 pr-4 align-top">
                     {строка.что}
                   </th>
-                  <td class="text-right font-semibold text-ink py-3 whitespace-nowrap align-top">
+                  <td class="text-right text-ink py-3 whitespace-nowrap align-top">
                     {строка.цена}
                   </td>
                 </tr>
@@ -239,6 +227,24 @@ document.addEventListener('click',function(e){
             <p class="text-lg text-muted mt-4">{репетиции.стоимость.примечание}</p>
           )
         }
+      </div>
+
+      {/*
+        Адрес стоит после цен: сначала человек решает, подходит ли ему хор
+        по времени и деньгам, и только потом ему нужно знать, куда идти.
+      */}
+      <div class="mt-10">
+        <p class="font-bold text-xl text-ink mb-2">{репетиции.адрес}</p>
+        <p class="text-lg text-muted mb-6">{репетиции.как_добраться}</p>
+
+        <a
+          href={репетиции.ссылка_на_карту}
+          target="_blank"
+          rel="noopener"
+          class="inline-block rounded-md border-2 border-accent px-6 py-3 text-lg font-bold text-accent hover:bg-accent/10"
+        >
+          Посмотреть на карте
+        </a>
       </div>
     </Section>
 
@@ -258,7 +264,7 @@ document.addEventListener('click',function(e){
                     height="450"
                     class="w-full h-auto rounded-md mb-3"
                   />
-                  <p class="font-display text-xl text-accent group-hover:underline">
+                  <p class="font-bold text-xl text-accent group-hover:underline">
                     {запись.название}
                   </p>
                   <p class="text-muted">{запись.где_когда}</p>
@@ -316,7 +322,7 @@ document.addEventListener('click',function(e){
                 <p class="text-accent font-semibold text-lg mb-1">
                   {событие.дата}, {событие.время}
                 </p>
-                <p class="font-display text-2xl text-ink mb-2">{событие.название}</p>
+                <p class="font-bold text-xl text-ink mb-2">{событие.название}</p>
                 <p class="text-lg text-muted mb-1">{событие.место}</p>
                 <p class="text-lg text-muted">{событие.описание}</p>
                 {событие.ссылка && (
@@ -343,7 +349,7 @@ document.addEventListener('click',function(e){
           <ul>
             {достижения.пункты.map((пункт) => (
               <li class="flex gap-5 py-4 border-b border-line last:border-0">
-                <span class="font-display text-2xl text-accent shrink-0 w-20">
+                <span class="font-bold text-xl text-accent shrink-0 w-20">
                   {пункт.год}
                 </span>
                 <span class="text-lg md:text-xl text-muted">{пункт.текст}</span>
@@ -421,7 +427,7 @@ document.addEventListener('click',function(e){
         {
           вопросы.список.map((пункт) => (
             <li class="py-5 border-b border-line last:border-0">
-              <p class="font-display text-xl md:text-2xl text-ink mb-2">
+              <p class="font-bold text-xl text-ink mb-2">
                 {пункт.вопрос}
               </p>
               <p class="text-lg md:text-xl text-muted">{пункт.ответ}</p>
