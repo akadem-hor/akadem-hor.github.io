@@ -153,7 +153,7 @@ document.addEventListener('click',function(e){
                   />
                 )}
                 <p class="font-bold text-xl text-ink mb-1">{человек.имя}</p>
-                <p class="text-accent font-semibold mb-4">{человек.должность}</p>
+                <p class="text-lg text-muted mb-4">{человек.должность}</p>
                 {человек.о_нём.map((абзац) => (
                   <p class="text-lg text-muted mb-4 last:mb-0">{абзац}</p>
                 ))}
@@ -180,7 +180,7 @@ document.addEventListener('click',function(e){
       </ul>
 
       <div class="border-l-4 border-accent pl-5">
-        <p class="font-bold text-xl text-ink mb-2">
+        <p class="font-bold text-2xl text-ink mb-2">
           {кого_ждём.прослушивание.заголовок}
         </p>
         <p class="text-lg md:text-xl text-muted">{кого_ждём.прослушивание.текст}</p>
@@ -189,7 +189,13 @@ document.addEventListener('click',function(e){
 
     <!-- Репетиции -->
     <Section id="rehearsals" title={репетиции.заголовок} tone={тон.rehearsals}>
-      <dl class="mb-8">
+      {/*
+        Три части — расписание, цены, адрес — каждая со своим подзаголовком
+        и заметным отступом. Без этого 08.10.2026 блок читался сплошной
+        кашей: строки таблиц, адрес и примечание шли подряд одним весом.
+      */}
+      <h3 class="font-bold text-2xl text-ink mb-4">{репетиции.заголовок_расписания}</h3>
+      <dl>
         {
           репетиции.расписание.map((строка) => (
             <div class="flex justify-between gap-4 py-3 border-b border-line text-lg md:text-xl">
@@ -200,8 +206,8 @@ document.addEventListener('click',function(e){
         }
       </dl>
 
-      <div>
-        <h3 class="font-bold text-xl text-ink mb-4">
+      <div class="mt-14">
+        <h3 class="font-bold text-2xl text-ink mb-4">
           {репетиции.стоимость.заголовок}
         </h3>
 
@@ -233,8 +239,9 @@ document.addEventListener('click',function(e){
         Адрес стоит после цен: сначала человек решает, подходит ли ему хор
         по времени и деньгам, и только потом ему нужно знать, куда идти.
       */}
-      <div class="mt-10">
-        <p class="font-bold text-xl text-ink mb-2">{репетиции.адрес}</p>
+      <div class="mt-14">
+        <h3 class="font-bold text-2xl text-ink mb-4">{репетиции.заголовок_адреса}</h3>
+        <p class="text-lg md:text-xl text-ink mb-2">{репетиции.адрес}</p>
         <p class="text-lg text-muted mb-6">{репетиции.как_добраться}</p>
 
         <a
