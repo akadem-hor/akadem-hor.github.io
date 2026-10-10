@@ -1,0 +1,552 @@
+---
+/**
+ * Пробное оформление по референсам хора AUTEM — общая страница для двух
+ * вариантов: «Неон» (/proba) и «Тёмный» (/proba/temnyi).
+ *
+ * Главный урок первой попытки: обложка должна быть одной афишей, а не стопкой
+ * «текст — кнопка — картинка». Поэтому здесь голова занимает весь первый
+ * экран как холст, а имя и кнопка лежат поверх неё, сверху и снизу. Шея не
+ * обрезана линией, а растворяется в фоне. Поверх всего — общее зерно: оно
+ * сводит фотографию мрамора и плоскую графику в одну фактуру, как на
+ * напечатанной афише.
+ *
+ * Голова — мраморная голова женщины, Рим, Метрополитен-музей, снимок
+ * DP202853, лицензия CC0. 3D-головы AUTEM не используются: права на них
+ * у дизайнера того хора.
+ *
+ * Страница закрыта от поисковиков и не считается Метрикой.
+ */
+import '@fontsource/montserrat/cyrillic-400.css'
+import '@fontsource/montserrat/cyrillic-600.css'
+import '@fontsource/montserrat/cyrillic-800.css'
+import '@fontsource/montserrat/latin-400.css'
+import '@fontsource/montserrat/latin-600.css'
+import '@fontsource/montserrat/latin-800.css'
+import content from '../../content.json'
+
+interface Props {
+  variant: 'neon' | 'dark'
+}
+const { variant } = Astro.props
+
+// Название хора на пробе — AUTEM: так назывался хор, который руководитель
+// создала раньше (решено 10.10.2026 — посмотреть, как сайт выглядит с ним).
+// На основном сайте название пока прежнее. Подмена делается здесь, на лету,
+// поэтому content.json не меняется.
+const НАЗВАНИЕ = 'AUTEM'
+const сНовымИменем = <T,>(x: T): T =>
+  JSON.parse(JSON.stringify(x).replaceAll(content.обложка.название, НАЗВАНИЕ))
+
+const { сайт, заявка, обложка, о_хоре, хормейстеры, кого_ждём, репетиции, галерея, вопросы, контакты } =
+  сНовымИменем(content)
+
+const внешняя = !заявка.ссылка_на_форму.startsWith('#')
+const цель = внешняя ? { target: '_blank', rel: 'noopener' } : {}
+const номер = (i: number) => String(i + 1).padStart(2, '0')
+const заголовок_вкладки = `Проба оформления — хор «${обложка.название}»`
+// Короткая строка-приглашение на обложке. Длинная фраза с обложки сайта
+// переехала в первый блок: на афише ей не место.
+const приглашение = сайт.заголовок_превью
+---
+
+<!doctype html>
+<html lang="ru" data-variant={variant}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{заголовок_вкладки}</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <nav class="switch" aria-label="Варианты оформления">
+      <span class="switch__label">Проба</span>
+      <a href="/proba/" aria-current={variant === 'neon' ? 'page' : undefined}>Неон</a>
+      <a href="/proba/temnyi/" aria-current={variant === 'dark' ? 'page' : undefined}>Тёмный</a>
+    </nav>
+
+    <header class="hero">
+      <div class="hero__art" aria-hidden="true">
+        {variant === 'neon' && <span class="hero__word">ХОР</span>}
+        {variant === 'dark' && (
+          <div class="hero__names">
+            {Array.from({ length: 9 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+          </div>
+        )}
+        <div class="bust">
+          {variant === 'dark' && <span class="bust__halo" />}
+          <img src="/proba/head.webp" alt="" width="748" height="1300" fetchpriority="high" />
+          {variant === 'neon' && (
+            <svg class="bust__glasses" viewBox="0 0 300 70">
+              <defs>
+                <linearGradient id="lens" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#2c2c34" />
+                  <stop offset="1" stop-color="#0d0d11" />
+                </linearGradient>
+              </defs>
+              <path d="M6 14 H294" stroke="#22d6c4" stroke-width="7" stroke-linecap="round" />
+              <path d="M14 10 H136 Q140 10 139 16 L134 48 Q131 64 114 64 H40 Q22 64 19 48 L12 18 Q11 10 14 10 Z" fill="url(#lens)" stroke="#22d6c4" stroke-width="7" />
+              <path d="M164 10 H286 Q289 10 288 18 L281 48 Q278 64 260 64 H186 Q169 64 166 48 L161 16 Q160 10 164 10 Z" fill="url(#lens)" stroke="#22d6c4" stroke-width="7" />
+              <path d="M136 22 Q150 14 164 22" fill="none" stroke="#22d6c4" stroke-width="7" />
+              {/* блик на стёклах — без него очки читаются как наклейка */}
+              <path d="M30 20 L60 20 L44 52 L22 52 Z" fill="#fff" opacity="0.12" />
+              <path d="M180 20 L210 20 L194 52 L172 52 Z" fill="#fff" opacity="0.12" />
+            </svg>
+          )}
+        </div>
+      </div>
+
+      <div class="hero__top">
+        <h1 class="brand">
+          <span class="brand__name">{обложка.название}</span>
+          <span class="brand__kind">{обложка.подзаголовок}</span>
+        </h1>
+      </div>
+
+      <div class="hero__bottom">
+        <p class="hero__invite">{приглашение}</p>
+        <a class="btn btn--hero" href={заявка.ссылка_на_форму} {...цель}>{заявка.текст_кнопки}</a>
+      </div>
+
+      <div class="grain" aria-hidden="true"></div>
+    </header>
+
+    <main>
+      <section class="block">
+        <div class="wrap">
+          <p class="lead">{обложка.главная_фраза}</p>
+          <p class="label">01 — О хоре</p>
+          <h2 class="title">{о_хоре.заголовок}</h2>
+          <div class="text">{о_хоре.абзацы.map((абзац) => <p>{абзац}</p>)}</div>
+        </div>
+        <div class="wrap">
+          <img class="wide-photo" src={обложка.фото} alt={обложка.описание_фото} width="1600" height="900" loading="lazy" />
+        </div>
+      </section>
+
+      {
+        хормейстеры.люди.length > 0 && (
+          <section class="block block--alt">
+            <div class="wrap">
+              <p class="label">02 — Хормейстеры</p>
+              <h2 class="title">{хормейстеры.заголовок}</h2>
+              <div class="people">
+                {хормейстеры.люди.map((человек) => (
+                  <figure class="person">
+                    <img src={человек.фото} alt={человек.имя} width="400" height="500" loading="lazy" />
+                    <figcaption>
+                      <span class="person__name">{человек.имя}</span>
+                      <span class="person__role">{человек.должность}</span>
+                    </figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
+          </section>
+        )
+      }
+
+      <section class="block">
+        <div class="wrap">
+          <p class="label">03 — Набор</p>
+          <h2 class="title">{кого_ждём.заголовок}</h2>
+          <p class="text text--lead">{кого_ждём.вступление}</p>
+          <ul class="cards">
+            {
+              кого_ждём.пункты.map((пункт, i) => (
+                <li class="card">
+                  <span class="card__num">{номер(i)}</span>
+                  <p class="card__title">{пункт.заголовок}</p>
+                  <p class="card__text">{пункт.текст}</p>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="audition">
+            <p class="audition__q">{кого_ждём.прослушивание.заголовок}</p>
+            <p class="audition__a">{кого_ждём.прослушивание.текст}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="block block--alt" id="rehearsals">
+        <div class="wrap">
+          <p class="label">04 — Репетиции</p>
+          <h2 class="title">{репетиции.заголовок}</h2>
+          <div class="days">
+            {
+              репетиции.расписание.map((строка) => (
+                <div class="day">
+                  <span class="day__name">{строка.день}</span>
+                  <span class="day__time">{строка.время}</span>
+                </div>
+              ))
+            }
+          </div>
+
+          <h3 class="subtitle">{репетиции.стоимость.заголовок}</h3>
+          <table class="prices">
+            <tbody>
+              {
+                репетиции.стоимость.строки.map((строка) => (
+                  <tr>
+                    <th scope="row">{строка.что}</th>
+                    <td>{строка.цена}</td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+          {репетиции.стоимость.примечание && <p class="note">{репетиции.стоимость.примечание}</p>}
+
+          <h3 class="subtitle">{репетиции.заголовок_адреса}</h3>
+          <p class="address">{репетиции.адрес}</p>
+          <p class="note">{репетиции.как_добраться}</p>
+          <a class="btn btn--ghost" href={репетиции.ссылка_на_карту} target="_blank" rel="noopener">Посмотреть на карте</a>
+        </div>
+      </section>
+
+      {
+        галерея.снимки.length > 0 && (
+          <section class="block">
+            <div class="wrap">
+              <p class="label">05 — Фото</p>
+              <h2 class="title">{галерея.заголовок}</h2>
+              <ul class="gallery">
+                {галерея.снимки.map((снимок) => (
+                  <li>
+                    <img src={снимок.файл} alt={снимок.подпись} width="800" height="600" loading="lazy" />
+                    <p>{снимок.подпись}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )
+      }
+
+      <section class="cta">
+        <div class="cta__pattern" aria-hidden="true">
+          {Array.from({ length: 8 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+        </div>
+        <div class="wrap cta__inner">
+          <h2 class="title">{контакты.заголовок}</h2>
+          <p class="cta__text">{контакты.вступление}</p>
+          <a class="btn btn--cta" href={заявка.ссылка_на_форму} {...цель}>{заявка.текст_кнопки}</a>
+          {заявка.после_заявки && <p class="cta__promise">{заявка.после_заявки}</p>}
+        </div>
+      </section>
+
+      <section class="block">
+        <div class="wrap">
+          <p class="label">06 — Вопросы</p>
+          <h2 class="title">{вопросы.заголовок}</h2>
+          <dl class="faq">
+            {
+              вопросы.список.map((пункт) => (
+                <div class="faq__item">
+                  <dt>{пункт.вопрос}</dt>
+                  <dd>{пункт.ответ}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <a class="btn btn--primary" href={заявка.ссылка_на_форму} {...цель}>{заявка.текст_кнопки}</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <p class="footer__name">{обложка.название}</p>
+        <p class="footer__kind">{контакты.подпись}</p>
+      </div>
+    </footer>
+
+    {/* Закреплённая кнопка появляется, только когда обложка ушла с экрана:
+        иначе на первом экране две одинаковые кнопки, и нижняя закрывает голову */}
+    <div class="sticky" id="sticky">
+      <a class="btn btn--primary btn--block" href={заявка.ссылка_на_форму} {...цель}>{заявка.текст_кнопки}</a>
+    </div>
+    <script is:inline>
+      ;(function () {
+        var hero = document.querySelector('.hero')
+        var sticky = document.getElementById('sticky')
+        if (!hero || !sticky || !('IntersectionObserver' in window)) return
+        new IntersectionObserver(function (e) {
+          sticky.classList.toggle('sticky--on', !e[0].isIntersecting)
+        }, { threshold: 0.15 }).observe(hero)
+      })()
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  /* ================= Общая основа ================= */
+  :root {
+    --font: 'Montserrat', 'Segoe UI', sans-serif;
+    font-size: 18px;
+  }
+  /*
+    «Неон» — с розовых афиш AUTEM: градиент из маджента в бирюзу на обложке
+    и в призыве к записи, остальное тёмное.
+  */
+  [data-variant='neon'] {
+    --bg: #0c0c10; --bg-alt: #141419; --card: #1b1b22; --line: #2b2b35;
+    --text: #f1f1f4; --muted: #b0b0bd;
+    --accent: #ff3fd9;
+    --grad: linear-gradient(135deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%);
+    --hero-bg: linear-gradient(172deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%);
+    --cta-bg: var(--grad); --cta-text: #111;
+    --btn-bg: #fff; --btn-text: #111;
+  }
+  /*
+    «Тёмный» — со спокойных афиш: «Stabat Mater» с кольцом света, чёрно-
+    красная афиша с повторённым именем. Чёрный, белый и один тёплый акцент —
+    золото даты на «Stabat Mater». Красный остаётся глубоким фоном у имени.
+  */
+  [data-variant='dark'] {
+    --bg: #09090b; --bg-alt: #111114; --card: #17171b; --line: #27272d;
+    --text: #efeeea; --muted: #aeada6;
+    --accent: #d8b46a;
+    --grad: linear-gradient(135deg, #e9cf8f 0%, #c9a24e 100%);
+    --hero-bg: radial-gradient(120% 80% at 50% 40%, #1a0c10 0%, #0b0708 55%, #050505 100%);
+    --cta-bg: linear-gradient(160deg, #3a0a14 0%, #14070a 100%); --cta-text: #efeeea;
+    --btn-bg: #efeeea; --btn-text: #111;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--font);
+    line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+  .switch {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 60;
+    display: flex; gap: 4px; align-items: center; padding: 4px;
+    background: rgba(10, 10, 12, 0.6); backdrop-filter: blur(6px); border-radius: 999px;
+    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .switch__label { color: #bbb; padding: 0 8px 0 10px; }
+  .switch a { color: #fff; text-decoration: none; padding: 5px 12px; border-radius: 999px; }
+  .switch a[aria-current='page'] { background: #fff; color: #111; }
+
+  /* ---------- Кнопки ---------- */
+  .btn {
+    display: inline-block; padding: 16px 34px; border-radius: 999px;
+    font-weight: 600; font-size: 1rem; letter-spacing: 0.04em;
+    text-decoration: none; text-align: center;
+  }
+  .btn--primary { background: var(--btn-bg); color: var(--btn-text); }
+  .btn--primary:hover { opacity: 0.9; }
+  .btn--ghost { border: 2px solid var(--text); color: var(--text); padding: 14px 32px; }
+  .btn--ghost:hover { background: rgba(255, 255, 255, 0.08); }
+  .btn--block { display: block; width: 100%; }
+
+  /* ================= Обложка-афиша ================= */
+  .hero {
+    position: relative; overflow: hidden; isolation: isolate;
+    min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between;
+    background: var(--hero-bg); color: #fff; text-align: center;
+  }
+  .hero__art { position: absolute; inset: 0; z-index: 0; }
+  .hero__top { position: relative; z-index: 3; padding: 64px 20px 0; }
+  .hero__bottom {
+    position: relative; z-index: 3; padding: 0 20px 40px;
+    display: flex; flex-direction: column; align-items: center; gap: 18px;
+  }
+
+  .brand { margin: 0; font-weight: 400; }
+  .brand__name {
+    display: block; font-weight: 600; text-transform: uppercase;
+    font-size: clamp(2.6rem, 9vw, 6.2rem); line-height: 1;
+    letter-spacing: 0.16em; margin-right: -0.16em;
+  }
+  .brand__kind {
+    display: block; margin: 16px auto 0; max-width: 34em;
+    font-size: clamp(0.72rem, 2vw, 0.95rem); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.24em;
+  }
+  .hero__invite {
+    margin: 0; font-size: clamp(0.8rem, 2.2vw, 1rem); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.2em;
+  }
+
+  /* Голова: стоит на нижнем крае, шея растворяется в фоне */
+  .bust {
+    /* z-index обязателен: transform создаёт свой слой, и без него голова
+       оказывалась под словом «ХОР» */
+    position: absolute; z-index: 2; left: 50%; bottom: 0; transform: translateX(-50%);
+    height: 72%; aspect-ratio: 748 / 1300;
+  }
+  .bust img {
+    position: relative; z-index: 2; width: 100%; height: 100%; object-fit: contain; object-position: bottom;
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 94%);
+    mask-image: linear-gradient(to bottom, #000 62%, transparent 94%);
+  }
+
+  /* Зерно поверх всей обложки — общая фактура для фото и графики */
+  .grain {
+    position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: 0.16; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- Неон ---------- */
+  [data-variant='neon'] .hero__word {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -38%);
+    font-weight: 800; font-size: clamp(12rem, 44vw, 36rem); line-height: 0.8;
+    letter-spacing: -0.03em; color: #3d3d44; white-space: nowrap; z-index: 1;
+  }
+  [data-variant='neon'] .bust img {
+    /* мрамор светлее и холоднее — ближе к белым скульптурам AUTEM */
+    filter: grayscale(1) brightness(1.12) contrast(1.04);
+    /* тени через drop-shadow здесь нет: вместе с mask-image Chrome рисует её
+       прямоугольником вокруг всей картинки */
+  }
+  [data-variant='neon'] .bust__glasses {
+    position: absolute; z-index: 3; width: 69.6%; left: 7.5%; top: 31.9%;
+    filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.35));
+  }
+  [data-variant='neon'] .btn--hero { background: #111; color: #fff; }
+  [data-variant='neon'] .btn--hero:hover { background: #2a2a33; }
+  [data-variant='neon'] .hero__invite { color: #111; }
+
+  /* ---------- Тёмный ---------- */
+  [data-variant='dark'] .hero__names {
+    position: absolute; inset: -4% -10%; display: flex; flex-direction: column; justify-content: center;
+    font-weight: 800; text-transform: uppercase; font-size: clamp(3.2rem, 12vw, 9rem);
+    line-height: 0.92; letter-spacing: -0.01em; white-space: nowrap; z-index: 0;
+    color: #4a0f1b; opacity: 0.55;
+  }
+  [data-variant='dark'] .hero__names span:nth-child(even) { margin-left: -25%; }
+  [data-variant='dark'] .hero__names::after {
+    /* виньетка: имя-фон гаснет к краям и не спорит с заголовком */
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(70% 60% at 50% 45%, transparent 30%, #050505 85%);
+  }
+  [data-variant='dark'] .bust__halo {
+    /* Кольцо света за головой — как на афише «Stabat Mater» */
+    position: absolute; z-index: 1; left: 50%; top: 34%; width: 150%; aspect-ratio: 1;
+    transform: translate(-50%, -50%); border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.95);
+    box-shadow: 0 0 30px 6px rgba(190, 210, 255, 0.55), 0 0 90px 30px rgba(140, 170, 255, 0.25),
+      inset 0 0 30px 6px rgba(190, 210, 255, 0.5), inset 0 0 90px 30px rgba(140, 170, 255, 0.18);
+  }
+  [data-variant='dark'] .bust img {
+    /* мрамор в полумраке: чуть темнее и контрастнее, как в луче света */
+    filter: grayscale(1) brightness(0.92) contrast(1.18);
+  }
+  [data-variant='dark'] .hero__top::before {
+    /* мягкое затемнение под заголовком, чтобы он читался поверх кольца */
+    content: ''; position: absolute; inset: 0 0 -60px; z-index: -1;
+    background: linear-gradient(to bottom, rgba(5, 5, 5, 0.85), transparent);
+  }
+  [data-variant='dark'] .hero__invite { color: var(--accent); }
+  [data-variant='dark'] .btn--hero { background: var(--btn-bg); color: var(--btn-text); }
+
+  /* Телефон: голова уже, чтобы оставить воздух вокруг имени и кнопки */
+  @media (max-width: 699px) {
+    .hero__top { padding-top: 64px; }
+    .bust { height: 74%; }
+    /* слово шире экрана, края «Х» и «Р» срезаны, голова закрывает только «О» — как на афише */
+    [data-variant='neon'] .bust { height: 58%; }
+    [data-variant='neon'] .hero__word { font-size: 74vw; transform: translate(-50%, -22%); }
+    [data-variant='dark'] .bust__halo { width: 128%; }
+  }
+
+  /* ================= Блоки ================= */
+  .block { padding: 96px 0; }
+  .block--alt { background: var(--bg-alt); }
+  .lead { font-size: clamp(1.3rem, 3vw, 1.75rem); line-height: 1.45; font-weight: 600; max-width: 820px; margin: 0 0 80px; }
+  .label { margin: 0 0 14px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); }
+  .title {
+    margin: 0 0 36px; font-weight: 800; text-transform: uppercase;
+    font-size: clamp(2rem, 6vw, 3.6rem); line-height: 1.05; letter-spacing: 0.01em;
+  }
+  .subtitle { margin: 56px 0 18px; font-weight: 800; text-transform: uppercase; font-size: 1.25rem; letter-spacing: 0.08em; }
+  .text { max-width: 760px; font-size: 1.1rem; color: var(--muted); }
+  .text p { margin: 0 0 18px; }
+  .text--lead { color: var(--text); font-size: 1.25rem; margin-bottom: 36px; }
+  .wide-photo { width: 100%; margin-top: 48px; border-radius: 22px; filter: grayscale(1) contrast(1.05); }
+
+  .people { display: grid; gap: 36px; }
+  @media (min-width: 640px) { .people { grid-template-columns: 1fr 1fr; } }
+  .person { margin: 0; }
+  .person img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: top; filter: grayscale(1) contrast(1.05); border-radius: 22px; }
+  .person figcaption { margin-top: 18px; }
+  .person__name { display: block; font-weight: 800; font-size: 1.25rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .person__role { display: block; color: var(--muted); margin-top: 4px; }
+
+  .cards { list-style: none; padding: 0; margin: 0 0 40px; display: grid; gap: 18px; }
+  @media (min-width: 700px) { .cards { grid-template-columns: 1fr 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 28px; }
+  .card__num { display: block; font-weight: 800; font-size: 2.4rem; line-height: 1; margin-bottom: 18px;
+    background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .card__title { margin: 0 0 8px; font-weight: 800; font-size: 1.15rem; }
+  .card__text { margin: 0; color: var(--muted); }
+  .audition { border-radius: 22px; padding: 26px 28px; border: 2px solid var(--accent); }
+  .audition__q { margin: 0 0 6px; font-weight: 800; font-size: 1.3rem; }
+  .audition__a { margin: 0; color: var(--muted); font-size: 1.1rem; }
+
+  .days { display: grid; gap: 18px; }
+  @media (min-width: 640px) { .days { grid-template-columns: 1fr 1fr; } }
+  .day { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 26px 28px; }
+  .day__name { display: block; font-weight: 800; text-transform: uppercase; font-size: 1.5rem; letter-spacing: 0.04em; }
+  .day__time { display: block; margin-top: 6px; font-size: 1.25rem; color: var(--muted); }
+  .prices { width: 100%; max-width: 760px; border-collapse: collapse; font-size: 1.1rem; }
+  .prices th, .prices td { padding: 16px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .prices th { text-align: left; font-weight: 400; color: var(--muted); padding-right: 16px; }
+  .prices td { text-align: right; font-weight: 800; white-space: nowrap; }
+  .note { color: var(--muted); max-width: 760px; margin: 14px 0 24px; }
+  .address { font-size: 1.25rem; margin: 0; }
+
+  .gallery { list-style: none; padding: 0; margin: 0; display: grid; gap: 22px; }
+  @media (min-width: 700px) { .gallery { grid-template-columns: 1fr 1fr 1fr; } }
+  .gallery img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 18px; filter: grayscale(1) contrast(1.05); }
+  .gallery img:hover { filter: none; }
+  .gallery p { margin: 10px 0 0; color: var(--muted); font-size: 0.95rem; }
+
+  .cta { position: relative; overflow: hidden; background: var(--cta-bg); padding: 110px 0; color: var(--cta-text); }
+  .cta__pattern {
+    position: absolute; inset: -20px; display: flex; flex-direction: column;
+    font-weight: 800; text-transform: uppercase; font-size: clamp(3rem, 10vw, 7rem);
+    line-height: 0.95; color: rgba(255, 255, 255, 0.14); white-space: nowrap; user-select: none;
+  }
+  [data-variant='dark'] .cta__pattern { color: rgba(216, 180, 106, 0.08); }
+  .cta__pattern span:nth-child(even) { margin-left: -30%; }
+  .cta__inner { position: relative; }
+  .cta__text { font-size: 1.25rem; max-width: 620px; margin: 0 0 30px; font-weight: 600; }
+  .cta__promise { max-width: 560px; margin: 22px 0 0; }
+  [data-variant='neon'] .btn--cta { background: #111; color: #fff; }
+  [data-variant='dark'] .btn--cta { background: var(--btn-bg); color: var(--btn-text); }
+
+  .faq { margin: 0 0 44px; display: grid; gap: 0 48px; }
+  @media (min-width: 800px) { .faq { grid-template-columns: 1fr 1fr; } }
+  .faq__item { padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .faq dt { font-weight: 800; font-size: 1.15rem; margin-bottom: 8px; }
+  .faq dd { margin: 0; color: var(--muted); }
+
+  .footer { padding: 56px 0 120px; border-top: 1px solid var(--line); }
+  .footer__name { margin: 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.16em; font-size: 1.3rem; }
+  .footer__kind { margin: 8px 0 0; color: var(--muted); }
+
+  .sticky {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; padding: 10px 16px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    background: rgba(10, 10, 12, 0.85); backdrop-filter: blur(8px);
+    transform: translateY(110%); visibility: hidden;
+  }
+  .sticky--on { transform: none; visibility: visible; }
+  @media (min-width: 768px) {
+    .sticky { display: none; }
+    .footer { padding-bottom: 56px; }
+    .block { padding: 120px 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
