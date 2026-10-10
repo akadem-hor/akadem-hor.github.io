@@ -13,7 +13,9 @@ const content = JSON.parse(сырой.replace(/^﻿/, ''))
 
 export default defineConfig({
   site: content.сайт.адрес,
-  integrations: [sitemap()],
+  // Пробные страницы оформления в карту сайта не попадают: поисковик принял
+  // бы их за копии главной.
+  integrations: [sitemap({ filter: (page) => !page.includes('/proba') })],
   vite: {
     plugins: [tailwindcss()],
   },
