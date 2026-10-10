@@ -1,7 +1,8 @@
 ---
 /**
  * Пробное оформление по референсам хора AUTEM — общая страница для двух
- * вариантов: «Неон» (/proba) и «Тёмный» (/proba/temnyi).
+ * вариантов: «Светлый» (/proba) и «Неон» (/proba/neon). Обложка у них общая —
+ * по макету дизайнера, отличаются блоки ниже: светлые или тёмные.
  *
  * Обложка — одна афиша: голова на весь первый экран как холст, имя сверху,
  * приглашение, кнопка и бегущая строка снизу. Шея растворяется в фоне,
@@ -18,9 +19,7 @@
  *      «служебные» строки: номера, дни, подзаголовки, бегущая строка, имя);
  *   3. Текст — Montserrat 400, обычный регистр; выделение внутри него — 600.
  *
- * Голова — мраморная голова женщины, Рим, Метрополитен-музей, снимок
- * DP202853, лицензия CC0. 3D-головы AUTEM не используются: права на них
- * у дизайнера того хора.
+ * Бюст в очках на обложке — 3D от дизайнера хора (10.10.2026).
  *
  * Страница закрыта от поисковиков и не считается Метрикой.
  */
@@ -33,13 +32,9 @@ import '@fontsource/montserrat/latin-800.css'
 import content from '../../content.json'
 
 interface Props {
-  variant: 'dark' | 'light'
+  variant: 'neon' | 'light'
 }
 const { variant } = Astro.props
-// Обложка: у «Светлого» — градиентная, с головой в очках и «ХОР» (её
-// придумали для варианта «Неон», который 10.10.2026 убран — тёмная страница
-// целиком давала ощущение ночного клуба), блоки ниже светлые.
-const обложкаВарианта = variant === 'dark' ? 'dark' : 'neon'
 
 
 // Типографика переносов. Предлоги, союзы и частицы из одной-двух букв
@@ -84,7 +79,7 @@ const строка = ['Духовная музыка', 'Русская клас�
 ---
 
 <!doctype html>
-<html lang="ru" data-variant={variant} data-hero={обложкаВарианта}>
+<html lang="ru" data-variant={variant} data-hero="neon">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -100,7 +95,7 @@ const строка = ['Духовная музыка', 'Русская клас�
     <nav class="switch" aria-label="Варианты пробы">
       <div class="switch__group">
         <a href="/proba/" aria-current={variant === 'light' ? 'page' : undefined}>Светлый</a>
-        <a href="/proba/temnyi/" aria-current={variant === 'dark' ? 'page' : undefined}>Тёмный</a>
+        <a href="/proba/neon/" aria-current={variant === 'neon' ? 'page' : undefined}>Неон</a>
       </div>
     </nav>
 
@@ -108,7 +103,7 @@ const строка = ['Духовная музыка', 'Русская клас�
       <div class="hero__art" aria-hidden="true">
         {/* «О» — залитый круг чуть больше «Х» и «Р», голова стоит в нём
             (правка дизайнера 10.10.2026). Для программ чтения слово — «ХОР». */}
-        {обложкаВарианта === 'neon' && (
+        {(
           <span class="hero__word" aria-label="ХОР">
             <span>Х</span>
             <span class="hero__disc">
@@ -120,17 +115,6 @@ const строка = ['Духовная музыка', 'Русская клас�
             </span>
             <span>Р</span>
           </span>
-        )}
-        {variant === 'dark' && (
-          <div class="hero__names">
-            {Array.from({ length: 9 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
-          </div>
-        )}
-        {variant === 'dark' && (
-        <div class="bust">
-          <span class="bust__halo" />
-          <img src="/proba/head.webp" alt="" width="748" height="1300" fetchpriority="high" />
-        </div>
         )}
       </div>
 
@@ -444,19 +428,6 @@ const строка = ['Духовная музыка', 'Русская клас�
     --font: 'Montserrat', 'Segoe UI', sans-serif;
     font-size: 18px;
   }
-  /*
-    «Тёмный» — со спокойных афиш: «Stabat Mater» с кольцом света, чёрно-
-    красная афиша с повторённым именем. Чёрный, белый и один тёплый акцент —
-    золото даты на «Stabat Mater». Красный остаётся глубоким фоном у имени.
-  */
-  [data-variant='dark'] {
-    --bg: #09090b; --bg-alt: #111114; --card: #17171b; --line: #27272d;
-    --text: #efeeea; --muted: #aeada6;
-    --accent: #d8b46a;
-    --hero-bg: radial-gradient(120% 80% at 50% 40%, #1a0c10 0%, #0b0708 55%, #050505 100%);
-    --cta-bg: linear-gradient(160deg, #3a0a14 0%, #14070a 100%); --cta-text: #efeeea;
-    --btn-bg: #efeeea; --btn-text: #111;
-  }
 
   /*
     «Светлый» — обложка как у «Неона», ниже — тёплый светлый фон, почти
@@ -475,6 +446,20 @@ const строка = ['Духовная музыка', 'Русская клас�
   [data-variant='light'] .btn--ghost:hover { background: rgba(0, 0, 0, 0.05); }
   [data-variant='light'] .btn--cta { background: #111; color: #fff; }
   [data-variant='light'] .sticky { background: rgba(247, 245, 240, 0.9); border-top: 1px solid var(--line); }
+
+  /*
+    «Неон» — обложка та же, блоки ниже тёмные с розовым акцентом и градиентом
+    обложки в призыве к записи.
+  */
+  [data-variant='neon'] {
+    --bg: #0c0c10; --bg-alt: #141419; --card: #1b1b22; --line: #2b2b35;
+    --text: #f1f1f4; --muted: #b0b0bd;
+    --accent: #ff3fd9;
+    --hero-bg: linear-gradient(172deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%);
+    --cta-bg: linear-gradient(135deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%); --cta-text: #111;
+    --btn-bg: #fff; --btn-text: #111;
+  }
+  [data-variant='neon'] .btn--cta { background: #111; color: #fff; }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; }
@@ -561,21 +546,6 @@ const строка = ['Духовная музыка', 'Русская клас�
   }
   .hero__invite { margin: 0; max-width: none; }
 
-  /* Голова: шея растворяется в фоне. Подбородок на снимке — на 69% высоты;
-     шея гаснет с 72% до 90%, и линия 90% совпадает с верхом нижней полосы:
-     последние 10% картинки, уже прозрачные, уходят под неё. Отсюда 0,9.
-     z-index обязателен: transform создаёт свой слой. */
-  .bust {
-    position: absolute; z-index: 2; left: 50%; transform: translateX(-50%);
-    height: calc((100% - var(--ht) - var(--hb)) / 0.9);
-    bottom: calc(var(--hb) - (100% - var(--ht) - var(--hb)) / 9);
-    aspect-ratio: 748 / 1300;
-  }
-  .bust img {
-    position: relative; z-index: 2; width: 100%; height: 100%; object-fit: contain; object-position: bottom;
-    -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 90%);
-    mask-image: linear-gradient(to bottom, #000 72%, transparent 90%);
-  }
 
   /* Зерно поверх всей обложки — общая фактура для фото и графики */
   .grain {
@@ -651,33 +621,6 @@ const строка = ['Духовная музыка', 'Русская клас�
   [data-hero='neon'] .btn--hero:hover { background: #2a2a33; }
   [data-hero='neon'] .hero__invite { color: #111; }
 
-  /* ---------- Тёмный ---------- */
-  [data-variant='dark'] .hero__names {
-    position: absolute; inset: -4% -10%; display: flex; flex-direction: column; justify-content: center;
-    font-weight: 800; text-transform: uppercase; font-size: clamp(3.2rem, 12vw, 9rem);
-    line-height: 0.92; letter-spacing: -0.01em; white-space: nowrap; z-index: 0;
-    color: #4a0f1b; opacity: 0.55;
-  }
-  [data-variant='dark'] .hero__names span:nth-child(even) { margin-left: -25%; }
-  [data-variant='dark'] .hero__names::after {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(70% 60% at 50% 45%, transparent 30%, #050505 85%);
-  }
-  [data-variant='dark'] .bust__halo {
-    /* Кольцо света за головой — как на афише «Stabat Mater» */
-    position: absolute; z-index: 1; left: 50%; top: 36%; width: 118%; aspect-ratio: 1;
-    transform: translate(-50%, -50%); border-radius: 50%;
-    border: 5px solid rgba(255, 255, 255, 0.95);
-    box-shadow: 0 0 30px 6px rgba(190, 210, 255, 0.55), 0 0 90px 30px rgba(140, 170, 255, 0.25),
-      inset 0 0 30px 6px rgba(190, 210, 255, 0.5), inset 0 0 90px 30px rgba(140, 170, 255, 0.18);
-  }
-  [data-variant='dark'] .bust img { filter: grayscale(1) brightness(0.92) contrast(1.18); }
-  [data-variant='dark'] .hero__top::before {
-    content: ''; position: absolute; inset: 0 0 -60px; z-index: -1;
-    background: linear-gradient(to bottom, rgba(5, 5, 5, 0.85), transparent);
-  }
-  [data-variant='dark'] .hero__invite { color: var(--accent); }
-  [data-variant='dark'] .btn--hero { background: var(--btn-bg); color: var(--btn-text); }
 
   @media (max-width: 699px) {
     .hero { --ht: 270px; --hb: 236px; }
@@ -687,7 +630,6 @@ const строка = ['Духовная музыка', 'Русская клас�
        обложка по высоте содержимого, без пустоты над «ХОР» */
     [data-hero='neon'] .hero { min-height: calc(var(--ht) + var(--hb) + 40vw); }
     [data-hero='neon'] .hero__word { top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.55); }
-    [data-variant='dark'] .bust__halo { width: 112%; }
   }
 
   /* ================= Блоки ================= */
@@ -813,13 +755,11 @@ const строка = ['Духовная музыка', 'Русская клас�
     font-weight: 800; text-transform: uppercase; font-size: clamp(3rem, 10vw, 7rem);
     line-height: 0.95; color: rgba(255, 255, 255, 0.14); white-space: nowrap; user-select: none;
   }
-  [data-variant='dark'] .cta__pattern { color: rgba(216, 180, 106, 0.08); }
   .cta__pattern span:nth-child(even) { margin-left: -30%; }
   .cta__inner { position: relative; }
   .cta .title { margin-bottom: 20px; }
   .cta__text { font-size: clamp(1.05rem, 2.4vw, 1.2rem); max-width: 560px; margin: 0 auto 28px; font-weight: 600; }
   .cta__promise { max-width: 520px; margin: 20px auto 0; font-size: 0.95rem; }
-  [data-variant='dark'] .btn--cta { background: var(--btn-bg); color: var(--btn-text); }
 
   .faq { margin: 0 0 40px; display: grid; column-gap: 56px; }
   @media (min-width: 900px) { .faq { grid-template-columns: 1fr 1fr; } .faq__item:nth-child(2) { border-top: 1px solid var(--line); } }
