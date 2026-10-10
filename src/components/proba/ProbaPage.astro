@@ -85,20 +85,70 @@ const приглашение = сайт.заголовок_превью
           {variant === 'dark' && <span class="bust__halo" />}
           <img src="/proba/head.webp" alt="" width="748" height="1300" fetchpriority="high" />
           {variant === 'neon' && (
-            <svg class="bust__glasses" viewBox="0 0 300 70">
+            /*
+              Очки нарисованы в координатах самого снимка (748 × 1300), по
+              измеренным точкам: центры глаз (190, 482) и (443, 482), переносица
+              около x = 305, ухо около (630, 530). Голова чуть повёрнута, ближний
+              к зрителю глаз — правый, поэтому правая линза шире левой.
+              Три вещи, без которых очки читаются наклейкой: перспектива, тень
+              на лице и отражение в стёклах (здесь — тот же градиент, что на фоне).
+            */
+            <svg class="bust__glasses" viewBox="0 0 748 1300" preserveAspectRatio="none" aria-hidden="true">
               <defs>
-                <linearGradient id="lens" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#2c2c34" />
-                  <stop offset="1" stop-color="#0d0d11" />
+                <linearGradient id="g-frame" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#7ff7ea" />
+                  <stop offset="0.45" stop-color="#22d6c4" />
+                  <stop offset="1" stop-color="#0e9e91" />
                 </linearGradient>
+                <linearGradient id="g-lens" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#2b2b36" />
+                  <stop offset="1" stop-color="#07070a" />
+                </linearGradient>
+                <linearGradient id="g-reflect" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ff2fd8" />
+                  <stop offset="0.5" stop-color="#8f6bff" />
+                  <stop offset="1" stop-color="#19f0d4" />
+                </linearGradient>
+                <filter id="g-shadow" x="-20%" y="-50%" width="140%" height="200%">
+                  <feGaussianBlur stdDeviation="11" />
+                </filter>
+                <clipPath id="g-clip-l"><path id="lens-l" d="M96 426 C96 419 101 416 108 416 L262 420 C270 420 275 425 274 433 L268 500 C265 528 249 542 224 542 L141 542 C116 542 103 528 100 503 Z" /></clipPath>
+                <clipPath id="g-clip-r"><path id="lens-r" d="M336 429 C336 421 342 418 350 418 L547 414 C556 414 562 419 561 428 L553 500 C549 532 527 549 496 549 L392 549 C362 549 344 532 341 505 Z" /></clipPath>
               </defs>
-              <path d="M6 14 H294" stroke="#22d6c4" stroke-width="7" stroke-linecap="round" />
-              <path d="M14 10 H136 Q140 10 139 16 L134 48 Q131 64 114 64 H40 Q22 64 19 48 L12 18 Q11 10 14 10 Z" fill="url(#lens)" stroke="#22d6c4" stroke-width="7" />
-              <path d="M164 10 H286 Q289 10 288 18 L281 48 Q278 64 260 64 H186 Q169 64 166 48 L161 16 Q160 10 164 10 Z" fill="url(#lens)" stroke="#22d6c4" stroke-width="7" />
-              <path d="M136 22 Q150 14 164 22" fill="none" stroke="#22d6c4" stroke-width="7" />
-              {/* блик на стёклах — без него очки читаются как наклейка */}
-              <path d="M30 20 L60 20 L44 52 L22 52 Z" fill="#fff" opacity="0.12" />
-              <path d="M180 20 L210 20 L194 52 L172 52 Z" fill="#fff" opacity="0.12" />
+
+              {/* тень оправы на щеках и переносице */}
+              <g filter="url(#g-shadow)" opacity="0.6" transform="translate(5 26)">
+                <use href="#lens-l" fill="#000" />
+                <use href="#lens-r" fill="#000" />
+                <path d="M274 446 Q305 432 336 444" stroke="#000" stroke-width="16" fill="none" />
+              </g>
+
+              {/* дужка к уху — уходит в волосы */}
+              <path d="M558 436 L628 452 Q640 455 642 466" stroke="url(#g-frame)" stroke-width="13" fill="none" stroke-linecap="round" />
+
+              {/* стёкла: тёмный градиент, отражение фона, блик */}
+              <use href="#lens-l" fill="url(#g-lens)" />
+              <use href="#lens-r" fill="url(#g-lens)" />
+              <g clip-path="url(#g-clip-l)">
+                <path d="M60 520 L300 380 L300 440 L60 580 Z" fill="url(#g-reflect)" opacity="0.38" />
+                <path d="M120 430 L165 430 L132 535 L104 535 Z" fill="#fff" opacity="0.16" />
+              </g>
+              <g clip-path="url(#g-clip-r)">
+                <path d="M300 530 L600 360 L600 425 L300 595 Z" fill="url(#g-reflect)" opacity="0.38" />
+                <path d="M372 432 L428 432 L388 542 L354 542 Z" fill="#fff" opacity="0.16" />
+              </g>
+
+              {/* оправа */}
+              <use href="#lens-l" fill="none" stroke="url(#g-frame)" stroke-width="15" stroke-linejoin="round" />
+              <use href="#lens-r" fill="none" stroke="url(#g-frame)" stroke-width="15" stroke-linejoin="round" />
+              {/* верхняя планка толще, как у вайфареров */}
+              <path d="M98 421 L268 424" stroke="url(#g-frame)" stroke-width="22" stroke-linecap="round" />
+              <path d="M340 424 L555 418" stroke="url(#g-frame)" stroke-width="24" stroke-linecap="round" />
+              {/* переносица */}
+              <path d="M272 440 Q305 424 338 438" stroke="url(#g-frame)" stroke-width="14" fill="none" stroke-linecap="round" />
+              {/* световой кант по верху оправы */}
+              <path d="M110 414 L262 417" stroke="#fff" stroke-width="3" opacity="0.55" stroke-linecap="round" />
+              <path d="M352 416 L545 412" stroke="#fff" stroke-width="3" opacity="0.55" stroke-linecap="round" />
             </svg>
           )}
         </div>
@@ -135,7 +185,9 @@ const приглашение = сайт.заголовок_превью
           <div class="text">{о_хоре.абзацы.map((абзац) => <p>{абзац}</p>)}</div>
         </div>
         <figure class="band">
-          <img class="photo" src={обложка.фото} alt={обложка.описание_фото} width="1280" height="543" loading="lazy" />
+          <a class="zoom" href={обложка.фото} data-caption={обложка.описание_фото}>
+            <img class="photo" src={обложка.фото} alt={обложка.описание_фото} width="1280" height="543" loading="lazy" />
+          </a>
         </figure>
       </section>
 
@@ -148,7 +200,9 @@ const приглашение = сайт.заголовок_превью
               <div class="people">
                 {хормейстеры.люди.map((человек) => (
                   <figure class="person">
-                    <img class="photo" src={человек.фото} alt={человек.имя} width="400" height="500" loading="lazy" />
+                    <a class="zoom" href={человек.фото} data-caption={`${человек.имя} — ${человек.должность}`}>
+                      <img class="photo" src={человек.фото} alt={человек.имя} width="400" height="500" loading="lazy" />
+                    </a>
                     <figcaption>
                       <span class="person__name">{человек.имя}</span>
                       <span class="person__role">{человек.должность}</span>
@@ -237,7 +291,9 @@ const приглашение = сайт.заголовок_превью
               <ul class="gallery">
                 {галерея.снимки.map((снимок) => (
                   <li>
-                    <img class="photo" src={снимок.файл} alt={снимок.подпись} width="800" height="600" loading="lazy" />
+                    <a class="zoom" href={снимок.файл} data-caption={снимок.подпись}>
+                      <img class="photo" src={снимок.файл} alt={снимок.подпись} width="800" height="600" loading="lazy" />
+                    </a>
                     <p>{снимок.подпись}</p>
                   </li>
                 ))}
@@ -289,6 +345,19 @@ const приглашение = сайт.заголовок_превью
       </div>
     </footer>
 
+    {/* Просмотр фотографии. Открывается только по нажатию на снимок.
+        Закрыть: кнопка «Закрыть», Esc, нажатие мимо снимка.
+        Листать: стрелки на экране и клавиатуре, на телефоне — свайп. */}
+    <dialog class="lightbox" id="lightbox" aria-label="Просмотр фотографии">
+      <figure class="lightbox__figure">
+        <img class="lightbox__img" id="lightbox-img" src="" alt="" />
+        <figcaption class="lightbox__caption" id="lightbox-caption"></figcaption>
+      </figure>
+      <button type="button" class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" aria-label="Предыдущее фото">‹</button>
+      <button type="button" class="lightbox__nav lightbox__nav--next" id="lightbox-next" aria-label="Следующее фото">›</button>
+      <button type="button" class="lightbox__close" id="lightbox-close" autofocus>Закрыть</button>
+    </dialog>
+
     {/* Закреплённая кнопка появляется, только когда обложка ушла с экрана:
         иначе на первом экране две одинаковые кнопки, и нижняя закрывает голову */}
     <div class="sticky" id="sticky">
@@ -325,6 +394,39 @@ const приглашение = сайт.заголовок_превью
           }, { rootMargin: '-35% 0px -35% 0px' })
           document.querySelectorAll('.photo').forEach(function (img) { io.observe(img) })
         }
+      })()
+      ;(function () {
+        var d = document.getElementById('lightbox')
+        if (!d || typeof d.showModal !== 'function') return
+        var img = document.getElementById('lightbox-img')
+        var cap = document.getElementById('lightbox-caption')
+        var links = Array.prototype.slice.call(document.querySelectorAll('a.zoom'))
+        var i = 0
+        function show(n) {
+          i = (n + links.length) % links.length
+          img.src = links[i].getAttribute('href')
+          img.alt = links[i].dataset.caption || ''
+          cap.textContent = links[i].dataset.caption || ''
+        }
+        links.forEach(function (a, n) {
+          a.addEventListener('click', function (e) { e.preventDefault(); show(n); d.showModal() })
+        })
+        document.getElementById('lightbox-prev').addEventListener('click', function () { show(i - 1) })
+        document.getElementById('lightbox-next').addEventListener('click', function () { show(i + 1) })
+        document.getElementById('lightbox-close').addEventListener('click', function () { d.close() })
+        d.addEventListener('click', function (e) { if (e.target === d) d.close() })
+        d.addEventListener('keydown', function (e) {
+          if (e.key === 'ArrowLeft') show(i - 1)
+          if (e.key === 'ArrowRight') show(i + 1)
+        })
+        var x0 = null
+        d.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX }, { passive: true })
+        d.addEventListener('touchend', function (e) {
+          if (x0 === null) return
+          var dx = e.changedTouches[0].clientX - x0
+          if (Math.abs(dx) > 50) show(dx < 0 ? i + 1 : i - 1)
+          x0 = null
+        })
       })()
       ;(function () {
         var hero = document.querySelector('.hero')
@@ -482,10 +584,8 @@ const приглашение = сайт.заголовок_превью
     /* тени через drop-shadow здесь нет: вместе с mask-image Chrome рисует её
        прямоугольником вокруг всей картинки */
   }
-  [data-variant='neon'] .bust__glasses {
-    position: absolute; z-index: 3; width: 69.6%; left: 7.5%; top: 31.9%;
-    filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.35));
-  }
+  /* очки занимают ту же коробку, что и снимок: координаты рисунка = координаты фото */
+  [data-variant='neon'] .bust__glasses { position: absolute; z-index: 3; inset: 0; width: 100%; height: 100%; }
   [data-variant='neon'] .btn--hero { background: #111; color: #fff; }
   [data-variant='neon'] .btn--hero:hover { background: #2a2a33; }
   [data-variant='neon'] .hero__invite { color: #111; }
@@ -666,6 +766,35 @@ const приглашение = сайт.заголовок_превью
   @media (min-width: 768px) {
     .block { padding: 112px 0; }
     .footer { padding-bottom: 48px; }
+  }
+
+  /* ---------- Открытие фото ---------- */
+  .zoom { display: block; cursor: zoom-in; border-radius: inherit; }
+  .lightbox {
+    width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; padding: 0;
+    border: 0; background: rgba(5, 5, 7, 0.96); color: #fff;
+  }
+  .lightbox::backdrop { background: rgba(0, 0, 0, 0.85); }
+  .lightbox[open] { display: flex; align-items: center; justify-content: center; }
+  .lightbox__figure { margin: 0; padding: 64px 16px 96px; max-width: 100%; max-height: 100%; text-align: center; }
+  .lightbox__img { max-width: min(100%, 1400px); max-height: calc(100dvh - 190px); width: auto; height: auto; margin: 0 auto; border-radius: 10px; }
+  .lightbox__caption { margin: 14px auto 0; max-width: 720px; color: #c9c9d2; font-size: 0.95rem; line-height: 1.45; }
+  .lightbox__close {
+    position: absolute; top: 14px; right: 14px; padding: 12px 22px; border-radius: 999px; border: 0; cursor: pointer;
+    background: #fff; color: #111; font: 600 0.95rem/1 var(--font);
+  }
+  .lightbox__nav {
+    position: absolute; top: 50%; transform: translateY(-50%); width: 52px; height: 52px; border-radius: 50%;
+    border: 0; cursor: pointer; background: rgba(255, 255, 255, 0.14); color: #fff; font: 400 2.2rem/1 var(--font);
+  }
+  .lightbox__nav:hover { background: rgba(255, 255, 255, 0.26); }
+  .lightbox__nav--prev { left: 14px; }
+  .lightbox__nav--next { right: 14px; }
+  /* на телефоне стрелки внизу, чтобы не закрывать снимок; листать можно и свайпом */
+  @media (max-width: 699px) {
+    .lightbox__nav { top: auto; bottom: 22px; transform: none; }
+    .lightbox__nav--prev { left: calc(50% - 64px); }
+    .lightbox__nav--next { right: calc(50% - 64px); }
   }
 
   /* ---------- Вид фотографий ---------- */
