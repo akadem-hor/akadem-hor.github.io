@@ -72,9 +72,6 @@ const заголовок_вкладки = `Проба оформления — �
 // Короткая строка-приглашение на обложке. Длинная фраза с обложки сайта
 // переехала в первый блок: на афише ей не место.
 const приглашение = сайт.заголовок_превью
-// Вступление — по предложению на строку: две мысли, а не абзац с переносами
-// в случайных местах.
-const вступление = обложка.главная_фраза.split(/(?<=[.!?])\s+/)
 
 // Строка фактов под «О хоре» — спокойная справка вместо крупных цифр:
 // цифры-плашки читались как реклама. Только подтверждённые факты.
@@ -171,14 +168,16 @@ const строка = ['Духовная музыка', 'Русская клас�
     <main>
       <section class="block">
         <div class="wrap">
-          <p class="intro">{вступление.map((фраза) => <span>{фраза}</span>)}</p>
-
           {/* «О хоре»: текст и фото — две равные колонки одной высоты */}
           <div class="about">
             <div class="about__text">
               <p class="label">01 — О хоре</p>
               <h2 class="title">{о_хоре.заголовок}</h2>
-              <div class="text">{о_хоре.абзацы.map((абзац) => <p>{абзац}</p>)}</div>
+              {/* фраза с обложки основного сайта — обычный первый абзац, не заголовок */}
+              <div class="text">
+                <p>{обложка.главная_фраза}</p>
+                {о_хоре.абзацы.map((абзац) => <p>{абзац}</p>)}
+              </div>
             </div>
             <figure class="about__photo">
               <a class="zoom" href={обложка.фото} data-caption={обложка.описание_фото}>
@@ -497,7 +496,7 @@ const строка = ['Духовная музыка', 'Русская клас�
      а строки текста при этом не длиннее 70–75 знаков */
   .wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 0 20px; }
   @media (min-width: 768px) { .wrap { padding: 0 40px; } }
-  h1, h2, h3, .intro, .cta__text, .hero__invite, .head__lead, .audition__q { text-wrap: balance; }
+  h1, h2, h3, .cta__text, .hero__invite, .head__lead, .audition__q { text-wrap: balance; }
   p, dd, li { text-wrap: pretty; }
 
   /* ================= Три стиля текста ================= */
@@ -681,14 +680,6 @@ const строка = ['Духовная музыка', 'Русская клас�
   @media (min-width: 900px) {
     .head { grid-template-columns: 1fr 1fr; align-items: end; gap: 64px; margin-bottom: 48px; }
   }
-
-  /* Вступление — крупно, по предложению на строку */
-  .intro {
-    margin: 0 auto 72px; max-width: 980px; text-align: center;
-    font-size: clamp(1.3rem, 3.6vw, 2.2rem); line-height: 1.25; font-weight: 600; letter-spacing: -0.01em;
-  }
-  .intro span { display: block; }
-  .intro span + span { margin-top: 0.4em; font-weight: 400; font-size: max(1.05rem, 0.66em); line-height: 1.4; color: var(--muted); }
 
   .text { max-width: 640px; font-size: 1rem; color: var(--muted); }
   .text p { margin: 0 0 16px; }
