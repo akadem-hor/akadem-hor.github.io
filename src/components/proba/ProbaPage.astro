@@ -33,9 +33,13 @@ import '@fontsource/montserrat/latin-800.css'
 import content from '../../content.json'
 
 interface Props {
-  variant: 'neon' | 'dark'
+  variant: 'neon' | 'dark' | 'light'
 }
 const { variant } = Astro.props
+// Обложка: у «Светлого» — та же, что у «Неона» (руководителю понравился
+// первый экран), а блоки ниже светлые: тёмная страница целиком давала
+// ощущение ночного клуба.
+const обложкаВарианта = variant === 'dark' ? 'dark' : 'neon'
 
 // Название хора на пробе — AUTEM: так назывался хор, который руководитель
 // создала раньше (решено 10.10.2026 — посмотреть, как сайт выглядит с ним).
@@ -84,7 +88,7 @@ const строка = ['Духовная музыка', 'Русская клас�
 ---
 
 <!doctype html>
-<html lang="ru" data-variant={variant} data-photo="bw">
+<html lang="ru" data-variant={variant} data-hero={обложкаВарианта} data-photo="bw">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -102,6 +106,7 @@ const строка = ['Духовная музыка', 'Русская клас�
       <div class="switch__group">
         <a href="/proba/" data-variant-link aria-current={variant === 'neon' ? 'page' : undefined}>Неон</a>
         <a href="/proba/temnyi/" data-variant-link aria-current={variant === 'dark' ? 'page' : undefined}>Тёмный</a>
+        <a href="/proba/svetlyi/" data-variant-link aria-current={variant === 'light' ? 'page' : undefined}>Светлый</a>
       </div>
       <div class="switch__group" role="group" aria-label="Вид фотографий">
         <button type="button" data-set="bw">Ч/Б фото</button>
@@ -111,7 +116,7 @@ const строка = ['Духовная музыка', 'Русская клас�
 
     <header class="hero">
       <div class="hero__art" aria-hidden="true">
-        {variant === 'neon' && <span class="hero__word">ХОР</span>}
+        {обложкаВарианта === 'neon' && <span class="hero__word">ХОР</span>}
         {variant === 'dark' && (
           <div class="hero__names">
             {Array.from({ length: 9 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
@@ -120,7 +125,7 @@ const строка = ['Духовная музыка', 'Русская клас�
         <div class="bust">
           {variant === 'dark' && <span class="bust__halo" />}
           <img src="/proba/head.webp" alt="" width="748" height="1300" fetchpriority="high" />
-          {variant === 'neon' && (
+          {обложкаВарианта === 'neon' && (
             <svg class="bust__glasses" viewBox="0 0 300 70">
               <defs>
                 <linearGradient id="lens" x1="0" y1="0" x2="0" y2="1">
@@ -498,6 +503,24 @@ const строка = ['Духовная музыка', 'Русская клас�
     --btn-bg: #efeeea; --btn-text: #111;
   }
 
+  /*
+    «Светлый» — обложка как у «Неона», ниже — тёплый светлый фон, почти
+    чёрный текст и один спокойный акцент — фиолетовый из середины
+    градиента обложки, затемнённый до читаемого на светлом (контраст
+    выше 4,5:1). Призыв к записи — тем же градиентом, что обложка.
+  */
+  [data-variant='light'] {
+    --bg: #f7f5f0; --bg-alt: #eeeae2; --card: #ffffff; --line: #ded8cc;
+    --text: #17171c; --muted: #565663;
+    --accent: #5a3fd0;
+    --hero-bg: linear-gradient(172deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%);
+    --cta-bg: linear-gradient(135deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%); --cta-text: #111;
+    --btn-bg: #17171c; --btn-text: #fff;
+  }
+  [data-variant='light'] .btn--ghost:hover { background: rgba(0, 0, 0, 0.05); }
+  [data-variant='light'] .btn--cta { background: #111; color: #fff; }
+  [data-variant='light'] .sticky { background: rgba(247, 245, 240, 0.9); border-top: 1px solid var(--line); }
+
   * { box-sizing: border-box; }
   html, body { margin: 0; }
   body {
@@ -610,18 +633,18 @@ const строка = ['Духовная музыка', 'Русская клас�
     position: relative; z-index: 3; overflow: hidden; white-space: nowrap;
     background: var(--accent); color: #111; text-align: left;
   }
-  [data-variant='neon'] .marquee { background: #111; color: #fff; }
+  [data-hero='neon'] .marquee { background: #111; color: #fff; }
   .marquee__track { display: inline-flex; animation: marquee 38s linear infinite; }
   .marquee__item {
     display: inline-flex; align-items: center; gap: 28px; padding: 13px 0 13px 28px;
     font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.8rem;
   }
   .marquee__item::after { content: '✦'; font-size: 0.8em; opacity: 0.7; }
-  [data-variant='neon'] .marquee__item::after { color: #19f0d4; opacity: 1; }
+  [data-hero='neon'] .marquee__item::after { color: #19f0d4; opacity: 1; }
   @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
   /* ---------- Неон ---------- */
-  [data-variant='neon'] .hero__word {
+  [data-hero='neon'] .hero__word {
     /* Размер — по меньшему из ширины экрана и свободной высоты между
        надписями; слово шириной 2,21 размера, 41vw оставляет поля. */
     position: absolute; left: 50%; top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.5); transform: translate(-50%, -50%);
@@ -629,14 +652,14 @@ const строка = ['Духовная музыка', 'Русская клас�
     font-size: min(41vw, calc((100svh - var(--ht) - var(--hb)) * 1.2));
     letter-spacing: -0.03em; color: #3d3d44; white-space: nowrap; z-index: 1;
   }
-  [data-variant='neon'] .bust img {
+  [data-hero='neon'] .bust img {
     /* мрамор светлее и холоднее. Тени через drop-shadow нет: вместе
        с mask-image Chrome рисует её прямоугольником вокруг картинки */
     filter: grayscale(1) brightness(1.12) contrast(1.04);
   }
   /* Очки — плоский рисунок, выбранный заказчиком. Глаза на снимке —
      на 25% и 59% ширины, 37% высоты. */
-  [data-variant='neon'] .bust__glasses {
+  [data-hero='neon'] .bust__glasses {
     position: absolute; z-index: 3; width: 69.6%; left: 7.5%; top: 31.9%;
     filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.35));
   }
@@ -649,7 +672,7 @@ const строка = ['Духовная музыка', 'Русская клас�
     (Firefox), очки просто остаются на глазах.
   */
   @supports (animation-timeline: scroll()) {
-    [data-variant='neon'] .bust__glasses {
+    [data-hero='neon'] .bust__glasses {
       animation: glasses-up linear both;
       animation-timeline: scroll(root);
       animation-range: 0 30vh;
@@ -659,9 +682,9 @@ const строка = ['Духовная музыка', 'Русская клас�
   @keyframes glasses-up {
     to { top: 21%; transform: rotate(-4deg) scale(0.96); }
   }
-  [data-variant='neon'] .btn--hero { background: #111; color: #fff; }
-  [data-variant='neon'] .btn--hero:hover { background: #2a2a33; }
-  [data-variant='neon'] .hero__invite { color: #111; }
+  [data-hero='neon'] .btn--hero { background: #111; color: #fff; }
+  [data-hero='neon'] .btn--hero:hover { background: #2a2a33; }
+  [data-hero='neon'] .hero__invite { color: #111; }
 
   /* ---------- Тёмный ---------- */
   [data-variant='dark'] .hero__names {
@@ -695,11 +718,11 @@ const строка = ['Духовная музыка', 'Русская клас�
     .hero { --ht: 270px; --hb: 236px; }
     .hero__top { padding-top: 104px; }
     /* на телефоне слово целиком, голова чуть меньше и стоит в «О» */
-    [data-variant='neon'] .bust {
+    [data-hero='neon'] .bust {
       height: calc((100% - var(--ht) - var(--hb)) * 0.95);
       bottom: calc(var(--hb) - (100% - var(--ht) - var(--hb)) * 0.095);
     }
-    [data-variant='neon'] .hero__word { top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.58); }
+    [data-hero='neon'] .hero__word { top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.58); }
     [data-variant='dark'] .bust__halo { width: 112%; }
   }
 
