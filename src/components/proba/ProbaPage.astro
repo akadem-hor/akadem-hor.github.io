@@ -187,10 +187,15 @@ const строка = ['Духовная музыка', 'Русская клас�
       {
         хормейстеры.люди.length > 0 && (
           <section class="block block--alt">
-            <div class="wrap team">
-              <div>
-                <p class="label">02 — Хормейстеры</p>
-                <h2 class="title">{хормейстеры.заголовок}</h2>
+            {/* Заголовок сверху, как у остальных блоков, фото — во всю ширину под ним.
+                Раньше заголовок стоял один в левой колонке и выглядел пустым:
+                текстов о хормейстерах пока нет. Когда появятся — встанут под именами. */}
+            <div class="wrap">
+              <div class="head">
+                <div>
+                  <p class="label">02 — Хормейстеры</p>
+                  <h2 class="title">{хормейстеры.заголовок}</h2>
+                </div>
               </div>
               <div class="people">
                 {хормейстеры.люди.map((человек) => (
@@ -721,9 +726,8 @@ const строка = ['Духовная музыка', 'Русская клас�
     .about__photo img { height: 100%; aspect-ratio: auto; min-height: 320px; }
   }
 
-  /* Хормейстеры — заголовок слева, пара портретов справа */
-  .team { display: grid; gap: 32px; }
-  @media (min-width: 900px) { .team { grid-template-columns: 1fr 1.3fr; gap: 64px; align-items: start; } }
+  /* Хормейстеры — два фото во всю ширину; на компьютере горизонтальные,
+     на телефоне вертикальные, чтобы лица не были мелкими */
   .people { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .person { margin: 0; }
   .person img { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: top; border-radius: 18px; }
@@ -731,6 +735,10 @@ const строка = ['Духовная музыка', 'Русская клас�
   .person__name { display: block; font-weight: 600; font-size: 1.05rem; line-height: 1.3; }
   .person__role { display: block; color: var(--muted); margin-top: 4px; font-size: 0.9rem; line-height: 1.4; }
   @media (min-width: 700px) { .people { gap: 32px; } }
+  @media (min-width: 900px) {
+    .person img { aspect-ratio: 4 / 3; object-position: 50% 22%; }
+    .person__name { font-size: 1.15rem; }
+  }
 
   /* Кого мы ждём — одна панель из четырёх пунктов */
   .points {
