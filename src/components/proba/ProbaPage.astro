@@ -73,14 +73,6 @@ const заголовок_вкладки = `Проба оформления — �
 // переехала в первый блок: на афише ей не место.
 const приглашение = сайт.заголовок_превью
 
-// Строка фактов под «О хоре» — спокойная справка вместо крупных цифр:
-// цифры-плашки читались как реклама. Только подтверждённые факты.
-const факты = [
-  { что: 'Состав', значение: '20 человек' },
-  { что: 'Возраст', значение: `с${NBSP}16 лет` },
-  { что: 'Репетиции', значение: `пн и${NBSP}пт, 18:30` },
-  { что: 'Первое занятие', значение: 'бесплатно' },
-]
 // Бегущая строка — о том, что поём; формулировки из блока «О хоре»
 const строка = ['Духовная музыка', 'Русская классика', 'Зарубежная классика', 'Народные песни', 'Концерты и конкурсы']
 ---
@@ -173,11 +165,9 @@ const строка = ['Духовная музыка', 'Русская клас�
             <div class="about__text">
               <p class="label">01 — О хоре</p>
               <h2 class="title">{о_хоре.заголовок}</h2>
-              {/* фраза с обложки основного сайта — обычный первый абзац, не заголовок */}
-              <div class="text">
-                <p>{обложка.главная_фраза}</p>
-                {о_хоре.абзацы.map((абзац) => <p>{абзац}</p>)}
-              </div>
+              {/* Только текст «О хоре»: набор, бесплатная первая репетиция и возраст
+                  уже сказаны на обложке, в ценах и в «Кого мы ждём» */}
+              <div class="text">{о_хоре.абзацы.map((абзац) => <p>{абзац}</p>)}</div>
             </div>
             <figure class="about__photo">
               <a class="zoom" href={обложка.фото} data-caption={обложка.описание_фото}>
@@ -185,12 +175,6 @@ const строка = ['Духовная музыка', 'Русская клас�
               </a>
             </figure>
           </div>
-
-          <dl class="facts">
-            {факты.map((ф) => (
-              <div class="facts__item"><dt class="label">{ф.что}</dt><dd>{ф.значение}</dd></div>
-            ))}
-          </dl>
         </div>
       </section>
 
@@ -626,6 +610,25 @@ const строка = ['Духовная музыка', 'Русская клас�
     position: absolute; z-index: 3; width: 69.6%; left: 7.5%; top: 31.9%;
     filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.35));
   }
+  /*
+    При прокрутке вниз очки сползают с глаз на лоб — чистый CSS, анимация
+    привязана к прокрутке страницы (animation-timeline: scroll()). За первую
+    треть экрана — пока голова ещё видна — они поднимаются к линии волос (21% высоты снимка) и чуть
+    наклоняются; при прокрутке назад опускаются обратно.
+    Работает в Chrome, Edge, Яндекс Браузере, Safari 26+. Где не поддерживается
+    (Firefox), очки просто остаются на глазах.
+  */
+  @supports (animation-timeline: scroll()) {
+    [data-variant='neon'] .bust__glasses {
+      animation: glasses-up linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 30vh;
+      transform-origin: 50% 100%;
+    }
+  }
+  @keyframes glasses-up {
+    to { top: 21%; transform: rotate(-4deg) scale(0.96); }
+  }
   [data-variant='neon'] .btn--hero { background: #111; color: #fff; }
   [data-variant='neon'] .btn--hero:hover { background: #2a2a33; }
   [data-variant='neon'] .hero__invite { color: #111; }
@@ -694,23 +697,6 @@ const строка = ['Духовная музыка', 'Русская клас�
   @media (min-width: 900px) {
     .about { grid-template-columns: 1fr 1fr; gap: 56px; align-items: stretch; }
     .about__photo img { height: 100%; aspect-ratio: auto; min-height: 320px; }
-  }
-
-  /* Строка фактов — справка, не реклама: подпись сверху, значение снизу */
-  .facts {
-    margin: 56px 0 0; display: grid; grid-template-columns: 1fr 1fr;
-    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-  }
-  .facts__item { padding: 20px 4px; }
-  .facts__item:nth-child(even) { padding-left: 20px; border-left: 1px solid var(--line); }
-  .facts__item:nth-child(n + 3) { border-top: 1px solid var(--line); }
-  .facts dt { margin-bottom: 6px; color: var(--muted); }
-  .facts dd { margin: 0; font-weight: 600; font-size: 1.05rem; }
-  @media (min-width: 900px) {
-    .facts { grid-template-columns: repeat(4, 1fr); margin-top: 64px; }
-    .facts__item { padding: 22px 24px; border-left: 1px solid var(--line); }
-    .facts__item:first-child { border-left: 0; padding-left: 0; }
-    .facts__item:nth-child(n + 3) { border-top: 0; }
   }
 
   /* Хормейстеры — заголовок слева, пара портретов справа */
