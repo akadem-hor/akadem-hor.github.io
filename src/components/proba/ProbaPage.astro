@@ -33,21 +33,14 @@ import '@fontsource/montserrat/latin-800.css'
 import content from '../../content.json'
 
 interface Props {
-  variant: 'neon' | 'dark' | 'light'
+  variant: 'dark' | 'light'
 }
 const { variant } = Astro.props
-// Обложка: у «Светлого» — та же, что у «Неона» (руководителю понравился
-// первый экран), а блоки ниже светлые: тёмная страница целиком давала
-// ощущение ночного клуба.
+// Обложка: у «Светлого» — градиентная, с головой в очках и «ХОР» (её
+// придумали для варианта «Неон», который 10.10.2026 убран — тёмная страница
+// целиком давала ощущение ночного клуба), блоки ниже светлые.
 const обложкаВарианта = variant === 'dark' ? 'dark' : 'neon'
 
-// Название хора на пробе — AUTEM: так назывался хор, который руководитель
-// создала раньше (решено 10.10.2026 — посмотреть, как сайт выглядит с ним).
-// На основном сайте название пока прежнее. Подмена делается здесь, на лету,
-// поэтому content.json не меняется.
-const НАЗВАНИЕ = 'AUTEM'
-const сНовымИменем = <T,>(x: T): T =>
-  JSON.parse(JSON.stringify(x).replaceAll(content.обложка.название, НАЗВАНИЕ))
 
 // Типографика переносов. Предлоги, союзы и частицы из одной-двух букв
 // («в», «и», «на», «не»…) приклеиваются к следующему слову неразрывным
@@ -67,7 +60,7 @@ const сТипографикой = (x: any): any =>
   : x
 
 const { сайт, заявка, обложка, о_хоре, хормейстеры, кого_ждём, репетиции, галерея, вопросы, контакты } =
-  сТипографикой(сНовымИменем(content))
+  сТипографикой(content)
 
 const внешняя = !заявка.ссылка_на_форму.startsWith('#')
 const цель = внешняя ? { target: '_blank', rel: 'noopener' } : {}
@@ -76,6 +69,9 @@ const заголовок_вкладки = `Проба оформления — �
 // Короткая строка-приглашение на обложке. Длинная фраза с обложки сайта
 // переехала в первый блок: на афише ей не место.
 const приглашение = сайт.заголовок_превью
+// В крупной надписи на обложке — знак ударения над последней «а»: без него
+// «Голоса» читается как «гóлоса». В остальных местах имя обычное.
+const имяНаОбложке = обложка.название + '\u0301'
 // Встроенная карта — простая, с меткой на доме Ленина, 97а (координаты дома
 // из ссылки Яндекса на него). Виджет карточки организации не подошёл: его
 // всплывающая карточка закрывала карту и показывала личный телефон
@@ -88,7 +84,7 @@ const строка = ['Духовная музыка', 'Русская клас�
 ---
 
 <!doctype html>
-<html lang="ru" data-variant={variant} data-hero={обложкаВарианта} data-photo="bw">
+<html lang="ru" data-variant={variant} data-hero={обложкаВарианта}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -100,54 +96,47 @@ const строка = ['Духовная музыка', 'Русская клас�
     <link rel="apple-touch-icon" href="/proba/favicon.png" />
   </head>
   <body>
-    {/* Панель пробы: вариант оформления и вид фотографий. Закреплена сверху,
-        чтобы переключать фото, глядя прямо на них. На сайт не пойдёт. */}
+    {/* Панель пробы: переключение вариантов. На сайт не пойдёт. */}
     <nav class="switch" aria-label="Варианты пробы">
       <div class="switch__group">
-        <a href="/proba/" data-variant-link aria-current={variant === 'neon' ? 'page' : undefined}>Неон</a>
-        <a href="/proba/temnyi/" data-variant-link aria-current={variant === 'dark' ? 'page' : undefined}>Тёмный</a>
-        <a href="/proba/svetlyi/" data-variant-link aria-current={variant === 'light' ? 'page' : undefined}>Светлый</a>
-      </div>
-      <div class="switch__group" role="group" aria-label="Вид фотографий">
-        <button type="button" data-set="bw">Ч/Б фото</button>
-        <button type="button" data-set="color">Цветные фото</button>
+        <a href="/proba/" aria-current={variant === 'light' ? 'page' : undefined}>Светлый</a>
+        <a href="/proba/temnyi/" aria-current={variant === 'dark' ? 'page' : undefined}>Тёмный</a>
       </div>
     </nav>
 
     <header class="hero">
       <div class="hero__art" aria-hidden="true">
-        {обложкаВарианта === 'neon' && <span class="hero__word">ХОР</span>}
+        {/* «О» — залитый круг чуть больше «Х» и «Р», голова стоит в нём
+            (правка дизайнера 10.10.2026). Для программ чтения слово — «ХОР». */}
+        {обложкаВарианта === 'neon' && (
+          <span class="hero__word" aria-label="ХОР">
+            <span>Х</span>
+            <span class="hero__disc">
+              {/* Бюст в очках — 3D от дизайнера хора (10.10.2026). Голова выходит
+                  над кругом, плечи обрезаются его краем — как в макете. */}
+              <span class="hero__bust">
+                <img src="/proba/bust.webp" alt="" width="695" height="1000" fetchpriority="high" />
+              </span>
+            </span>
+            <span>Р</span>
+          </span>
+        )}
         {variant === 'dark' && (
           <div class="hero__names">
             {Array.from({ length: 9 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
           </div>
         )}
+        {variant === 'dark' && (
         <div class="bust">
-          {variant === 'dark' && <span class="bust__halo" />}
+          <span class="bust__halo" />
           <img src="/proba/head.webp" alt="" width="748" height="1300" fetchpriority="high" />
-          {обложкаВарианта === 'neon' && (
-            <svg class="bust__glasses" viewBox="0 0 300 70">
-              <defs>
-                <linearGradient id="lens" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#2c2c34" />
-                  <stop offset="1" stop-color="#0d0d11" />
-                </linearGradient>
-              </defs>
-              <path d="M6 14 H294" stroke="#22d6c4" stroke-width="7" stroke-linecap="round" />
-              <path d="M14 10 H136 Q140 10 139 16 L134 48 Q131 64 114 64 H40 Q22 64 19 48 L12 18 Q11 10 14 10 Z" fill="url(#lens)" stroke="#22d6c4" stroke-width="7" />
-              <path d="M164 10 H286 Q289 10 288 18 L281 48 Q278 64 260 64 H186 Q169 64 166 48 L161 16 Q160 10 164 10 Z" fill="url(#lens)" stroke="#22d6c4" stroke-width="7" />
-              <path d="M136 22 Q150 14 164 22" fill="none" stroke="#22d6c4" stroke-width="7" />
-              {/* блик на стёклах — без него очки читаются как наклейка */}
-              <path d="M30 20 L60 20 L44 52 L22 52 Z" fill="#fff" opacity="0.12" />
-              <path d="M180 20 L210 20 L194 52 L172 52 Z" fill="#fff" opacity="0.12" />
-            </svg>
-          )}
         </div>
+        )}
       </div>
 
       <div class="hero__top">
         <h1 class="brand">
-          <span class="brand__name">{обложка.название}</span>
+          <span class="brand__name">{имяНаОбложке}</span>
           <span class="brand__kind">{обложка.подзаголовок}</span>
         </h1>
       </div>
@@ -404,28 +393,6 @@ const строка = ['Духовная музыка', 'Русская клас�
       <a class="btn btn--primary btn--block" href={заявка.ссылка_на_форму} {...цель}>{заявка.текст_кнопки}</a>
     </div>
     <script is:inline>
-      // Вид фотографий: чёрно-белые или цветные. Выбор хранится в адресе
-      // (?foto=…), чтобы ссылку на нужный вариант можно было переслать.
-      ;(function () {
-        var root = document.documentElement
-        var modes = ['bw', 'color']
-        var buttons = document.querySelectorAll('.switch button[data-set]')
-        var links = document.querySelectorAll('[data-variant-link]')
-        function set(mode, save) {
-          if (modes.indexOf(mode) < 0) mode = 'bw'
-          root.setAttribute('data-photo', mode)
-          buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === mode)) })
-          // при переходе между «Неоном» и «Тёмным» выбранный вид фото сохраняется
-          links.forEach(function (a) { a.search = mode === 'bw' ? '' : '?foto=' + mode })
-          if (save) {
-            var u = new URL(location.href)
-            u.searchParams.set('foto', mode)
-            history.replaceState(null, '', u)
-          }
-        }
-        set(new URL(location.href).searchParams.get('foto'), false)
-        buttons.forEach(function (b) { b.addEventListener('click', function () { set(b.dataset.set, true) }) })
-      })()
       ;(function () {
         var d = document.getElementById('lightbox')
         if (!d || typeof d.showModal !== 'function') return
@@ -476,18 +443,6 @@ const строка = ['Духовная музыка', 'Русская клас�
   :root {
     --font: 'Montserrat', 'Segoe UI', sans-serif;
     font-size: 18px;
-  }
-  /*
-    «Неон» — с розовых афиш AUTEM: градиент из маджента в бирюзу на обложке
-    и в призыве к записи, остальное тёмное.
-  */
-  [data-variant='neon'] {
-    --bg: #0c0c10; --bg-alt: #141419; --card: #1b1b22; --line: #2b2b35;
-    --text: #f1f1f4; --muted: #b0b0bd;
-    --accent: #ff3fd9;
-    --hero-bg: linear-gradient(172deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%);
-    --cta-bg: linear-gradient(135deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%); --cta-text: #111;
-    --btn-bg: #fff; --btn-text: #111;
   }
   /*
     «Тёмный» — со спокойных афиш: «Stabat Mater» с кольцом света, чёрно-
@@ -649,38 +604,48 @@ const строка = ['Духовная музыка', 'Русская клас�
        надписями; слово шириной 2,21 размера, 41vw оставляет поля. */
     position: absolute; left: 50%; top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.5); transform: translate(-50%, -50%);
     font-weight: 800; line-height: 0.8;
-    font-size: min(41vw, calc((100svh - var(--ht) - var(--hb)) * 1.2));
+    font-size: min(40vw, calc((100svh - var(--ht) - var(--hb)) * 1.05));
     letter-spacing: -0.03em; color: #3d3d44; white-space: nowrap; z-index: 1;
+    display: flex; align-items: center; gap: 0.03em;
   }
-  [data-hero='neon'] .bust img {
-    /* мрамор светлее и холоднее. Тени через drop-shadow нет: вместе
-       с mask-image Chrome рисует её прямоугольником вокруг картинки */
-    filter: grayscale(1) brightness(1.12) contrast(1.04);
-  }
-  /* Очки — плоский рисунок, выбранный заказчиком. Глаза на снимке —
-     на 25% и 59% ширины, 37% высоты. */
-  [data-hero='neon'] .bust__glasses {
-    position: absolute; z-index: 3; width: 69.6%; left: 7.5%; top: 31.9%;
-    filter: drop-shadow(0 8px 6px rgba(0, 0, 0, 0.35));
+  /* Круг на месте «О»: заглавные Montserrat высотой около 0,7 размера шрифта,
+     круг — 0,84, то есть чуть больше букв, как просил дизайнер. Буквы
+     в строке с line-height 0,8 сидят чуть ниже середины — круг опущен на
+     столько же, чтобы его центр совпал с центром букв. */
+  [data-hero='neon'] .hero__disc {
+    position: relative; display: block; flex: none; width: 0.84em; height: 0.84em; border-radius: 50%;
+    background: currentColor; transform: translateY(0.035em);
   }
   /*
-    При прокрутке вниз очки сползают с глаз на лоб — чистый CSS, анимация
-    привязана к прокрутке страницы (animation-timeline: scroll()). За первую
-    треть экрана — пока голова ещё видна — они поднимаются к линии волос (21% высоты снимка) и чуть
-    наклоняются; при прокрутке назад опускаются обратно.
-    Работает в Chrome, Edge, Яндекс Браузере, Safari 26+. Где не поддерживается
-    (Firefox), очки просто остаются на глазах.
+    Слой бюста — квадрат круга, продлённый вверх на 8% диаметра, чтобы
+    макушка выходила над кругом. Маска — объединение двух фигур: всё выше
+    центра круга видно, ниже — только внутри круга. Центр круга в слое —
+    на 0,58 / 1,08 = 53,7% высоты. Положение бюста снято с макета
+    дизайнера: ширина 79% диаметра, макушка на 5% диаметра выше круга,
+    голова чуть левее центра.
   */
-  @supports (animation-timeline: scroll()) {
-    [data-hero='neon'] .bust__glasses {
-      animation: glasses-up linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 30vh;
-      transform-origin: 50% 100%;
-    }
+  /* Пропорции как в макете дизайнера: название и подпись скромнее, место
+     отдано слову «ХОР». Подпись в одну строку. */
+  @media (min-width: 700px) {
+    [data-hero='neon'] .hero { --ht: 190px; --hb: 170px; }
+    [data-hero='neon'] .hero__top { padding-top: 62px; }
+    [data-hero='neon'] .brand__name { font-size: clamp(2.6rem, 5.4vw, 4.4rem); }
+    [data-hero='neon'] .brand__kind { max-width: none; margin-top: 12px; }
+    [data-hero='neon'] .hero__word { font-size: min(40vw, calc((100svh - var(--ht) - var(--hb)) * 1.02)); top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.47); }
   }
-  @keyframes glasses-up {
-    to { top: 21%; transform: rotate(-4deg) scale(0.96); }
+  [data-hero='neon'] .hero__bust {
+    position: absolute; left: 0; right: 0; bottom: 0; top: -8%;
+    -webkit-mask-image: linear-gradient(#000, #000), radial-gradient(circle closest-side at 50% 53.7%, #000 99.4%, transparent 100%);
+    mask-image: linear-gradient(#000, #000), radial-gradient(circle closest-side at 50% 53.7%, #000 99.4%, transparent 100%);
+    -webkit-mask-size: 100% 53.7%, 100% 100%;
+    mask-size: 100% 53.7%, 100% 100%;
+    -webkit-mask-position: top, center;
+    mask-position: top, center;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+  }
+  [data-hero='neon'] .hero__bust img {
+    position: absolute; left: 3.6%; top: 2.5%; width: 79%; height: auto; max-width: none;
   }
   [data-hero='neon'] .btn--hero { background: #111; color: #fff; }
   [data-hero='neon'] .btn--hero:hover { background: #2a2a33; }
@@ -718,11 +683,10 @@ const строка = ['Духовная музыка', 'Русская клас�
     .hero { --ht: 270px; --hb: 236px; }
     .hero__top { padding-top: 104px; }
     /* на телефоне слово целиком, голова чуть меньше и стоит в «О» */
-    [data-hero='neon'] .bust {
-      height: calc((100% - var(--ht) - var(--hb)) * 0.95);
-      bottom: calc(var(--hb) - (100% - var(--ht) - var(--hb)) * 0.095);
-    }
-    [data-hero='neon'] .hero__word { top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.58); }
+    /* На телефоне слово упирается в ширину экрана (40vw), а не в высоту:
+       обложка по высоте содержимого, без пустоты над «ХОР» */
+    [data-hero='neon'] .hero { min-height: calc(var(--ht) + var(--hb) + 40vw); }
+    [data-hero='neon'] .hero__word { top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.55); }
     [data-variant='dark'] .bust__halo { width: 112%; }
   }
 
@@ -855,7 +819,6 @@ const строка = ['Духовная музыка', 'Русская клас�
   .cta .title { margin-bottom: 20px; }
   .cta__text { font-size: clamp(1.05rem, 2.4vw, 1.2rem); max-width: 560px; margin: 0 auto 28px; font-weight: 600; }
   .cta__promise { max-width: 520px; margin: 20px auto 0; font-size: 0.95rem; }
-  [data-variant='neon'] .btn--cta { background: #111; color: #fff; }
   [data-variant='dark'] .btn--cta { background: var(--btn-bg); color: var(--btn-text); }
 
   .faq { margin: 0 0 40px; display: grid; column-gap: 56px; }
@@ -903,9 +866,9 @@ const строка = ['Духовная музыка', 'Русская клас�
   }
 
   /* ---------- Вид фотографий ---------- */
-  [data-photo='bw'] .photo { filter: grayscale(1) contrast(1.05); }
+
   /* цвет чуть приглушён: яркие снимки разного времени спорили бы с оформлением */
-  [data-photo='color'] .photo { filter: saturate(0.85) contrast(1.03); }
+  .photo { filter: saturate(0.85) contrast(1.03); }
 
   .sticky {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; padding: 10px 16px;

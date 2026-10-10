@@ -1,9 +1,18 @@
 ---
-// Проба оформления, вариант «Светлый»: обложка как у «Неона», блоки ниже
-// светлые. Сделан после отзыва руководителя: первый экран понравился, а вся
-// тёмная страница давала ощущение ночного клуба.
-// Вся страница — в src/components/proba/ProbaPage.astro.
-import ProbaPage from '../../components/proba/ProbaPage.astro'
+// «Светлый» переехал на /proba/ — ссылку /proba/svetlyi/ уже пересылали,
+// поэтому здесь переадресация, а не пустая страница.
 ---
 
-<ProbaPage variant="light" />
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="refresh" content="0; url=/proba/" />
+    <link rel="canonical" href="/proba/" />
+    <title>Проба оформления</title>
+  </head>
+  <body>
+    <p><a href="/proba/">Перейти к пробе оформления</a></p>
+  </body>
+</html>
