@@ -1,7 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { defineConfig } from 'astro/config'
 import sitemap from '@astrojs/sitemap'
-import tailwindcss from '@tailwindcss/vite'
 
 // Адрес сайта берётся из content.json, чтобы его правка не требовала лезть в код.
 //
@@ -16,7 +15,12 @@ export default defineConfig({
   // Пробные страницы оформления в карту сайта не попадают: поисковик принял
   // бы их за копии главной.
   integrations: [sitemap({ filter: (page) => !page.includes('/proba') })],
-  vite: {
-    plugins: [tailwindcss()],
+  // Пробные страницы оформления (октябрь 2026) больше не нужны: выбранный
+  // вариант стал главной. Ссылки на них уже пересылали — ведём на главную.
+  redirects: {
+    '/proba': '/',
+    '/proba/neon': '/',
+    '/proba/temnyi': '/',
+    '/proba/svetlyi': '/',
   },
 })

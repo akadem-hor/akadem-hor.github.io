@@ -1,8 +1,8 @@
 ---
 /**
- * Пробное оформление по референсам хора AUTEM — общая страница для двух
- * вариантов: «Светлый» (/proba) и «Неон» (/proba/neon). Обложка у них общая —
- * по макету дизайнера, отличаются блоки ниже: светлые или тёмные.
+ * Главная страница сайта хора. Оформление выбрано 10.10.2026 из проб
+ * по референсам хора AUTEM (вариант «Светлый»): градиентная обложка по макету
+ * дизайнера, блоки ниже светлые. Тексты — из content.json.
  *
  * Обложка — одна афиша: голова на весь первый экран как холст, имя сверху,
  * приглашение, кнопка и бегущая строка снизу. Шея растворяется в фоне,
@@ -21,7 +21,6 @@
  *
  * Бюст в очках на обложке — 3D от дизайнера хора (10.10.2026).
  *
- * Страница закрыта от поисковиков и не считается Метрикой.
  */
 import '@fontsource/montserrat/cyrillic-400.css'
 import '@fontsource/montserrat/cyrillic-600.css'
@@ -29,17 +28,13 @@ import '@fontsource/montserrat/cyrillic-800.css'
 import '@fontsource/montserrat/latin-400.css'
 import '@fontsource/montserrat/latin-600.css'
 import '@fontsource/montserrat/latin-800.css'
-import content from '../../content.json'
+import content from '../content.json'
 // Файлы шрифтов обложки — для предзагрузки: без неё страница сначала рисуется
 // запасным шрифтом, потом Montserrat, и «ХОР» с названием меняли размер —
 // обложка дёргалась при каждом обновлении.
 import шрифт800 from '@fontsource/montserrat/files/montserrat-cyrillic-800-normal.woff2?url'
 import шрифт600 from '@fontsource/montserrat/files/montserrat-cyrillic-600-normal.woff2?url'
 
-interface Props {
-  variant: 'neon' | 'light'
-}
-const { variant } = Astro.props
 
 
 // Типографика переносов. Предлоги, союзы и частицы из одной-двух букв
@@ -65,7 +60,6 @@ const { сайт, заявка, обложка, о_хоре, хормейсте�
 const внешняя = !заявка.ссылка_на_форму.startsWith('#')
 const цель = внешняя ? { target: '_blank', rel: 'noopener' } : {}
 const номер = (i: number) => String(i + 1).padStart(2, '0')
-const заголовок_вкладки = `Проба оформления — хор «${обложка.название}»`
 // Короткая строка-приглашение на обложке. Длинная фраза с обложки сайта
 // переехала в первый блок: на афише ей не место.
 const приглашение = сайт.заголовок_превью
@@ -79,23 +73,90 @@ const имяНаОбложке = обложка.название + '́'
 const ДОМ = '60.641613,56.843745'
 const карта = `https://yandex.ru/map-widget/v1/?ll=${ДОМ}&z=16&pt=${ДОМ},pm2rdl`
 
+const canonical = new URL(Astro.url.pathname, Astro.site).href
+
+// Разметка для поисковиков: что это за организация, где находится.
+// sameAs связывает сайт с карточкой в Яндекс Картах — связь заявлена прямо,
+// а не угадывается по совпадению названия и адреса.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'MusicGroup',
+  name: `Хор «${content.обложка.название}»`,
+  description: content.сайт.описание,
+  url: content.сайт.адрес,
+  genre: ['Академическое хоровое пение', 'Хоровая музыка'],
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Екатеринбург',
+    addressCountry: 'RU',
+    streetAddress: content.репетиции.адрес,
+  },
+  ...(content.контакты.телефон_для_ссылки && { telephone: content.контакты.телефон_для_ссылки }),
+  ...(content.сайт.карточка_на_картах && { sameAs: [content.сайт.карточка_на_картах], hasMap: content.сайт.карточка_на_картах }),
+}
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: content.вопросы.список.map((пункт) => ({
+    '@type': 'Question',
+    name: пункт.вопрос,
+    acceptedAnswer: { '@type': 'Answer', text: пункт.ответ },
+  })),
+}
+
+// Яндекс Метрика. Вторая половина — цель: нажатие любой кнопки записи
+// (элементы с data-goal) — единственное действие, означающее решение человека.
+const метрика = `
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,
+k.src=r,a.parentNode.insertBefore(k,a)})
+(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
+ym(${content.сайт.счётчик_метрики},'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
+document.addEventListener('click',function(e){
+  var t=e.target;
+  if(!t||!t.closest)return;
+  var el=t.closest('[data-goal]');
+  if(el)ym(${content.сайт.счётчик_метрики},'reachGoal',el.getAttribute('data-goal'));
+});
+`
+
 // Бегущая строка — о том, что поём; формулировки из блока «О хоре»
 const строка = ['Духовная музыка', 'Русская классика', 'Зарубежная классика', 'Народные песни', 'Концерты и конкурсы']
 ---
 
 <!doctype html>
-<html lang="ru" data-variant={variant} data-hero="neon">
+<html lang="ru" data-variant="light" data-hero="neon">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>{заголовок_вкладки}</title>
-    {/* значок вкладки — голова статуи, как в оформлении; у основного сайта
-        пока прежний, его меняем вместе с названием */}
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="canonical" href={canonical} />
+    <title>{сайт.заголовок}</title>
+    <meta name="description" content={сайт.описание} />
+    <meta name="keywords" content={сайт.ключевые_слова} />
+
+    {/* Превью ссылки в мессенджерах. Заголовок и описание свои, отличные от
+        поисковых: в переписке работает приглашение. Размеры картинки указаны
+        явно — без них Телеграм и ВКонтакте рисуют маленькую иконку сбоку. */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={`Хор «${обложка.название}»`} />
+    <meta property="og:title" content={сайт.заголовок_превью || сайт.заголовок} />
+    <meta property="og:description" content={сайт.описание_превью || сайт.описание} />
+    <meta property="og:url" content={сайт.адрес} />
+    <meta property="og:image" content={new URL(обложка.фото, сайт.адрес).href} />
+    <meta property="og:image:width" content="1280" />
+    <meta property="og:image:height" content="543" />
+    <meta property="og:image:alt" content={обложка.описание_фото} />
+    <meta property="og:locale" content="ru_RU" />
+
+    {сайт.код_вебмастера && <meta name="yandex-verification" content={сайт.код_вебмастера} />}
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
     <link rel="preload" href={шрифт800} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={шрифт600} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/proba/bust.webp" as="image" type="image/webp" fetchpriority="high" />
-    <link rel="icon" href="/proba/favicon.png" type="image/png" />
+    <link rel="preload" href="/images/bust.webp" as="image" type="image/webp" fetchpriority="high" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
     {/* Обложка показывается целиком, когда готовы шрифт и бюст: иначе она
         сначала рисовалась запасным шрифтом и без картинки, потом перестраивалась.
         Предзагрузка выше делает ожидание коротким; через 1,5 с показываем
@@ -106,7 +167,7 @@ const строка = ['Духовная музыка', 'Русская клас�
         if (!document.fonts || !document.fonts.load) return
         root.classList.add('hero-wait')
         var img = new Image()
-        img.src = '/proba/bust.webp'
+        img.src = '/images/bust.webp'
         var ready = Promise.all([
           document.fonts.load('800 1em Montserrat', 'ХОР'),
           document.fonts.load('600 1em Montserrat', 'Голоса'),
@@ -116,16 +177,9 @@ const строка = ['Духовная музыка', 'Русская клас�
         Promise.race([ready, timeout]).then(function () { root.classList.remove('hero-wait') })
       })()
     </script>
-    <link rel="apple-touch-icon" href="/proba/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
   </head>
   <body>
-    {/* Панель пробы: переключение вариантов. На сайт не пойдёт. */}
-    <nav class="switch" aria-label="Варианты пробы">
-      <div class="switch__group">
-        <a href="/proba/" aria-current={variant === 'light' ? 'page' : undefined}>Светлый</a>
-        <a href="/proba/neon/" aria-current={variant === 'neon' ? 'page' : undefined}>Неон</a>
-      </div>
-    </nav>
 
     <header class="hero">
       <div class="hero__art" aria-hidden="true">
@@ -138,7 +192,7 @@ const строка = ['Духовная музыка', 'Русская клас�
               {/* Бюст в очках — 3D от дизайнера хора (10.10.2026). Голова выходит
                   над кругом, плечи обрезаются его краем — как в макете. */}
               <span class="hero__bust">
-                <img src="/proba/bust.webp" alt="" width="695" height="1000" fetchpriority="high" />
+                <img src="/images/bust.webp" alt="" width="695" height="1000" fetchpriority="high" />
               </span>
             </span>
             <span>Р</span>
@@ -155,7 +209,7 @@ const строка = ['Духовная музыка', 'Русская клас�
 
       <div class="hero__bottom">
         <p class="hero__invite">{приглашение}</p>
-        <a class="btn btn--hero" href={заявка.ссылка_на_форму} {...цель}>{заявка.текст_кнопки}</a>
+        <a class="btn btn--hero" href={заявка.ссылка_на_форму} {...цель} data-goal="prihod">{заявка.текст_кнопки}</a>
       </div>
 
       {/* Бегущая строка — нижний край обложки, видна на первом экране */}
@@ -351,7 +405,7 @@ const строка = ['Духовная музыка', 'Русская клас�
         <div class="wrap cta__inner">
           <h2 class="title">{контакты.заголовок}</h2>
           <p class="cta__text">{контакты.вступление}</p>
-          <a class="btn btn--cta" href={заявка.ссылка_на_форму} {...цель}>{заявка.текст_кнопки}</a>
+          <a class="btn btn--cta" href={заявка.ссылка_на_форму} {...цель} data-goal="prihod">{заявка.текст_кнопки}</a>
           {заявка.после_заявки && <p class="cta__promise">{заявка.после_заявки}</p>}
         </div>
       </section>
@@ -374,7 +428,7 @@ const строка = ['Духовная музыка', 'Русская клас�
               ))
             }
           </dl>
-          <a class="btn btn--primary" href={заявка.ссылка_на_форму} {...цель}>{заявка.текст_кнопки}</a>
+          <a class="btn btn--primary" href={заявка.ссылка_на_форму} {...цель} data-goal="prihod">{заявка.текст_кнопки}</a>
         </div>
       </section>
     </main>
@@ -402,7 +456,7 @@ const строка = ['Духовная музыка', 'Русская клас�
     {/* Закреплённая кнопка появляется, только когда обложка ушла с экрана:
         иначе на первом экране две одинаковые кнопки, и нижняя закрывает голову */}
     <div class="sticky" id="sticky">
-      <a class="btn btn--primary btn--block" href={заявка.ссылка_на_форму} {...цель}>{заявка.текст_кнопки}</a>
+      <a class="btn btn--primary btn--block" href={заявка.ссылка_на_форму} {...цель} data-goal="prihod">{заявка.текст_кнопки}</a>
     </div>
     <script is:inline>
       ;(function () {
@@ -447,6 +501,15 @@ const строка = ['Духовная музыка', 'Русская клас�
         }, { threshold: 0.15 }).observe(hero)
       })()
     </script>
+
+    {content.сайт.счётчик_метрики && (
+      <Fragment>
+        <script is:inline set:html={метрика} />
+        <noscript>
+          <div><img src={`https://mc.yandex.ru/watch/${content.сайт.счётчик_метрики}`} style="position:absolute; left:-9999px;" alt="" /></div>
+        </noscript>
+      </Fragment>
+    )}
   </body>
 </html>
 
@@ -475,19 +538,6 @@ const строка = ['Духовная музыка', 'Русская клас�
   [data-variant='light'] .btn--cta { background: #111; color: #fff; }
   [data-variant='light'] .sticky { background: rgba(247, 245, 240, 0.9); border-top: 1px solid var(--line); }
 
-  /*
-    «Неон» — обложка та же, блоки ниже тёмные с розовым акцентом и градиентом
-    обложки в призыве к записи.
-  */
-  [data-variant='neon'] {
-    --bg: #0c0c10; --bg-alt: #141419; --card: #1b1b22; --line: #2b2b35;
-    --text: #f1f1f4; --muted: #b0b0bd;
-    --accent: #ff3fd9;
-    --hero-bg: linear-gradient(172deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%);
-    --cta-bg: linear-gradient(135deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%); --cta-text: #111;
-    --btn-bg: #fff; --btn-text: #111;
-  }
-  [data-variant='neon'] .btn--cta { background: #111; color: #fff; }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; }
@@ -517,20 +567,6 @@ const строка = ['Духовная музыка', 'Русская клас�
   }
   /* 3. Текст — стиль body; выделение внутри него — 600 */
 
-  .switch {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 60;
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 16px; padding: 6px 10px;
-    background: rgba(10, 10, 12, 0.86); backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    font: 600 12px/1 var(--font); letter-spacing: 0.06em; text-transform: uppercase;
-  }
-  .switch__group { display: flex; gap: 2px; }
-  .switch a, .switch button {
-    font: inherit; letter-spacing: inherit; text-transform: inherit; color: #fff;
-    text-decoration: none; background: transparent; border: 0; cursor: pointer;
-    padding: 8px 12px; border-radius: 999px;
-  }
-  .switch a[aria-current='page'], .switch button[aria-pressed='true'] { background: #fff; color: #111; }
 
   /* ---------- Кнопки ---------- */
   .btn {
@@ -548,14 +584,14 @@ const строка = ['Духовная музыка', 'Русская клас�
   .hero {
     /* Высота верхней полосы (имя) и нижней (приглашение, кнопка, бегущая
        строка). Голова стоит строго между ними. */
-    --ht: 270px; --hb: 210px;
+    --ht: 240px; --hb: 210px;
     position: relative; overflow: hidden; isolation: isolate;
     min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between;
     background: var(--hero-bg); color: #fff; text-align: center;
   }
   .hero__art { position: absolute; inset: 0; z-index: 0; }
   .hero-wait .hero__art, .hero-wait .hero__top, .hero-wait .hero__bottom { visibility: hidden; }
-  .hero__top { position: relative; z-index: 3; padding: 84px 20px 0; }
+  .hero__top { position: relative; z-index: 3; padding: 52px 20px 0; }
   .hero__bottom {
     position: relative; z-index: 3; padding: 0 20px 22px; margin-top: auto;
     display: flex; flex-direction: column; align-items: center; gap: 18px;
@@ -626,8 +662,8 @@ const строка = ['Духовная музыка', 'Русская клас�
   /* Пропорции как в макете дизайнера: название и подпись скромнее, место
      отдано слову «ХОР». Подпись в одну строку. */
   @media (min-width: 700px) {
-    [data-hero='neon'] .hero { --ht: 190px; --hb: 170px; }
-    [data-hero='neon'] .hero__top { padding-top: 62px; }
+    [data-hero='neon'] .hero { --ht: 170px; --hb: 170px; }
+    [data-hero='neon'] .hero__top { padding-top: 42px; }
     [data-hero='neon'] .brand__name { font-size: clamp(2.6rem, 5.4vw, 4.4rem); }
     [data-hero='neon'] .brand__kind { max-width: none; margin-top: 12px; }
     [data-hero='neon'] .hero__word { font-size: min(40vw, calc((100svh - var(--ht) - var(--hb)) * 1.02)); top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.47); }
@@ -652,8 +688,8 @@ const строка = ['Духовная музыка', 'Русская клас�
 
 
   @media (max-width: 699px) {
-    .hero { --ht: 270px; --hb: 236px; }
-    .hero__top { padding-top: 104px; }
+    .hero { --ht: 230px; --hb: 236px; }
+    .hero__top { padding-top: 60px; }
     /* на телефоне слово целиком, голова чуть меньше и стоит в «О» */
     /* На телефоне слово упирается в ширину экрана (40vw), а не в высоту:
        обложка по высоте содержимого, без пустоты над «ХОР» */
