@@ -153,7 +153,12 @@ const строка = ['Духовная музыка', 'Русская клас�
     <link rel="preload" href={шрифт800} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={шрифт600} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/images/bust.webp" as="image" type="image/webp" fetchpriority="high" />
-    <link rel="icon" href="/favicon.png" type="image/png" />
+    {/* Значок вкладки. favicon.ico в корне — его по умолчанию ищет робот Яндекса
+        (Вебмастер ругался «Файл favicon не найден»); 120 × 120 — размер,
+        который Яндекс показывает рядом с сайтом в выдаче. */}
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="icon" href="/favicon-120.png" type="image/png" sizes="120x120" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="192x192" />
     {/* Обложка показывается целиком, когда готовы шрифт и бюст: иначе она
         сначала рисовалась запасным шрифтом и без картинки, потом перестраивалась.
         Предзагрузка выше делает ожидание коротким; через 1,5 с показываем
