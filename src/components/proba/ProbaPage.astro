@@ -30,6 +30,11 @@ import '@fontsource/montserrat/latin-400.css'
 import '@fontsource/montserrat/latin-600.css'
 import '@fontsource/montserrat/latin-800.css'
 import content from '../../content.json'
+// Файлы шрифтов обложки — для предзагрузки: без неё страница сначала рисуется
+// запасным шрифтом, потом Montserrat, и «ХОР» с названием меняли размер —
+// обложка дёргалась при каждом обновлении.
+import шрифт800 from '@fontsource/montserrat/files/montserrat-cyrillic-800-normal.woff2?url'
+import шрифт600 from '@fontsource/montserrat/files/montserrat-cyrillic-600-normal.woff2?url'
 
 interface Props {
   variant: 'neon' | 'light'
@@ -64,9 +69,6 @@ const заголовок_вкладки = `Проба оформления — �
 // Короткая строка-приглашение на обложке. Длинная фраза с обложки сайта
 // переехала в первый блок: на афише ей не место.
 const приглашение = сайт.заголовок_превью
-// В крупной надписи на обложке — знак ударения над последней «а»: без него
-// «Голоса» читается как «гóлоса». В остальных местах имя обычное.
-const имяНаОбложке = обложка.название + '\u0301'
 // Встроенная карта — простая, с меткой на доме Ленина, 97а (координаты дома
 // из ссылки Яндекса на него). Виджет карточки организации не подошёл: его
 // всплывающая карточка закрывала карту и показывала личный телефон
@@ -87,7 +89,30 @@ const строка = ['Духовная музыка', 'Русская клас�
     <title>{заголовок_вкладки}</title>
     {/* значок вкладки — голова статуи, как в оформлении; у основного сайта
         пока прежний, его меняем вместе с названием */}
+    <link rel="preload" href={шрифт800} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={шрифт600} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/proba/bust.webp" as="image" type="image/webp" fetchpriority="high" />
     <link rel="icon" href="/proba/favicon.png" type="image/png" />
+    {/* Обложка показывается целиком, когда готовы шрифт и бюст: иначе она
+        сначала рисовалась запасным шрифтом и без картинки, потом перестраивалась.
+        Предзагрузка выше делает ожидание коротким; через 1,5 с показываем
+        в любом случае, чтобы медленная сеть не оставила пустой экран. */}
+    <script is:inline>
+      ;(function () {
+        var root = document.documentElement
+        if (!document.fonts || !document.fonts.load) return
+        root.classList.add('hero-wait')
+        var img = new Image()
+        img.src = '/proba/bust.webp'
+        var ready = Promise.all([
+          document.fonts.load('800 1em Montserrat', 'ХОР'),
+          document.fonts.load('600 1em Montserrat', 'Голоса'),
+          img.decode ? img.decode().catch(function () {}) : null,
+        ])
+        var timeout = new Promise(function (r) { setTimeout(r, 1500) })
+        Promise.race([ready, timeout]).then(function () { root.classList.remove('hero-wait') })
+      })()
+    </script>
     <link rel="apple-touch-icon" href="/proba/favicon.png" />
   </head>
   <body>
@@ -120,7 +145,7 @@ const строка = ['Духовная музыка', 'Русская клас�
 
       <div class="hero__top">
         <h1 class="brand">
-          <span class="brand__name">{имяНаОбложке}</span>
+          <span class="brand__name">{обложка.название}</span>
           <span class="brand__kind">{обложка.подзаголовок}</span>
         </h1>
       </div>
@@ -526,6 +551,7 @@ const строка = ['Духовная музыка', 'Русская клас�
     background: var(--hero-bg); color: #fff; text-align: center;
   }
   .hero__art { position: absolute; inset: 0; z-index: 0; }
+  .hero-wait .hero__art, .hero-wait .hero__top, .hero-wait .hero__bottom { visibility: hidden; }
   .hero__top { position: relative; z-index: 3; padding: 84px 20px 0; }
   .hero__bottom {
     position: relative; z-index: 3; padding: 0 20px 22px; margin-top: auto;
