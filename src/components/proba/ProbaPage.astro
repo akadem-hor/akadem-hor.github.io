@@ -59,10 +59,18 @@ const приглашение = сайт.заголовок_превью
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
-    <nav class="switch" aria-label="Варианты оформления">
-      <span class="switch__label">Проба</span>
-      <a href="/proba/" aria-current={variant === 'neon' ? 'page' : undefined}>Неон</a>
-      <a href="/proba/temnyi/" aria-current={variant === 'dark' ? 'page' : undefined}>Тёмный</a>
+    {/* Панель пробы: вариант оформления и вид фотографий. Закреплена сверху,
+        чтобы переключать фото, глядя прямо на них. На сайт не пойдёт. */}
+    <nav class="switch" aria-label="Варианты пробы">
+      <div class="switch__group">
+        <a href="/proba/" data-variant-link aria-current={variant === 'neon' ? 'page' : undefined}>Неон</a>
+        <a href="/proba/temnyi/" data-variant-link aria-current={variant === 'dark' ? 'page' : undefined}>Тёмный</a>
+      </div>
+      <div class="switch__group" role="group" aria-label="Вид фотографий">
+        <button type="button" data-set="bw">Ч/Б</button>
+        <button type="button" data-set="hover" title="Цветные при наведении мышкой, на телефоне — в середине экрана">При наведении</button>
+        <button type="button" data-set="color">Цвет</button>
+      </div>
     </nav>
 
     <header class="hero">
@@ -263,14 +271,6 @@ const приглашение = сайт.заголовок_превью
       </div>
     </footer>
 
-    {/* Переключатель вида фотографий — только для пробы, на сайт не пойдёт */}
-    <div class="photo-switch" role="group" aria-label="Вид фотографий">
-      <span class="photo-switch__label">Фото</span>
-      <button type="button" data-set="bw">Ч/Б</button>
-      <button type="button" data-set="hover">Цвет при наведении</button>
-      <button type="button" data-set="color">Цвет</button>
-    </div>
-
     {/* Закреплённая кнопка появляется, только когда обложка ушла с экрана:
         иначе на первом экране две одинаковые кнопки, и нижняя закрывает голову */}
     <div class="sticky" id="sticky">
@@ -282,11 +282,14 @@ const приглашение = сайт.заголовок_превью
       ;(function () {
         var root = document.documentElement
         var modes = ['bw', 'hover', 'color']
-        var buttons = document.querySelectorAll('.photo-switch button')
+        var buttons = document.querySelectorAll('.switch button[data-set]')
+        var links = document.querySelectorAll('[data-variant-link]')
         function set(mode, save) {
           if (modes.indexOf(mode) < 0) mode = 'bw'
           root.setAttribute('data-photo', mode)
           buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.set === mode)) })
+          // при переходе между «Неоном» и «Тёмным» выбранный вид фото сохраняется
+          links.forEach(function (a) { a.search = mode === 'bw' ? '' : '?foto=' + mode })
           if (save) {
             var u = new URL(location.href)
             u.searchParams.set('foto', mode)
@@ -311,7 +314,6 @@ const приглашение = сайт.заголовок_превью
         if (!hero || !sticky || !('IntersectionObserver' in window)) return
         new IntersectionObserver(function (e) {
           sticky.classList.toggle('sticky--on', !e[0].isIntersecting)
-          document.body.classList.toggle('past-hero', !e[0].isIntersecting)
         }, { threshold: 0.15 }).observe(hero)
       })()
     </script>
@@ -363,14 +365,21 @@ const приглашение = сайт.заголовок_превью
   .wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 20px; }
 
   .switch {
-    position: absolute; top: 12px; left: 50%; transform: translateX(-50%); z-index: 60;
-    display: flex; gap: 4px; align-items: center; padding: 4px;
-    background: rgba(10, 10, 12, 0.6); backdrop-filter: blur(6px); border-radius: 999px;
-    font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+    position: fixed; top: 10px; left: 50%; transform: translateX(-50%); z-index: 60;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 6px;
+    width: max-content; max-width: calc(100vw - 20px);
+    font: 600 12px/1 var(--font); letter-spacing: 0.06em; text-transform: uppercase;
   }
-  .switch__label { color: #bbb; padding: 0 8px 0 10px; }
-  .switch a { color: #fff; text-decoration: none; padding: 5px 12px; border-radius: 999px; }
-  .switch a[aria-current='page'] { background: #fff; color: #111; }
+  .switch__group {
+    display: flex; gap: 2px; padding: 3px; border-radius: 999px;
+    background: rgba(10, 10, 12, 0.72); backdrop-filter: blur(6px);
+  }
+  .switch a, .switch button {
+    font: inherit; letter-spacing: inherit; text-transform: inherit; color: #fff;
+    text-decoration: none; background: transparent; border: 0; cursor: pointer;
+    padding: 8px 12px; border-radius: 999px;
+  }
+  .switch a[aria-current='page'], .switch button[aria-pressed='true'] { background: #fff; color: #111; }
 
   /* ---------- Кнопки ---------- */
   .btn {
@@ -500,8 +509,8 @@ const приглашение = сайт.заголовок_превью
 
   /* Телефон: голова уже, чтобы оставить воздух вокруг имени и кнопки */
   @media (max-width: 699px) {
-    .hero { --ht: 240px; --hb: 190px; }
-    .hero__top { padding-top: 64px; }
+    .hero { --ht: 270px; --hb: 190px; }
+    .hero__top { padding-top: 104px; }
     /* слово шире экрана, края «Х» и «Р» срезаны, голова закрывает только «О» — как на афише */
     [data-variant='neon'] .hero__word { font-size: min(74vw, calc((100svh - var(--ht) - var(--hb)) * 1.2)); }
     [data-variant='dark'] .bust__halo { width: 112%; }
@@ -590,26 +599,6 @@ const приглашение = сайт.заголовок_превью
   [data-photo='hover'] .photo.is-live { filter: none; }
   /* Цвет чуть приглушён: яркие снимки разного времени спорили бы с оформлением */
   [data-photo='color'] .photo { filter: saturate(0.85) contrast(1.03); }
-
-  .photo-switch {
-    position: fixed; left: 12px; bottom: 12px; z-index: 50;
-    display: flex; flex-wrap: wrap; align-items: center; gap: 4px; padding: 4px;
-    background: rgba(10, 10, 12, 0.8); backdrop-filter: blur(6px); border-radius: 18px;
-    font: 600 12px/1 var(--font); letter-spacing: 0.04em; color: #fff;
-    max-width: calc(100vw - 24px);
-  }
-  .photo-switch__label { padding: 0 6px 0 8px; color: #bbb; text-transform: uppercase; }
-  .photo-switch button {
-    font: inherit; color: #fff; background: transparent; border: 0; cursor: pointer;
-    padding: 8px 12px; border-radius: 999px;
-  }
-  .photo-switch button[aria-pressed='true'] { background: #fff; color: #111; }
-  /* Появляется после обложки: на первом экране он ложился на кнопку записи,
-     а фотографии всё равно ниже */
-  .photo-switch { visibility: hidden; }
-  .past-hero .photo-switch { visibility: visible; }
-  /* на телефоне — над закреплённой кнопкой записи */
-  @media (max-width: 767px) { .photo-switch { bottom: 84px; } }
 
   .sticky {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; padding: 10px 16px;
