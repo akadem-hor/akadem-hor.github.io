@@ -120,7 +120,7 @@ const приглашение = сайт.заголовок_превью
           <div class="text">{о_хоре.абзацы.map((абзац) => <p>{абзац}</p>)}</div>
         </div>
         <div class="wrap">
-          <img class="wide-photo" src={обложка.фото} alt={обложка.описание_фото} width="1600" height="900" loading="lazy" />
+          <img class="wide-photo" src={обложка.фото} alt={обложка.описание_фото} width="1280" height="543" loading="lazy" />
         </div>
       </section>
 
@@ -349,6 +349,9 @@ const приглашение = сайт.заголовок_превью
 
   /* ================= Обложка-афиша ================= */
   .hero {
+    /* Высота верхней полосы (имя) и нижней (приглашение и кнопка). Голова
+       стоит строго между ними — раньше текст снизу лежал поверх шеи. */
+    --ht: 270px; --hb: 160px;
     position: relative; overflow: hidden; isolation: isolate;
     min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between;
     background: var(--hero-bg); color: #fff; text-align: center;
@@ -380,13 +383,18 @@ const приглашение = сайт.заголовок_превью
   .bust {
     /* z-index обязателен: transform создаёт свой слой, и без него голова
        оказывалась под словом «ХОР» */
-    position: absolute; z-index: 2; left: 50%; bottom: 0; transform: translateX(-50%);
-    height: 72%; aspect-ratio: 748 / 1300;
+    /* Подбородок на снимке — на 69% высоты. Шея гаснет с 72% до 90%, и именно
+       линия 90% совпадает с верхом нижней полосы: последние 10% картинки,
+       уже прозрачные, уходят под приглашение и кнопку. Отсюда деление на 0,9. */
+    position: absolute; z-index: 2; left: 50%; transform: translateX(-50%);
+    height: calc((100% - var(--ht) - var(--hb)) / 0.9);
+    bottom: calc(var(--hb) - (100% - var(--ht) - var(--hb)) / 9);
+    aspect-ratio: 748 / 1300;
   }
   .bust img {
     position: relative; z-index: 2; width: 100%; height: 100%; object-fit: contain; object-position: bottom;
-    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 94%);
-    mask-image: linear-gradient(to bottom, #000 62%, transparent 94%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 90%);
+    mask-image: linear-gradient(to bottom, #000 72%, transparent 90%);
   }
 
   /* Зерно поверх всей обложки — общая фактура для фото и графики */
@@ -397,7 +405,7 @@ const приглашение = сайт.заголовок_превью
 
   /* ---------- Неон ---------- */
   [data-variant='neon'] .hero__word {
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -38%);
+    position: absolute; left: 50%; top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.5); transform: translate(-50%, -50%);
     font-weight: 800; font-size: clamp(12rem, 44vw, 36rem); line-height: 0.8;
     letter-spacing: -0.03em; color: #3d3d44; white-space: nowrap; z-index: 1;
   }
@@ -430,7 +438,7 @@ const приглашение = сайт.заголовок_превью
   }
   [data-variant='dark'] .bust__halo {
     /* Кольцо света за головой — как на афише «Stabat Mater» */
-    position: absolute; z-index: 1; left: 50%; top: 34%; width: 150%; aspect-ratio: 1;
+    position: absolute; z-index: 1; left: 50%; top: 36%; width: 118%; aspect-ratio: 1;
     transform: translate(-50%, -50%); border-radius: 50%;
     border: 5px solid rgba(255, 255, 255, 0.95);
     box-shadow: 0 0 30px 6px rgba(190, 210, 255, 0.55), 0 0 90px 30px rgba(140, 170, 255, 0.25),
@@ -450,12 +458,11 @@ const приглашение = сайт.заголовок_превью
 
   /* Телефон: голова уже, чтобы оставить воздух вокруг имени и кнопки */
   @media (max-width: 699px) {
+    .hero { --ht: 240px; --hb: 190px; }
     .hero__top { padding-top: 64px; }
-    .bust { height: 74%; }
     /* слово шире экрана, края «Х» и «Р» срезаны, голова закрывает только «О» — как на афише */
-    [data-variant='neon'] .bust { height: 58%; }
-    [data-variant='neon'] .hero__word { font-size: 74vw; transform: translate(-50%, -22%); }
-    [data-variant='dark'] .bust__halo { width: 128%; }
+    [data-variant='neon'] .hero__word { font-size: 74vw; }
+    [data-variant='dark'] .bust__halo { width: 112%; }
   }
 
   /* ================= Блоки ================= */
@@ -471,7 +478,7 @@ const приглашение = сайт.заголовок_превью
   .text { max-width: 760px; font-size: 1.1rem; color: var(--muted); }
   .text p { margin: 0 0 18px; }
   .text--lead { color: var(--text); font-size: 1.25rem; margin-bottom: 36px; }
-  .wide-photo { width: 100%; margin-top: 48px; border-radius: 22px; filter: grayscale(1) contrast(1.05); }
+  .wide-photo { width: 100%; height: auto; margin-top: 48px; border-radius: 22px; filter: grayscale(1) contrast(1.05); }
 
   .people { display: grid; gap: 36px; }
   @media (min-width: 640px) { .people { grid-template-columns: 1fr 1fr; } }
