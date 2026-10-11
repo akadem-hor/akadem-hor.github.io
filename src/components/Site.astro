@@ -819,28 +819,40 @@ const строка = ['Духовная музыка', 'Русская клас�
   }
 
   /*
-    Вариант 2 — в одну строку: «ХОР» с головой, за ним «порация» вдвое мельче
-    на той же базовой линии, что «Х» и «Р». Ширина всего слова — 2,32 + 0,5 ×
-    4,58 ≈ 4,6 размера шрифта.
+    Варианты 2 и 3 — слово в одну строку. Чтобы оно не тонуло в пустоте:
+    круг с головой крупнее букв (строка проходит через его середину) — голова
+    остаётся главным образом и заполняет высоту; обложка по высоте
+    содержимого, а не на весь экран.
+
+    Вариант 2: «ХОР» с кругом 1,3 размера шрифта, за ним «порация» вдвое
+    мельче на базовой линии «Х» и «Р». Базовая линия букв — на 0,36 размера
+    ниже середины строки, у «порации» своя — на 0,18 ниже её середины:
+    сдвиг 0,18 большого размера = 0,36 своего. Ширина ≈ 5,1 размера шрифта,
+    высота с макушкой ≈ 1,45.
   */
+  html[data-lockup='inline'] .hero__disc { width: 1.3em; height: 1.3em; }
   html[data-lockup='inline'] .hero__tail {
-    flex-basis: auto; margin: 0 0 0.08em 0.06em; align-self: flex-end; line-height: 0.8;
+    flex-basis: auto; margin: 0 0 0 0.06em; line-height: 0.8;
+    position: relative; top: 0.36em;
   }
-  html[data-lockup='inline'] .hero__word { font-size: min(19vw, calc((100svh - var(--ht) - var(--hb)) * 0.95)); }
+  html[data-lockup='inline'] .hero__word { font-size: min(17.5vw, calc((100svh - var(--ht) - var(--hb)) * 0.66)); }
+  html[data-lockup='inline'] .hero { min-height: calc(var(--ht) + var(--hb) + min(17.5vw, calc((100svh - var(--ht) - var(--hb)) * 0.66)) * 1.45 + 48px); }
   /*
-    Вариант 3 — всё слово одним кеглем прописными: «ХОРПОРАЦИЯ», голова
-    в первой «О». Ширина около 7,6 размера шрифта.
+    Вариант 3: «ХОРПОРАЦИЯ» одним кеглем прописными, круг с головой
+    1,75 размера — вдвое выше букв. Ширина ≈ 8,5 размера, высота ≈ 1,95.
   */
+  html[data-lockup='caps'] .hero__disc { width: 1.75em; height: 1.75em; }
   html[data-lockup='caps'] .hero__tail {
     flex-basis: auto; margin: 0 0 0 0.03em; font-size: 1em; line-height: 0.8;
     text-transform: uppercase; letter-spacing: -0.03em;
   }
-  html[data-lockup='caps'] .hero__word { font-size: min(11.5vw, calc((100svh - var(--ht) - var(--hb)) * 0.95)); }
+  html[data-lockup='caps'] .hero__word { font-size: min(10.6vw, calc((100svh - var(--ht) - var(--hb)) * 0.5)); }
+  html[data-lockup='caps'] .hero { min-height: calc(var(--ht) + var(--hb) + min(10.6vw, calc((100svh - var(--ht) - var(--hb)) * 0.5)) * 1.95 + 48px); }
   @media (max-width: 699px) {
-    html[data-lockup='inline'] .hero { min-height: calc(var(--ht) + var(--hb) + 19vw * 1.2); }
-    html[data-lockup='inline'] .hero__word { font-size: 19vw; }
-    html[data-lockup='caps'] .hero { min-height: calc(var(--ht) + var(--hb) + 11.5vw * 1.4); }
-    html[data-lockup='caps'] .hero__word { font-size: 11.5vw; }
+    html[data-lockup='inline'] .hero__word { font-size: 17.5vw; }
+    html[data-lockup='inline'] .hero { min-height: calc(var(--ht) + var(--hb) + 17.5vw * 1.45 + 32px); }
+    html[data-lockup='caps'] .hero__word { font-size: 10.6vw; }
+    html[data-lockup='caps'] .hero { min-height: calc(var(--ht) + var(--hb) + 10.6vw * 1.95 + 32px); }
   }
 
   [data-hero='neon'] .btn--hero { background: #111; color: #fff; }
