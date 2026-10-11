@@ -54,8 +54,19 @@ const сТипографикой = (x: any): any =>
   : x && typeof x === 'object' ? Object.fromEntries(Object.entries(x).map(([k, v]) => [k, сТипографикой(v)]))
   : x
 
+// Проба (/proba/): закрыта от поисковиков, без Метрики. На ней обкатываются
+// идеи до выкатки на главную: название «ХОРпорация» на обложке и
+// переключатель светлой и тёмной темы (октябрь 2026).
+interface Props {
+  проба?: boolean
+}
+const { проба = false } = Astro.props
+const НОВОЕ_ИМЯ = 'ХОРпорация'
+const сИменем = (x: any) =>
+  проба ? JSON.parse(JSON.stringify(x).replaceAll(content.обложка.название, НОВОЕ_ИМЯ)) : x
+
 const { сайт, заявка, обложка, о_хоре, хормейстеры, кого_ждём, репетиции, галерея, вопросы, контакты } =
-  сТипографикой(content)
+  сТипографикой(сИменем(content))
 
 const внешняя = !заявка.ссылка_на_форму.startsWith('#')
 const цель = внешняя ? { target: '_blank', rel: 'noopener' } : {}
@@ -122,11 +133,24 @@ const строка = ['Духовная музыка', 'Русская клас�
 ---
 
 <!doctype html>
-<html lang="ru" data-variant="light" data-hero="neon">
+<html lang="ru" data-variant="light" data-hero="neon" data-name={проба ? 'horporation' : undefined}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="canonical" href={canonical} />
+    {проба && <meta name="robots" content="noindex, nofollow" />}
+    {/* Тема выставляется до отрисовки, иначе тёмная страница мигнула бы светлой.
+        По умолчанию — как в настройках телефона, выбор запоминается. */}
+    {проба && (
+      <script is:inline>
+        ;(function () {
+          var t = null
+          try { t = localStorage.getItem('theme') } catch (e) {}
+          if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          document.documentElement.setAttribute('data-variant', t)
+        })()
+      </script>
+    )}
     <title>{сайт.заголовок}</title>
     <meta name="description" content={сайт.описание} />
     <meta name="keywords" content={сайт.ключевые_слова} />
@@ -182,13 +206,20 @@ const строка = ['Духовная музыка', 'Русская клас�
     <link rel="apple-touch-icon" href="/favicon.png" />
   </head>
   <body>
+    {проба && (
+      <button type="button" class="theme" id="theme" aria-label="Светлая или тёмная тема">
+        <svg class="theme__sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" /></svg>
+        <svg class="theme__moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" /></svg>
+      </button>
+    )}
 
     <header class="hero">
       <div class="hero__art" aria-hidden="true">
         {/* «О» — залитый круг чуть больше «Х» и «Р», голова стоит в нём
             (правка дизайнера 10.10.2026). Для программ чтения слово — «ХОР». */}
         {(
-          <span class="hero__word" aria-label="ХОР">
+          <span class="hero__word" aria-label={проба ? НОВОЕ_ИМЯ : 'ХОР'}>
+            <span class="hero__row">
             <span>Х</span>
             <span class="hero__disc">
               {/* Бюст в очках — 3D от дизайнера хора (10.10.2026). Голова выходит
@@ -198,6 +229,10 @@ const строка = ['Духовная музыка', 'Русская клас�
               </span>
             </span>
             <span>Р</span>
+            </span>
+            {/* «ХОР» с головой в «О» — начало названия, «порация» — его хвост:
+                обложка целиком становится логотипом */}
+            {проба && <span class="hero__tail">порация</span>}
           </span>
         )}
       </div>
@@ -504,7 +539,22 @@ const строка = ['Духовная музыка', 'Русская клас�
       })()
     </script>
 
-    {content.сайт.счётчик_метрики && (
+    {проба && (
+      <script is:inline>
+        ;(function () {
+          var b = document.getElementById('theme')
+          if (!b) return
+          b.addEventListener('click', function () {
+            var root = document.documentElement
+            var t = root.getAttribute('data-variant') === 'dark' ? 'light' : 'dark'
+            root.setAttribute('data-variant', t)
+            try { localStorage.setItem('theme', t) } catch (e) {}
+          })
+        })()
+      </script>
+    )}
+
+    {!проба && content.сайт.счётчик_метрики && (
       <Fragment>
         <script is:inline set:html={метрика} />
         <noscript>
@@ -540,6 +590,33 @@ const строка = ['Духовная музыка', 'Русская клас�
   [data-variant='light'] .btn--cta { background: #111; color: #fff; }
   [data-variant='light'] .sticky { background: rgba(247, 245, 240, 0.9); border-top: 1px solid var(--line); }
 
+
+  /*
+    Тёмная тема — та же страница и та же обложка, только блоки ниже тёмные,
+    с розовым акцентом из градиента обложки (бывший вариант «Неон»).
+  */
+  [data-variant='dark'] {
+    --bg: #0c0c10; --bg-alt: #141419; --card: #1b1b22; --line: #2b2b35;
+    --text: #f1f1f4; --muted: #b0b0bd;
+    --accent: #ff3fd9;
+    --hero-bg: linear-gradient(172deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%);
+    --cta-bg: linear-gradient(135deg, #ff2fd8 0%, #8f6bff 45%, #19f0d4 100%); --cta-text: #111;
+    --btn-bg: #fff; --btn-text: #111;
+  }
+  [data-variant='dark'] .btn--cta { background: #111; color: #fff; }
+
+  /* Переключатель темы — круглая кнопка в правом верхнем углу */
+  .theme {
+    position: fixed; top: 14px; right: 14px; z-index: 50;
+    width: 46px; height: 46px; border-radius: 50%; border: 0; cursor: pointer;
+    display: grid; place-items: center;
+    background: rgba(17, 17, 22, 0.78); color: #fff; backdrop-filter: blur(6px);
+  }
+  .theme svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  .theme__moon { display: none; }
+  [data-variant='dark'] .theme { background: rgba(255, 255, 255, 0.9); color: #111; }
+  [data-variant='dark'] .theme__sun { display: none; }
+  [data-variant='dark'] .theme__moon { display: block; fill: currentColor; stroke: none; }
 
   * { box-sizing: border-box; }
   html, body { margin: 0; }
@@ -643,8 +720,9 @@ const строка = ['Духовная музыка', 'Русская клас�
     font-weight: 800; line-height: 0.8;
     font-size: min(40vw, calc((100svh - var(--ht) - var(--hb)) * 1.05));
     letter-spacing: -0.03em; color: #3d3d44; white-space: nowrap; z-index: 1;
-    display: flex; align-items: center; gap: 0.03em;
+    display: flex; flex-direction: column; align-items: center;
   }
+  .hero__row { display: flex; align-items: center; gap: 0.03em; }
   /* Круг на месте «О»: заглавные Montserrat высотой около 0,7 размера шрифта,
      круг — 0,84, то есть чуть больше букв, как просил дизайнер. Буквы
      в строке с line-height 0,8 сидят чуть ниже середины — круг опущен на
@@ -684,6 +762,37 @@ const строка = ['Духовная музыка', 'Русская клас�
   [data-hero='neon'] .hero__bust img {
     position: absolute; left: 3.6%; top: 2.5%; width: 79%; height: auto; max-width: none;
   }
+  /*
+    «ХОРпорация» (проба). Хвост «порация» строчными, ширина — как у «ХОР»:
+    измерено: «ХОР» с кругом — 2,32 размера большого шрифта, «порация»
+    строчными — 4,58 своего; 2,32 / 4,58 ≈ 0,5.
+    Отдельное крупное название сверху не нужно: им стала обложка; в h1 оно
+    остаётся для поисковиков и программ чтения с экрана.
+  */
+  [data-name='horporation'] .hero__tail {
+    display: block; font-size: 0.5em; line-height: 0.9; letter-spacing: -0.02em;
+    margin-top: -0.07em; text-transform: none;
+  }
+  [data-name='horporation'] .brand__name {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  [data-name='horporation'] .brand__kind { margin-top: 0; }
+  [data-name='horporation'] .hero { --ht: 110px; }
+  [data-name='horporation'] .hero__word { font-size: min(36vw, calc((100svh - var(--ht) - var(--hb)) * 0.68)); }
+  @media (min-width: 700px) {
+    [data-name='horporation'] .hero { --ht: 100px; }
+    [data-name='horporation'] .hero__word {
+      font-size: min(36vw, calc((100svh - var(--ht) - var(--hb)) * 0.68));
+      top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.5);
+    }
+  }
+  @media (max-width: 699px) {
+    [data-name='horporation'] .hero { --ht: 150px; min-height: calc(var(--ht) + var(--hb) + 40vw * 1.3); }
+    [data-name='horporation'] .hero__top { padding-top: 80px; }
+    [data-name='horporation'] .hero__word { font-size: 40vw; }
+    [data-name='horporation'] .hero__word { top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.52); }
+  }
+
   [data-hero='neon'] .btn--hero { background: #111; color: #fff; }
   [data-hero='neon'] .btn--hero:hover { background: #2a2a33; }
   [data-hero='neon'] .hero__invite { color: #111; }
