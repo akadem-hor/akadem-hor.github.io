@@ -148,6 +148,8 @@ const строка = ['Духовная музыка', 'Русская клас�
           try { t = localStorage.getItem('theme') } catch (e) {}
           if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
           document.documentElement.setAttribute('data-variant', t)
+          var n = new URLSearchParams(location.search).get('n')
+          document.documentElement.setAttribute('data-lockup', { '2': 'inline', '3': 'caps' }[n] || 'stack')
         })()
       </script>
     )}
@@ -207,6 +209,12 @@ const строка = ['Духовная музыка', 'Русская клас�
   </head>
   <body>
     {проба && (
+      <div class="lockups" role="group" aria-label="Вариант названия">
+        <span class="lockups__label">Название</span>
+        <button type="button" data-n="1" data-l="stack">1</button>
+        <button type="button" data-n="2" data-l="inline">2</button>
+        <button type="button" data-n="3" data-l="caps">3</button>
+      </div>
       <button type="button" class="theme" id="theme" aria-label="Светлая или тёмная тема">
         <svg class="theme__sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5" /><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8" /></svg>
         <svg class="theme__moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" /></svg>
@@ -229,10 +237,10 @@ const строка = ['Духовная музыка', 'Русская клас�
               </span>
             </span>
             <span>Р</span>
-            </span>
             {/* «ХОР» с головой в «О» — начало названия, «порация» — его хвост:
                 обложка целиком становится логотипом */}
             {проба && <span class="hero__tail">порация</span>}
+            </span>
           </span>
         )}
       </div>
@@ -550,6 +558,17 @@ const строка = ['Духовная музыка', 'Русская клас�
             root.setAttribute('data-variant', t)
             try { localStorage.setItem('theme', t) } catch (e) {}
           })
+          var root = document.documentElement
+          var bs = document.querySelectorAll('.lockups button')
+          function mark() { bs.forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.l === root.getAttribute('data-lockup'))) }) }
+          mark()
+          bs.forEach(function (x) {
+            x.addEventListener('click', function () {
+              root.setAttribute('data-lockup', x.dataset.l)
+              var u = new URL(location.href); u.searchParams.set('n', x.dataset.n); history.replaceState(null, '', u)
+              mark()
+            })
+          })
         })()
       </script>
     )}
@@ -722,7 +741,12 @@ const строка = ['Духовная музыка', 'Русская клас�
     letter-spacing: -0.03em; color: #3d3d44; white-space: nowrap; z-index: 1;
     display: flex; flex-direction: column; align-items: center;
   }
-  .hero__row { display: flex; align-items: center; gap: 0.03em; }
+  /* width: max-content — блок со словом прижат к середине (left: 50%) и без
+     этого сжимался до половины экрана, перенося буквы на новую строку */
+  .hero__word { width: max-content; }
+  .hero__row { display: flex; justify-content: center; align-items: center; gap: 0 0.03em; }
+  /* вариант 1: строка шириной ровно «ХОР» (2,32 размера), «порация» — под ней */
+  html[data-lockup='stack'] .hero__row { flex-wrap: wrap; width: 2.4em; }
   /* Круг на месте «О»: заглавные Montserrat высотой около 0,7 размера шрифта,
      круг — 0,84, то есть чуть больше букв, как просил дизайнер. Буквы
      в строке с line-height 0,8 сидят чуть ниже середины — круг опущен на
@@ -772,6 +796,7 @@ const строка = ['Духовная музыка', 'Русская клас�
   [data-name='horporation'] .hero__tail {
     display: block; font-size: 0.5em; line-height: 0.9; letter-spacing: -0.02em;
     margin-top: -0.07em; text-transform: none;
+    flex-basis: 100%; text-align: center;
   }
   [data-name='horporation'] .brand__name {
     position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
@@ -793,9 +818,70 @@ const строка = ['Духовная музыка', 'Русская клас�
     [data-name='horporation'] .hero__word { top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.52); }
   }
 
+  /*
+    Вариант 2 — в одну строку: «ХОР» с головой, за ним «порация» вдвое мельче
+    на той же базовой линии, что «Х» и «Р». Ширина всего слова — 2,32 + 0,5 ×
+    4,58 ≈ 4,6 размера шрифта.
+  */
+  html[data-lockup='inline'] .hero__tail {
+    flex-basis: auto; margin: 0 0 0.08em 0.06em; align-self: flex-end; line-height: 0.8;
+  }
+  html[data-lockup='inline'] .hero__word { font-size: min(19vw, calc((100svh - var(--ht) - var(--hb)) * 0.95)); }
+  /*
+    Вариант 3 — всё слово одним кеглем прописными: «ХОРПОРАЦИЯ», голова
+    в первой «О». Ширина около 7,6 размера шрифта.
+  */
+  html[data-lockup='caps'] .hero__tail {
+    flex-basis: auto; margin: 0 0 0 0.03em; font-size: 1em; line-height: 0.8;
+    text-transform: uppercase; letter-spacing: -0.03em;
+  }
+  html[data-lockup='caps'] .hero__word { font-size: min(11.5vw, calc((100svh - var(--ht) - var(--hb)) * 0.95)); }
+  @media (max-width: 699px) {
+    html[data-lockup='inline'] .hero { min-height: calc(var(--ht) + var(--hb) + 19vw * 1.2); }
+    html[data-lockup='inline'] .hero__word { font-size: 19vw; }
+    html[data-lockup='caps'] .hero { min-height: calc(var(--ht) + var(--hb) + 11.5vw * 1.4); }
+    html[data-lockup='caps'] .hero__word { font-size: 11.5vw; }
+  }
+
   [data-hero='neon'] .btn--hero { background: #111; color: #fff; }
   [data-hero='neon'] .btn--hero:hover { background: #2a2a33; }
   [data-hero='neon'] .hero__invite { color: #111; }
+
+  /*
+    Тёмная обложка — для ночного режима: почти чёрный фон с розовым и
+    бирюзовым свечением по углам, буквы залиты градиентом обложки, как неон.
+    Круг — тот же градиент, бюст в нём не меняется.
+  */
+  html[data-variant='dark'] .hero {
+    background:
+      radial-gradient(55% 45% at 12% 8%, rgba(255, 47, 216, 0.38), transparent 70%),
+      radial-gradient(55% 45% at 88% 92%, rgba(25, 240, 212, 0.3), transparent 70%),
+      #0b0b10;
+  }
+  html[data-variant='dark'] .hero__word {
+    background: linear-gradient(120deg, #ff2fd8 0%, #8f6bff 50%, #19f0d4 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  html[data-variant='dark'] .hero__disc {
+    background: linear-gradient(160deg, #ff2fd8 0%, #8f6bff 55%, #19f0d4 100%);
+  }
+  html[data-variant='dark'] .hero__invite { color: #fff; }
+  html[data-variant='dark'] .btn--hero { background: #fff; color: #111; }
+  html[data-variant='dark'] .btn--hero:hover { background: #e6e6ee; }
+  html[data-variant='dark'] .marquee { border-top: 1px solid rgba(255, 255, 255, 0.08); }
+
+  /* Переключатель вариантов названия — только на пробе */
+  .lockups {
+    position: fixed; top: 14px; left: 14px; z-index: 50; display: flex; align-items: center; gap: 2px;
+    padding: 4px; border-radius: 999px; background: rgba(17, 17, 22, 0.78); backdrop-filter: blur(6px);
+    font: 600 12px/1 var(--font); letter-spacing: 0.06em; text-transform: uppercase; color: #fff;
+  }
+  .lockups__label { padding: 0 8px 0 10px; color: #bbb; }
+  .lockups button {
+    font: inherit; color: #fff; background: transparent; border: 0; cursor: pointer;
+    width: 34px; height: 34px; border-radius: 50%;
+  }
+  .lockups button[aria-pressed='true'] { background: #fff; color: #111; }
 
 
   @media (max-width: 699px) {
