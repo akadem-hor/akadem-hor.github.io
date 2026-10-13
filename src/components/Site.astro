@@ -62,7 +62,7 @@ interface Props {
 }
 const { проба = false } = Astro.props
 // Темы пробы — от молодёжной к строгой; 2–4 — средние между светлой и тёмной
-const ТЕМЫ = [['1', 'Светлая'], ['2', 'Вечер'], ['3', 'Мрамор'], ['4', 'Смешанная'], ['5', 'Тёмная']]
+const ТЕМЫ = [['1', 'Светлая'], ['2', 'Вечер'], ['3', 'Мрамор'], ['4', 'Смешанная'], ['5', 'Тёмная'], ['6', 'Концерт']]
 
 const { сайт, заявка, обложка, о_хоре, хормейстеры, кого_ждём, репетиции, галерея, вопросы, контакты } =
   сТипографикой(content)
@@ -145,7 +145,7 @@ const строка = ['Духовная музыка', 'Русская клас�
         ;(function () {
           // Пять тем от молодёжной к строгой: [страница, обложка].
           // Номер можно передать ссылкой (?t=2), иначе — последний выбор.
-          var T = { '1': ['light', 'bright'], '2': ['light', 'dusk'], '3': ['light', 'marble'], '4': ['light', 'night'], '5': ['dark', 'night'] }
+          var T = { '1': ['light', 'bright'], '2': ['light', 'dusk'], '3': ['light', 'marble'], '4': ['light', 'night'], '5': ['dark', 'night'], '6': ['hall', 'hall'] }
           var q = new URLSearchParams(location.search)
           var t = q.get('t')
           if (!T[t]) { try { t = localStorage.getItem('tema') } catch (e) {} }
@@ -548,7 +548,7 @@ const строка = ['Духовная музыка', 'Русская клас�
       <script is:inline>
         ;(function () {
           var root = document.documentElement
-          var T = { '1': ['light', 'bright'], '2': ['light', 'dusk'], '3': ['light', 'marble'], '4': ['light', 'night'], '5': ['dark', 'night'] }
+          var T = { '1': ['light', 'bright'], '2': ['light', 'dusk'], '3': ['light', 'marble'], '4': ['light', 'night'], '5': ['dark', 'night'], '6': ['hall', 'hall'] }
           var ts = document.querySelectorAll('.temy button')
           var tn = document.getElementById('tema-name')
           function markT() {
@@ -837,6 +837,38 @@ const строка = ['Духовная музыка', 'Русская клас�
   }
   html[data-cover='night'][data-variant='light'] .btn--cta { background: #fff; color: #111; }
 
+  /*
+    «Концерт» — 70 % строгого, 30 % молодёжного. Основа — проба «Тёмный»
+    (10.10.2026) по спокойным афишам AUTEM: тёплая темнота зала, кремовые
+    буквы, бордо, золото и кольцо света вокруг головы, как на «Stabat Mater».
+    Молодёжное — голова в очках (неон остался только в их отражении),
+    огромное «ХОР» и одна яркая полоса: бегущая строка градиентом сайта.
+    Блоки ниже не чёрные, а графитовые с тёплым оттенком — чтобы страница
+    ощущалась концертным залом, а не ночным клубом.
+  */
+  [data-variant='hall'] {
+    --bg: #121013; --bg-alt: #19161a; --card: #1f1b20; --line: #2f2a30;
+    --text: #efeae2; --muted: #b3ada4;
+    --accent: #d8b46a;
+    --cta-bg: linear-gradient(160deg, #4a0f1b 0%, #1c080c 100%); --cta-text: #efeae2;
+    --btn-bg: #efeae2; --btn-text: #121013;
+  }
+  [data-variant='hall'] .btn--cta { background: var(--btn-bg); color: var(--btn-text); }
+  [data-variant='hall'] .cta__pattern { color: rgba(216, 180, 106, 0.08); }
+  html[data-cover='hall'] .hero {
+    background: radial-gradient(110% 70% at 50% 48%, #2a0f19 0%, #0d080a 58%, #060506 100%);
+  }
+  html[data-cover='hall'] .hero__word { color: #efeae2; }
+  html[data-cover='hall'] .hero__disc {
+    background: radial-gradient(circle at 50% 38%, #6e1729 0%, #3d0b16 58%, #1a0609 100%);
+    box-shadow: 0 0 0 0.012em rgba(255, 236, 205, 0.8), 0 0 0.2em 0.02em rgba(255, 214, 160, 0.3);
+  }
+  html[data-cover='hall'] .brand__kind, html[data-cover='hall'] .hero__invite { color: #d8b46a; }
+  html[data-cover='hall'] .btn--hero { background: #efeae2; color: #121013; }
+  html[data-cover='hall'] .btn--hero:hover { background: #fff; }
+  html[data-cover='hall'] .marquee { background: linear-gradient(90deg, #ff2fd8 0%, #8f6bff 50%, #19f0d4 100%); color: #111; }
+  html[data-cover='hall'] .marquee__item::after { color: #111; opacity: 0.55; }
+
   /* Переключатель на пробе — плашка в левом верхнем углу */
   .lockups {
     position: fixed; top: 14px; left: 14px; z-index: 50; display: flex; align-items: center; gap: 2px;
@@ -861,6 +893,7 @@ const строка = ['Духовная музыка', 'Русская клас�
   .sw--3 { background: radial-gradient(circle at 50% 50%, #ff2fd8 0 30%, #ebe5d9 32%); }
   .sw--4 { background: linear-gradient(180deg, #0b0b10 50%, #f7f5f0 50%); }
   .sw--5 { background: radial-gradient(circle at 30% 30%, #ff2fd8, #0b0b10 70%); }
+  .sw--6 { background: radial-gradient(circle, #6e1729 0 45%, #d8b46a 47% 55%, #0d080a 57%); }
   .temy button[aria-pressed='true'] { background: transparent; box-shadow: 0 0 0 2px #fff; }
 
 
