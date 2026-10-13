@@ -903,8 +903,8 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
 
   /*
     Кнопка записи едет вместе со страницей — круглая «таблетка» справа
-    внизу, появляется, когда обложка ушла с экрана. Залита сливовым, как
-    круг с головой: поверх и тёмных, и бежевых блоков её видно.
+    внизу, появляется, когда обложка ушла с экрана. Залита сиренью, как
+    «Идёт набор» на обложке: поверх и тёмных, и бежевых блоков её видно.
   */
   [data-variant='hall'] .sticky {
     left: auto; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); padding: 0;
@@ -913,10 +913,10 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   }
   [data-variant='hall'] .sticky .btn {
     width: auto; padding: 14px 24px; font-size: 0.95rem;
-    background: #3f2a55; color: #ebdfd2; border: 1px solid rgba(196, 182, 244, 0.7);
-    box-shadow: 0 8px 28px rgba(20, 8, 12, 0.45), 0 0 18px rgba(176, 162, 240, 0.25);
+    background: #c4b6f4; color: #2e1d1a; border: 0;
+    box-shadow: 0 8px 28px rgba(20, 8, 12, 0.4), 0 0 20px rgba(176, 162, 240, 0.35);
   }
-  [data-variant='hall'] .sticky .btn:hover { background: #4d3568; }
+  [data-variant='hall'] .sticky .btn:hover { background: #d4c9f8; }
   @media (min-width: 768px) {
     [data-variant='hall'] .sticky { right: 28px; bottom: 28px; }
     [data-variant='hall'] .footer { padding-bottom: 48px; }
