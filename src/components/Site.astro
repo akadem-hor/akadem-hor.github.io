@@ -194,6 +194,11 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   </head>
   <body>
     <header class="hero">
+      {проба && (
+        <div class="cta__pattern name-pattern name-pattern--hero" aria-hidden="true">
+          {Array.from({ length: 10 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+        </div>
+      )}
       <div class="hero__art" aria-hidden="true">
         {/* «О» — залитый круг чуть больше «Х» и «Р», голова стоит в нём
             (правка дизайнера 10.10.2026). Для программ чтения слово — «ХОР». */}
@@ -443,7 +448,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
         </div>
       </section>
 
-      <section class="block">
+      <section class:list={['block', проба && 'block--light']}>
         <div class="wrap">
           <div class="head">
             <div>
@@ -467,6 +472,11 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
     </main>
 
     <footer class="footer">
+      {проба && (
+        <div class="cta__pattern name-pattern" aria-hidden="true">
+          {Array.from({ length: 3 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+        </div>
+      )}
       <div class="wrap">
         <p class="label footer__name">{обложка.название}</p>
         <p class="footer__kind">{контакты.подпись}</p>
@@ -814,6 +824,18 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   [data-variant='hall'] main > .block--light::after { opacity: 0.22; mix-blend-mode: multiply; }
+
+  /*
+    Повторы, чтобы приёмы не выглядели случайными (13.10.2026):
+    — светлая полоса: «читают — на светлом, смотрят — на тёмном» — светлые
+      оба текстовых раздела, «Кого мы ждём» и «Частые вопросы»;
+    — узор из названия хора — на обложке (едва проступает за «ХОР»),
+      в блоке записи и в подвале: страница им начинается и заканчивается.
+  */
+  [data-variant='hall'] .block--light { --btn-bg: #2e1d1a; --btn-text: #f4ebe3; }
+  [data-variant='hall'] .name-pattern--hero { z-index: 0; color: rgba(244, 235, 227, 0.035); }
+  [data-variant='hall'] .footer .name-pattern { z-index: -1; inset: -10px -20px; color: rgba(196, 182, 244, 0.06); }
+  [data-variant='hall'] .footer { overflow: hidden; }
 
   /*
     Чтобы после яркой обложки страница не становилась скучной, её приёмы
