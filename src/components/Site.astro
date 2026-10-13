@@ -128,6 +128,11 @@ document.addEventListener('click',function(e){
 // Бегущая строка — о том, что поём; формулировки из блока «О хоре»
 const строка = ['Духовная музыка', 'Русская классика', 'Зарубежная классика', 'Народные песни', 'Концерты и конкурсы']
 // вторая строка на пробе — между «Кого мы ждём» и репетициями, едет навстречу первой
+// Подписи над заголовками. На пробе они добавляют смысл, а не повторяют
+// заголовок («01 — О хоре» над «О хоре»)
+const подпись = проба
+  ? ['01 — Кто мы', '02 — Хормейстеры', '03 — Набор', '04 — Расписание и цены', '05 — Как это выглядит', '06 — Если сомневаетесь']
+  : ['01 — О хоре', '02 — Хормейстеры', '03 — Набор', '04 — Репетиции', '05 — Фото', '06 — Вопросы']
 const строка2 = ['Нужен слух', 'Ноты — хотя бы немного', 'С 16 лет', 'Два вечера в неделю', 'Первая репетиция бесплатно']
 ---
 
@@ -194,11 +199,6 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   </head>
   <body>
     <header class="hero">
-      {проба && (
-        <div class="cta__pattern name-pattern name-pattern--hero" aria-hidden="true">
-          {Array.from({ length: 10 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
-        </div>
-      )}
       <div class="hero__art" aria-hidden="true">
         {/* «О» — залитый круг чуть больше «Х» и «Р», голова стоит в нём
             (правка дизайнера 10.10.2026). Для программ чтения слово — «ХОР». */}
@@ -251,7 +251,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
           {/* «О хоре»: текст и фото — две равные колонки одной высоты */}
           <div class="about">
             <div class="about__text">
-              <p class="label">01 — О хоре</p>
+              <p class="label">{подпись[0]}</p>
               <h2 class="title">{о_хоре.заголовок}</h2>
               {/* Только текст «О хоре»: набор, бесплатная первая репетиция и возраст
                   уже сказаны на обложке, в ценах и в «Кого мы ждём» */}
@@ -272,12 +272,13 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
             {/* Заголовок сверху, как у остальных блоков, фото — во всю ширину под ним.
                 Раньше заголовок стоял один в левой колонке и выглядел пустым:
                 текстов о хормейстерах пока нет. Когда появятся — встанут под именами. */}
-            <div class="wrap">
+            <div class="wrap crew">
               <div class="head">
                 <div>
-                  <p class="label">02 — Хормейстеры</p>
+                  <p class="label">{подпись[1]}</p>
                   <h2 class="title">{хормейстеры.заголовок}</h2>
                 </div>
+                {проба && хормейстеры.вступление && <p class="head__lead">{хормейстеры.вступление}</p>}
               </div>
               <div class="people">
                 {хормейстеры.люди.map((человек) => (
@@ -288,6 +289,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
                     <figcaption>
                       <span class="person__name">{человек.имя}</span>
                       <span class="person__role">{человек.должность}</span>
+                      {человек.о_нём.map((абзац: string) => <span class="person__about">{абзац}</span>)}
                     </figcaption>
                   </figure>
                 ))}
@@ -301,7 +303,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
         <div class="wrap">
           <div class="head">
             <div>
-              <p class="label">03 — Набор</p>
+              <p class="label">{подпись[2]}</p>
               <h2 class="title">{кого_ждём.заголовок}</h2>
             </div>
             <p class="head__lead">{кого_ждём.вступление}</p>
@@ -340,7 +342,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
         <div class="wrap">
           <div class="head">
             <div>
-              <p class="label">04 — Репетиции</p>
+              <p class="label">{подпись[3]}</p>
               <h2 class="title">{репетиции.заголовок}</h2>
             </div>
           </div>
@@ -410,7 +412,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
             <div class="wrap">
               <div class="head">
                 <div>
-                  <p class="label">05 — Фото</p>
+                  <p class="label">{подпись[4]}</p>
                   <h2 class="title">{галерея.заголовок}</h2>
                 </div>
               </div>
@@ -452,20 +454,31 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
         <div class="wrap">
           <div class="head">
             <div>
-              <p class="label">06 — Вопросы</p>
+              <p class="label">{подпись[5]}</p>
               <h2 class="title">{вопросы.заголовок}</h2>
             </div>
           </div>
-          <dl class="faq">
-            {
-              вопросы.список.map((пункт) => (
-                <div class="faq__item">
-                  <dt>{пункт.вопрос}</dt>
-                  <dd>{пункт.ответ}</dd>
-                </div>
-              ))
-            }
-          </dl>
+          {проба ? (
+            <div class="faq faq--fold">
+              {вопросы.список.map((пункт) => (
+                <details class="faq__item">
+                  <summary>{пункт.вопрос}</summary>
+                  <p>{пункт.ответ}</p>
+                </details>
+              ))}
+            </div>
+          ) : (
+            <dl class="faq">
+              {
+                вопросы.список.map((пункт) => (
+                  <div class="faq__item">
+                    <dt>{пункт.вопрос}</dt>
+                    <dd>{пункт.ответ}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+          )}
           <a class="btn btn--primary" href={заявка.ссылка_на_форму} {...цель} data-goal="prihod">{заявка.текст_кнопки}</a>
         </div>
       </section>
@@ -829,21 +842,59 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
     Повторы, чтобы приёмы не выглядели случайными (13.10.2026):
     — светлая полоса: «читают — на светлом, смотрят — на тёмном» — светлые
       оба текстовых раздела, «Кого мы ждём» и «Частые вопросы»;
-    — узор из названия хора — на обложке (едва проступает за «ХОР»),
-      в блоке записи и в подвале: страница им начинается и заканчивается.
+    — узор из названия хора — в блоке записи и в подвале: концовка
+      страницы. С обложки убран — там и так много деталей.
   */
   [data-variant='hall'] .block--light { --btn-bg: #2e1d1a; --btn-text: #f4ebe3; }
-  [data-variant='hall'] .name-pattern--hero { z-index: 0; color: rgba(244, 235, 227, 0.035); }
   [data-variant='hall'] .footer .name-pattern { z-index: -1; inset: -10px -20px; color: rgba(196, 182, 244, 0.06); }
   [data-variant='hall'] .footer { overflow: hidden; }
+
+  /* Кнопки без заливки — тонкий контур цвета текста, заливка при наведении */
+  [data-variant='hall'] .btn--primary, [data-variant='hall'] .btn--cta, html[data-cover='hall'] .btn--hero {
+    background: transparent; color: var(--text); border: 2px solid currentColor; padding: 14px 32px;
+  }
+  html[data-cover='hall'] .btn--hero { color: #f4ebe3; }
+  [data-variant='hall'] .btn--cta { color: var(--cta-text); }
+  [data-variant='hall'] .btn--primary:hover, [data-variant='hall'] .btn--cta:hover, html[data-cover='hall'] .btn--hero:hover {
+    background: rgba(244, 235, 227, 0.12);
+  }
+  [data-variant='hall'] .block--light .btn--primary:hover { background: rgba(46, 29, 26, 0.08); }
+
+  /* Меньше одинаковых карточек: пункты, расписание и цены — просто строки
+     с линиями; карточкой остался только адрес с картой, рамкой — вопрос
+     о прослушивании */
+  [data-variant='hall'] .points { background: none; border: 0; border-radius: 0; column-gap: 48px; }
+  [data-variant='hall'] .point { padding: 24px 0; }
+  [data-variant='hall'] .panel { background: none; border: 0; border-radius: 0; padding: 0; }
+  [data-variant='hall'] .rehearse { row-gap: 40px; }
+  @media (min-width: 900px) { [data-variant='hall'] .rehearse { column-gap: 64px; } }
+
+  /* Хормейстеры: на компьютере заголовок слева, портреты справа — без
+     пустоты; на телефоне — как было, под заголовком */
+  .person__about { display: block; margin-top: 10px; font-size: 0.95rem; color: var(--muted); }
+  @media (min-width: 900px) {
+    [data-variant='hall'] .crew { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 64px; align-items: center; }
+    [data-variant='hall'] .crew .head { grid-template-columns: 1fr; gap: 20px; margin: 0; }
+    [data-variant='hall'] .crew .people { max-width: none; margin: 0; gap: 40px; }
+  }
+
+  /* Вопросы раскрываются по нажатию: видно только вопросы */
+  .faq--fold summary {
+    list-style: none; cursor: pointer; display: flex; justify-content: space-between; gap: 16px;
+    font-weight: 600; font-size: 1.05rem; line-height: 1.35;
+  }
+  .faq--fold summary::-webkit-details-marker { display: none; }
+  .faq--fold summary::after { content: '+'; flex: none; font-weight: 400; font-size: 1.5rem; line-height: 0.9; color: var(--accent); transition: transform 0.2s; }
+  .faq--fold details[open] summary::after { transform: rotate(45deg); }
+  .faq--fold p { margin: 10px 0 0; color: var(--muted); }
 
   /*
     Чтобы после яркой обложки страница не становилась скучной, её приёмы
     протянуты вниз (проба, 13.10.2026):
     — мотив круга: портреты хормейстеров в кругах с тем же кольцом света,
       большое фото хора — в арке;
-    — ритм: «Кого мы ждём» — светлая сиреневая полоса между тёмными;
-    — вторая бегущая строка навстречу первой, кремовая;
+    — ритм: светлые полосы между тёмными (см. ниже);
+    — вторая бегущая строка навстречу первой, сливовая — в цвет круга;
     — голова возвращается в блоке записи: страница начинается и
       заканчивается одним героем;
     — заголовки мягко поднимаются при прокрутке.
@@ -874,16 +925,19 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
     [data-variant='hall'] .people { max-width: 760px; margin: 0 auto; gap: 56px; }
   }
 
+  /* Светлые полосы — цвета гипса, как сама голова и кремовые буквы:
+     коричневый и кремовый — один тон, «кофе с молоком». Сирень осталась
+     акцентом — подписи на светлом сливовые, в цвет круга с головой. */
   [data-variant='hall'] .block--light {
-    --text: #2e1d1a; --muted: #5e4a45; --accent: #5b3f9a;
-    --card: #f1ecfb; --line: #cfc4ec;
-    background: linear-gradient(170deg, #e6dff8 0%, #d9d6f4 55%, #d2dff3 100%);
+    --text: #2e1d1a; --muted: #6a564e; --accent: #5a3f86;
+    --card: #f8f2ea; --line: #dccbbd;
+    background: linear-gradient(170deg, #f4ece3 0%, #ebdfd2 100%);
     color: var(--text);
   }
 
-  html[data-cover='hall'] .marquee--back { background: #f4ebe3; color: #2e1d1a; }
+  html[data-cover='hall'] .marquee--back { background: #3f2a55; color: #f4ebe3; }
   [data-variant='hall'] .marquee--back .marquee__track { animation-direction: reverse; }
-  html[data-cover='hall'] .marquee--back .marquee__item::after { color: #6a56a0; opacity: 1; }
+  html[data-cover='hall'] .marquee--back .marquee__item::after { color: #c4b6f4; opacity: 1; }
 
   .cta__mark { font-size: clamp(150px, 22vw, 210px); display: flex; justify-content: center; margin: 0 0 22px; }
   /* в блоке записи голова чуть покачивается, будто подпевает */
