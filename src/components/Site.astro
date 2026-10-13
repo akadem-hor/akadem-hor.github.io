@@ -200,7 +200,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   <body>
     <header class="hero">
       {проба && (
-        <div class="cta__pattern name-pattern name-pattern--hero" aria-hidden="true">
+        <div class="cta__pattern name-pattern" aria-hidden="true">
           {Array.from({ length: 10 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
         </div>
       )}
@@ -252,6 +252,11 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
 
     <main>
       <section class:list={['block', проба && 'block--light']}>
+        {проба && (
+          <div class="cta__pattern name-pattern" aria-hidden="true">
+            {Array.from({ length: 24 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+          </div>
+        )}
         <div class="wrap">
           {/* «О хоре»: текст и фото — две равные колонки одной высоты */}
           <div class="about">
@@ -275,7 +280,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
         хормейстеры.люди.length > 0 && (
           <section class="block block--alt">
             {проба && (
-              <div class="cta__pattern name-pattern name-pattern--edge" aria-hidden="true">
+              <div class="cta__pattern name-pattern" aria-hidden="true">
                 {Array.from({ length: 10 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
               </div>
             )}
@@ -310,6 +315,11 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
       }
 
       <section class:list={['block', проба && 'block--light']}>
+        {проба && (
+          <div class="cta__pattern name-pattern" aria-hidden="true">
+            {Array.from({ length: 24 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+          </div>
+        )}
         <div class="wrap">
           <div class="head">
             <div>
@@ -349,6 +359,11 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
       )}
 
       <section class="block block--alt" id="rehearsals">
+        {проба && (
+          <div class="cta__pattern name-pattern" aria-hidden="true">
+            {Array.from({ length: 24 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+          </div>
+        )}
         <div class="wrap">
           <div class="head">
             <div>
@@ -419,6 +434,16 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
       {
         галерея.снимки.length > 0 && (
           <section class:list={['block', проба && 'block--light']}>
+            {проба && (
+              <div class="cta__pattern name-pattern" aria-hidden="true">
+                {Array.from({ length: 24 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+              </div>
+            )}
+        {проба && (
+          <div class="cta__pattern name-pattern" aria-hidden="true">
+            {Array.from({ length: 24 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+          </div>
+        )}
             <div class="wrap">
               <div class="head">
                 <div>
@@ -442,7 +467,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
       }
 
       <section class="cta">
-        <div class="cta__pattern" aria-hidden="true">
+        <div class="cta__pattern name-pattern" aria-hidden="true">
           {Array.from({ length: 8 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
         </div>
         <div class="wrap cta__inner">
@@ -461,6 +486,11 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
       </section>
 
       <section class:list={['block', проба && 'block--light']}>
+        {проба && (
+          <div class="cta__pattern name-pattern" aria-hidden="true">
+            {Array.from({ length: 24 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+          </div>
+        )}
         <div class="wrap">
           <div class="head">
             <div>
@@ -496,7 +526,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
 
     <footer class="footer">
       {проба && (
-        <div class="cta__pattern name-pattern name-pattern--edge" aria-hidden="true">
+        <div class="cta__pattern name-pattern" aria-hidden="true">
           {Array.from({ length: 3 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
         </div>
       )}
@@ -796,8 +826,6 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
     --btn-bg: #ebdfd2; --btn-text: #2e1d1a;
   }
   [data-variant='hall'] .btn--cta { background: var(--btn-bg); color: var(--btn-text); }
-  [data-variant='hall'] .cta__pattern { color: rgba(196, 182, 244, 0.07); }
-  [data-variant='hall'] .sticky { background: rgba(46, 29, 26, 0.9); border-top: 1px solid var(--line); }
   /* Яндекс Карта своей тёмной схемы не даёт: светлую плитку переворачиваем
      в тёмную, цвета возвращаем поворотом оттенка и тонируем в тёплое */
   [data-variant='hall'] .place__map { filter: invert(0.88) hue-rotate(180deg) sepia(0.5) hue-rotate(-28deg) saturate(1.15) brightness(0.92); }
@@ -851,22 +879,47 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   */
   [data-variant='hall'] .block--light { --btn-bg: #2e1d1a; --btn-text: #ebdfd2; }
 
+
   /*
-    «ГОЛОСА» — узор из названия хора (13.10.2026). Контуром и только по
-    краям — на обложке и у хормейстеров (там блок казался пустым);
-    сплошной — в блоке записи; в подвале — за текстом. Узор лежит
-    под содержимым и высоту блоков не меняет. Огромные одиночные слова
-    контуром, срезанные краем, пробовали — выглядели случайно выехавшими.
+    «ГОЛОСА» — узор из названия хора (13.10.2026). Один и тот же на каждом
+    блоке: тёмных, бежевых и бордовом — сплошные буквы, едва заметные,
+    видны только по краям, за текстом пусто. Как монограмма на ткани:
+    общая фактура всей страницы. Лежит под содержимым, высоту блоков
+    не меняет. Огромные одиночные слова контуром пробовали — выглядели
+    случайно выехавшими за край.
   */
-  [data-variant='hall'] main > .block, [data-variant='hall'] .footer { overflow: hidden; }
-  [data-variant='hall'] .name-pattern--hero, [data-variant='hall'] .name-pattern--edge {
-    color: transparent; -webkit-text-stroke: 1px rgba(235, 223, 210, 0.11);
-    -webkit-mask-image: radial-gradient(60% 55% at 50% 50%, transparent 55%, #000 100%);
-    mask-image: radial-gradient(60% 55% at 50% 50%, transparent 55%, #000 100%);
+  [data-variant='hall'] main > .block, [data-variant='hall'] .footer, [data-variant='hall'] .cta { overflow: hidden; isolation: isolate; }
+  [data-variant='hall'] .cta__pattern.name-pattern {
+    z-index: -1; color: rgba(235, 223, 210, 0.07); -webkit-text-stroke: 0;
+    -webkit-mask-image: radial-gradient(62% 58% at 50% 50%, transparent 50%, #000 100%);
+    mask-image: radial-gradient(62% 58% at 50% 50%, transparent 50%, #000 100%);
   }
-  [data-variant='hall'] .name-pattern--hero { z-index: 0; }
-  [data-variant='hall'] .name-pattern--edge { z-index: -1; }
-  [data-variant='hall'] .footer .name-pattern--edge { -webkit-mask-image: none; mask-image: none; }
+  [data-variant='hall'] .block--light .cta__pattern.name-pattern { color: rgba(46, 29, 26, 0.06); }
+  [data-variant='hall'] .hero .cta__pattern.name-pattern { z-index: 0; }
+
+  /* Блоки уже: на широком экране строки и сетки не расползаются */
+  [data-variant='hall'] .wrap { max-width: 1060px; }
+
+  /*
+    Кнопка записи едет вместе со страницей — круглая «таблетка» справа
+    внизу, появляется, когда обложка ушла с экрана. Залита сливовым, как
+    круг с головой: поверх и тёмных, и бежевых блоков её видно.
+  */
+  [data-variant='hall'] .sticky {
+    left: auto; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); padding: 0;
+    background: none; border: 0; backdrop-filter: none; display: block;
+    transition: transform 0.35s ease, visibility 0.35s;
+  }
+  [data-variant='hall'] .sticky .btn {
+    width: auto; padding: 14px 24px; font-size: 0.95rem;
+    background: #3f2a55; color: #ebdfd2; border: 1px solid rgba(196, 182, 244, 0.7);
+    box-shadow: 0 8px 28px rgba(20, 8, 12, 0.45), 0 0 18px rgba(176, 162, 240, 0.25);
+  }
+  [data-variant='hall'] .sticky .btn:hover { background: #4d3568; }
+  @media (min-width: 768px) {
+    [data-variant='hall'] .sticky { right: 28px; bottom: 28px; }
+    [data-variant='hall'] .footer { padding-bottom: 48px; }
+  }
 
   /* Кнопки без заливки — тонкий контур цвета текста, заливка при наведении */
   [data-variant='hall'] .btn--primary, [data-variant='hall'] .btn--cta, html[data-cover='hall'] .btn--hero {
