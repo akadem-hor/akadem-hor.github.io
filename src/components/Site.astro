@@ -822,7 +822,9 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
     --bg: #2e1d1a; --bg-alt: #36221e; --card: #432a26; --line: #5d3f39;
     --text: #ebdfd2; --muted: #cdb8aa;
     --accent: #c4b6f4;
-    --cta-bg: radial-gradient(90% 120% at 50% 0%, #74202f 0%, #4a1320 60%, #34101a 100%); --cta-text: #ebdfd2;
+    /* блок записи — не красный бордо, а винно-сливовый: свет сверху
+       того же оттенка, что в центре обложки и в круге с головой */
+    --cta-bg: radial-gradient(90% 110% at 50% 0%, #55253f 0%, #3d1d2a 55%, #2a1714 100%); --cta-text: #ebdfd2;
     --btn-bg: #ebdfd2; --btn-text: #2e1d1a;
   }
   [data-variant='hall'] .btn--cta { background: var(--btn-bg); color: var(--btn-text); }
