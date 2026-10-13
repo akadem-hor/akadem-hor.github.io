@@ -55,20 +55,17 @@ const сТипографикой = (x: any): any =>
   : x
 
 // Проба (/proba/): закрыта от поисковиков, без Метрики. На ней обкатываются
-// идеи до выкатки на главную: название «ХОРпорация» на обложке и
-// переключатель светлой и тёмной темы (октябрь 2026).
+// идеи до выкатки на главную: сейчас — пять тем, от светлой до тёмной
+// (октябрь 2026).
 interface Props {
   проба?: boolean
 }
 const { проба = false } = Astro.props
-const НОВОЕ_ИМЯ = 'ХОРпорация'
 // Темы пробы — от молодёжной к строгой; 2–4 — средние между светлой и тёмной
 const ТЕМЫ = [['1', 'Светлая'], ['2', 'Вечер'], ['3', 'Мрамор'], ['4', 'Смешанная'], ['5', 'Тёмная']]
-const сИменем = (x: any) =>
-  проба ? JSON.parse(JSON.stringify(x).replaceAll(content.обложка.название, НОВОЕ_ИМЯ)) : x
 
 const { сайт, заявка, обложка, о_хоре, хормейстеры, кого_ждём, репетиции, галерея, вопросы, контакты } =
-  сТипографикой(сИменем(content))
+  сТипографикой(content)
 
 const внешняя = !заявка.ссылка_на_форму.startsWith('#')
 const цель = внешняя ? { target: '_blank', rel: 'noopener' } : {}
@@ -135,7 +132,7 @@ const строка = ['Духовная музыка', 'Русская клас�
 ---
 
 <!doctype html>
-<html lang="ru" data-variant="light" data-hero="neon" data-name={проба ? 'horporation' : undefined}>
+<html lang="ru" data-variant="light" data-hero="neon">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -157,8 +154,6 @@ const строка = ['Духовная музыка', 'Русская клас�
           root.setAttribute('data-variant', T[t][0])
           root.setAttribute('data-cover', T[t][1])
           root.setAttribute('data-tema', t)
-          var n = q.get('n')
-          document.documentElement.setAttribute('data-lockup', { '2': 'inline', '3': 'caps' }[n] || 'stack')
         })()
       </script>
     )}
@@ -218,12 +213,6 @@ const строка = ['Духовная музыка', 'Русская клас�
   </head>
   <body>
     {проба && (
-      <div class="lockups" role="group" aria-label="Вариант названия">
-        <span class="lockups__label">Название</span>
-        <button type="button" data-n="1" data-l="stack">1</button>
-        <button type="button" data-n="2" data-l="inline">2</button>
-        <button type="button" data-n="3" data-l="caps">3</button>
-      </div>
       <div class="lockups temy" role="group" aria-label="Тема">
         <span class="lockups__label temy__name" id="tema-name">Тема</span>
         {ТЕМЫ.map(([n, имя]) => (
@@ -237,7 +226,7 @@ const строка = ['Духовная музыка', 'Русская клас�
         {/* «О» — залитый круг чуть больше «Х» и «Р», голова стоит в нём
             (правка дизайнера 10.10.2026). Для программ чтения слово — «ХОР». */}
         {(
-          <span class="hero__word" aria-label={проба ? НОВОЕ_ИМЯ : 'ХОР'}>
+          <span class="hero__word" aria-label='ХОР'>
             <span class="hero__row">
             <span>Х</span>
             <span class="hero__disc">
@@ -248,9 +237,6 @@ const строка = ['Духовная музыка', 'Русская клас�
               </span>
             </span>
             <span>Р</span>
-            {/* «ХОР» с головой в «О» — начало названия, «порация» — его хвост:
-                обложка целиком становится логотипом */}
-            {проба && <span class="hero__tail">порация</span>}
             </span>
           </span>
         )}
@@ -584,16 +570,6 @@ const строка = ['Духовная музыка', 'Русская клас�
               markT()
             })
           })
-          var bs = document.querySelectorAll('.lockups button')
-          function mark() { bs.forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.l === root.getAttribute('data-lockup'))) }) }
-          mark()
-          bs.forEach(function (x) {
-            x.addEventListener('click', function () {
-              root.setAttribute('data-lockup', x.dataset.l)
-              var u = new URL(location.href); u.searchParams.set('n', x.dataset.n); history.replaceState(null, '', u)
-              mark()
-            })
-          })
         })()
       </script>
     )}
@@ -758,8 +734,6 @@ const строка = ['Духовная музыка', 'Русская клас�
      этого сжимался до половины экрана, перенося буквы на новую строку */
   .hero__word { width: max-content; }
   .hero__row { display: flex; justify-content: center; align-items: center; gap: 0 0.03em; }
-  /* вариант 1: строка шириной ровно «ХОР» (2,32 размера), «порация» — под ней */
-  html[data-lockup='stack'] .hero__row { flex-wrap: wrap; width: 2.4em; }
   /* Круг на месте «О»: заглавные Montserrat высотой около 0,7 размера шрифта,
      круг — 0,84, то есть чуть больше букв, как просил дизайнер. Буквы
      в строке с line-height 0,8 сидят чуть ниже середины — круг опущен на
@@ -798,75 +772,6 @@ const строка = ['Духовная музыка', 'Русская клас�
   }
   [data-hero='neon'] .hero__bust img {
     position: absolute; left: 3.6%; top: 2.5%; width: 79%; height: auto; max-width: none;
-  }
-  /*
-    «ХОРпорация» (проба). Хвост «порация» строчными, ширина — как у «ХОР»:
-    измерено: «ХОР» с кругом — 2,32 размера большого шрифта, «порация»
-    строчными — 4,58 своего; 2,32 / 4,58 ≈ 0,5.
-    Отдельное крупное название сверху не нужно: им стала обложка; в h1 оно
-    остаётся для поисковиков и программ чтения с экрана.
-  */
-  [data-name='horporation'] .hero__tail {
-    display: block; font-size: 0.5em; line-height: 0.9; letter-spacing: -0.02em;
-    margin-top: -0.07em; text-transform: none;
-    flex-basis: 100%; text-align: center;
-  }
-  [data-name='horporation'] .brand__name {
-    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
-  }
-  [data-name='horporation'] .brand__kind { margin-top: 0; }
-  [data-name='horporation'] .hero { --ht: 110px; }
-  [data-name='horporation'] .hero__word { font-size: min(36vw, calc((100svh - var(--ht) - var(--hb)) * 0.68)); }
-  @media (min-width: 700px) {
-    [data-name='horporation'] .hero { --ht: 100px; }
-    [data-name='horporation'] .hero__word {
-      font-size: min(36vw, calc((100svh - var(--ht) - var(--hb)) * 0.68));
-      top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.5);
-    }
-  }
-  @media (max-width: 699px) {
-    /* сверху на пробе два ряда переключателей — подпись опущена под них */
-    [data-name='horporation'] .hero { --ht: 186px; min-height: calc(var(--ht) + var(--hb) + 40vw * 1.3); }
-    [data-name='horporation'] .hero__top { padding-top: 116px; }
-    [data-name='horporation'] .hero__word { font-size: 40vw; }
-    [data-name='horporation'] .hero__word { top: calc(var(--ht) + (100% - var(--ht) - var(--hb)) * 0.52); }
-  }
-
-  /*
-    Варианты 2 и 3 — слово в одну строку. Чтобы оно не тонуло в пустоте:
-    круг с головой крупнее букв (строка проходит через его середину) — голова
-    остаётся главным образом и заполняет высоту; обложка по высоте
-    содержимого, а не на весь экран.
-
-    Вариант 2: «ХОР» с кругом 1,3 размера шрифта, за ним «порация» вдвое
-    мельче на базовой линии «Х» и «Р». Базовая линия букв — на 0,36 размера
-    ниже середины строки, у «порации» своя — на 0,18 ниже её середины:
-    сдвиг 0,18 большого размера = 0,36 своего. Ширина ≈ 5,1 размера шрифта,
-    высота с макушкой ≈ 1,45.
-  */
-  html[data-lockup='inline'] .hero__disc { width: 1.3em; height: 1.3em; }
-  html[data-lockup='inline'] .hero__tail {
-    flex-basis: auto; margin: 0 0 0 0.06em; line-height: 0.8;
-    position: relative; top: 0.36em;
-  }
-  html[data-lockup='inline'] .hero__word { font-size: min(17.5vw, calc((100svh - var(--ht) - var(--hb)) * 0.66)); }
-  html[data-lockup='inline'] .hero { min-height: calc(var(--ht) + var(--hb) + min(17.5vw, calc((100svh - var(--ht) - var(--hb)) * 0.66)) * 1.45 + 48px); }
-  /*
-    Вариант 3: «ХОРПОРАЦИЯ» одним кеглем прописными, круг с головой
-    1,75 размера — вдвое выше букв. Ширина ≈ 8,5 размера, высота ≈ 1,95.
-  */
-  html[data-lockup='caps'] .hero__disc { width: 1.75em; height: 1.75em; }
-  html[data-lockup='caps'] .hero__tail {
-    flex-basis: auto; margin: 0 0 0 0.03em; font-size: 1em; line-height: 0.8;
-    text-transform: uppercase; letter-spacing: -0.03em;
-  }
-  html[data-lockup='caps'] .hero__word { font-size: min(10.6vw, calc((100svh - var(--ht) - var(--hb)) * 0.5)); }
-  html[data-lockup='caps'] .hero { min-height: calc(var(--ht) + var(--hb) + min(10.6vw, calc((100svh - var(--ht) - var(--hb)) * 0.5)) * 1.95 + 48px); }
-  @media (max-width: 699px) {
-    html[data-lockup='inline'] .hero__word { font-size: 17.5vw; }
-    html[data-lockup='inline'] .hero { min-height: calc(var(--ht) + var(--hb) + 17.5vw * 1.45 + 32px); }
-    html[data-lockup='caps'] .hero__word { font-size: 10.6vw; }
-    html[data-lockup='caps'] .hero { min-height: calc(var(--ht) + var(--hb) + 10.6vw * 1.95 + 32px); }
   }
 
   [data-hero='neon'] .btn--hero { background: #111; color: #fff; }
@@ -932,7 +837,7 @@ const строка = ['Духовная музыка', 'Русская клас�
   }
   html[data-cover='night'][data-variant='light'] .btn--cta { background: #fff; color: #111; }
 
-  /* Переключатель вариантов названия — только на пробе */
+  /* Переключатель на пробе — плашка в левом верхнем углу */
   .lockups {
     position: fixed; top: 14px; left: 14px; z-index: 50; display: flex; align-items: center; gap: 2px;
     padding: 4px; border-radius: 999px; background: rgba(17, 17, 22, 0.78); backdrop-filter: blur(6px);
@@ -944,8 +849,10 @@ const строка = ['Духовная музыка', 'Русская клас�
     width: 34px; height: 34px; border-radius: 50%;
   }
   .lockups button[aria-pressed='true'] { background: #fff; color: #111; }
-  /* Переключатель тем — под переключателем названия, кружки цвета обложки */
-  .temy { top: 62px; }
+  /* Переключатель тем (проба) — кружки цвета обложки; подпись обложки
+     на телефоне опущена под него */
+  html[data-tema] .hero__top { padding-top: 76px; }
+  @media (min-width: 700px) { html[data-tema] .hero__top { padding-top: 72px; } }
   .temy__name { min-width: 7.5em; color: #fff; }
   .temy button { display: grid; place-items: center; }
   .sw { display: block; width: 22px; height: 22px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25); }
