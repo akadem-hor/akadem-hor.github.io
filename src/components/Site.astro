@@ -706,39 +706,45 @@ const строка = ['Духовная музыка', 'Русская клас�
   [data-hero='neon'] .hero__invite { color: #111; }
 
   /*
-    «Концерт» — 70 % строгого, 30 % молодёжного. Основа — проба «Тёмный»
-    (10.10.2026) по спокойным афишам AUTEM: тёплая темнота зала, кремовые
-    буквы, бордо, золото и кольцо света вокруг головы, как на «Stabat Mater».
-    Молодёжное — голова в очках (неон остался только в их отражении),
-    огромное «ХОР» и одна яркая полоса: бегущая строка градиентом сайта.
-    Блоки ниже графитовые с тёплым оттенком. Неона и розового свечения
-    на чёрном нет: отзыв «грань со стрип-клубом» был про них.
+    «Концерт» — 70 % строгого, 30 % молодёжного (выбрана 13.10.2026).
+    Почти монохром в бордово-коричневом: как бархат и дерево концертного
+    зала — без чёрного и серого. Обложка темнее к краям, блоки ниже —
+    винные, через один чуть светлее, карточки ещё светлее.
+    Холодный акцент — сиреневый и ледяной голубой из отблесков на голове
+    и в очках. Тёплое винное и холодная сирень — контраст температуры
+    при общем красно-фиолетовом корне, поэтому сочетаются и держат
+    молодёжность. Сирень дозирована: подписи, кольцо света вокруг круга,
+    бегущая строка. Неона и розового свечения нет — отзыв «грань со
+    стрип-клубом» был про них.
   */
   [data-variant='hall'] {
-    --bg: #121013; --bg-alt: #19161a; --card: #1f1b20; --line: #2f2a30;
-    --text: #efeae2; --muted: #b3ada4;
-    --accent: #d8b46a;
-    --cta-bg: linear-gradient(160deg, #4a0f1b 0%, #1c080c 100%); --cta-text: #efeae2;
-    --btn-bg: #efeae2; --btn-text: #121013;
+    --bg: #3a171c; --bg-alt: #441b21; --card: #51232a; --line: #6a3a42;
+    --text: #f4e9e2; --muted: #d0b8b1;
+    --accent: #c4b6f4;
+    --cta-bg: radial-gradient(90% 120% at 50% 0%, #74202f 0%, #4a1320 60%, #34101a 100%); --cta-text: #f4e9e2;
+    --btn-bg: #f4e9e2; --btn-text: #3a171c;
   }
   [data-variant='hall'] .btn--cta { background: var(--btn-bg); color: var(--btn-text); }
-  [data-variant='hall'] .cta__pattern { color: rgba(216, 180, 106, 0.08); }
-  /* Яндекс Карта своей тёмной схемы не даёт — светлую плитку переворачиваем
-     в тёмную фильтром, цвета возвращаем поворотом оттенка */
-  [data-variant='hall'] .place__map { filter: invert(0.9) hue-rotate(180deg) saturate(0.7) brightness(0.95); }
+  [data-variant='hall'] .cta__pattern { color: rgba(196, 182, 244, 0.07); }
+  [data-variant='hall'] .sticky { background: rgba(58, 23, 28, 0.9); border-top: 1px solid var(--line); }
+  /* Яндекс Карта своей тёмной схемы не даёт: светлую плитку переворачиваем
+     в тёмную, цвета возвращаем поворотом оттенка и тонируем в тёплое */
+  [data-variant='hall'] .place__map { filter: invert(0.88) hue-rotate(180deg) sepia(0.5) hue-rotate(-28deg) saturate(1.15) brightness(0.92); }
   html[data-cover='hall'] .hero {
-    background: radial-gradient(110% 70% at 50% 48%, #2a0f19 0%, #0d080a 58%, #060506 100%);
+    background: radial-gradient(110% 75% at 50% 46%, #5a1a27 0%, #3a141a 55%, #2a0f13 100%);
   }
-  html[data-cover='hall'] .hero__word { color: #efeae2; }
+  html[data-cover='hall'] .hero__word { color: #f4e9e2; }
   html[data-cover='hall'] .hero__disc {
-    background: radial-gradient(circle at 50% 38%, #6e1729 0%, #3d0b16 58%, #1a0609 100%);
-    box-shadow: 0 0 0 0.012em rgba(255, 236, 205, 0.8), 0 0 0.2em 0.02em rgba(255, 214, 160, 0.3);
+    background: radial-gradient(circle at 50% 36%, #8a2436 0%, #561424 55%, #2c0b12 100%);
+    box-shadow: 0 0 0 0.012em rgba(222, 214, 255, 0.85), 0 0 0.22em 0.02em rgba(176, 162, 240, 0.32);
   }
-  html[data-cover='hall'] .brand__kind, html[data-cover='hall'] .hero__invite { color: #d8b46a; }
-  html[data-cover='hall'] .btn--hero { background: #efeae2; color: #121013; }
+  html[data-cover='hall'] .brand__kind { color: #d9c9c2; }
+  html[data-cover='hall'] .hero__invite { color: #c4b6f4; }
+  html[data-cover='hall'] .btn--hero { background: #f4e9e2; color: #2a1215; }
   html[data-cover='hall'] .btn--hero:hover { background: #fff; }
-  html[data-cover='hall'] .marquee { background: linear-gradient(90deg, #ff2fd8 0%, #8f6bff 50%, #19f0d4 100%); color: #111; }
-  html[data-cover='hall'] .marquee__item::after { color: #111; opacity: 0.55; }
+  /* бегущая строка — полоса сирени в ледяной голубой, как отблеск на голове */
+  html[data-cover='hall'] .marquee { background: linear-gradient(90deg, #c9bdf6 0%, #b3c3f2 55%, #a8cdea 100%); color: #2a1215; }
+  html[data-cover='hall'] .marquee__item::after { color: #74202f; opacity: 0.8; }
 
 
 
