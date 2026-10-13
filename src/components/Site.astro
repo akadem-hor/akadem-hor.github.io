@@ -127,6 +127,8 @@ document.addEventListener('click',function(e){
 
 // Бегущая строка — о том, что поём; формулировки из блока «О хоре»
 const строка = ['Духовная музыка', 'Русская классика', 'Зарубежная классика', 'Народные песни', 'Концерты и конкурсы']
+// вторая строка на пробе — между «Кого мы ждём» и репетициями, едет навстречу первой
+const строка2 = ['Нужен слух', 'Ноты — хотя бы немного', 'С 16 лет', 'Два вечера в неделю', 'Первая репетиция бесплатно']
 ---
 
 <!doctype html>
@@ -290,7 +292,7 @@ const строка = ['Духовная музыка', 'Русская клас�
         )
       }
 
-      <section class="block">
+      <section class:list={['block', проба && 'block--light']}>
         <div class="wrap">
           <div class="head">
             <div>
@@ -316,6 +318,18 @@ const строка = ['Духовная музыка', 'Русская клас�
           </div>
         </div>
       </section>
+
+      {проба && (
+        <div class="marquee marquee--back" aria-hidden="true">
+          <div class="marquee__track">
+            {[0, 1].map(() => (
+              <span class="marquee__set">
+                {строка2.map((слово) => <span class="marquee__item">{слово}</span>)}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       <section class="block block--alt" id="rehearsals">
         <div class="wrap">
@@ -415,6 +429,13 @@ const строка = ['Духовная музыка', 'Русская клас�
           {Array.from({ length: 8 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
         </div>
         <div class="wrap cta__inner">
+          {проба && (
+            <div class="cta__mark" aria-hidden="true">
+              <span class="hero__disc">
+                <span class="hero__bust"><img src="/images/bust.webp" alt="" width="695" height="1000" loading="lazy" /></span>
+              </span>
+            </div>
+          )}
           <h2 class="title">{контакты.заголовок}</h2>
           <p class="cta__text">{контакты.вступление}</p>
           <a class="btn btn--cta" href={заявка.ссылка_на_форму} {...цель} data-goal="prihod">{заявка.текст_кнопки}</a>
@@ -513,6 +534,22 @@ const строка = ['Духовная музыка', 'Русская клас�
         }, { threshold: 0.15 }).observe(hero)
       })()
     </script>
+
+    {проба && (
+      <script is:inline>
+        ;(function () {
+          // Заголовки разделов мягко поднимаются, когда доходят до экрана.
+          // Без поддержки или при «уменьшить движение» всё видно сразу.
+          if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+          var root = document.documentElement
+          root.classList.add('reveal-on')
+          var io = new IntersectionObserver(function (es) {
+            es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target) } })
+          }, { rootMargin: '0px 0px -12% 0px' })
+          document.querySelectorAll('main .head, main .about__text, .person, .point, .cta__inner').forEach(function (el) { io.observe(el) })
+        })()
+      </script>
+    )}
 
     {!проба && content.сайт.счётчик_метрики && (
       <Fragment>
@@ -732,11 +769,13 @@ const строка = ['Духовная музыка', 'Русская клас�
      в тёмную, цвета возвращаем поворотом оттенка и тонируем в тёплое */
   [data-variant='hall'] .place__map { filter: invert(0.88) hue-rotate(180deg) sepia(0.5) hue-rotate(-28deg) saturate(1.15) brightness(0.92); }
   html[data-cover='hall'] .hero {
-    background: radial-gradient(110% 75% at 50% 46%, #4e1c24 0%, #34201c 58%, #261712 100%);
+    background: radial-gradient(110% 75% at 50% 46%, #4a1d2e 0%, #34201c 58%, #261712 100%);
   }
   html[data-cover='hall'] .hero__word { color: #f4e9e2; }
   html[data-cover='hall'] .hero__disc {
-    background: radial-gradient(circle at 50% 36%, #8a2436 0%, #561424 55%, #2c0b12 100%);
+    /* слива с холодным светом сверху: голова освещена сиренево-голубым
+       и на бордо выглядела вклеенной; здесь её тени — отсвет от круга */
+    background: radial-gradient(circle at 45% 28%, #6a56a0 0%, #3f2a55 52%, #261520 100%);
     box-shadow: 0 0 0 0.012em rgba(222, 214, 255, 0.85), 0 0 0.22em 0.02em rgba(176, 162, 240, 0.32);
   }
   html[data-cover='hall'] .brand__kind { color: #d9c9c2; }
@@ -746,6 +785,58 @@ const строка = ['Духовная музыка', 'Русская клас�
   /* бегущая строка — полоса сирени в ледяной голубой, как отблеск на голове */
   html[data-cover='hall'] .marquee { background: linear-gradient(90deg, #c9bdf6 0%, #b3c3f2 55%, #a8cdea 100%); color: #2a1215; }
   html[data-cover='hall'] .marquee__item::after { color: #74202f; opacity: 0.8; }
+
+  /*
+    Чтобы после яркой обложки страница не становилась скучной, её приёмы
+    протянуты вниз (проба, 13.10.2026):
+    — мотив круга: портреты хормейстеров в кругах с тем же кольцом света,
+      большое фото хора — в арке;
+    — ритм: «Кого мы ждём» — светлая сиреневая полоса между тёмными;
+    — вторая бегущая строка навстречу первой, кремовая;
+    — голова возвращается в блоке записи: страница начинается и
+      заканчивается одним героем;
+    — заголовки мягко поднимаются при прокрутке.
+  */
+  [data-variant='hall'] .about__photo { border-radius: 999px 999px 24px 24px; }
+  @media (min-width: 900px) {
+    [data-variant='hall'] .about__photo { border-radius: 320px 320px 24px 24px; }
+  }
+  [data-variant='hall'] .people { gap: 28px 20px; }
+  [data-variant='hall'] .person { text-align: center; }
+  [data-variant='hall'] .person .zoom { border-radius: 50%; }
+  [data-variant='hall'] .person img {
+    aspect-ratio: 1; border-radius: 50%; object-position: 50% 20%;
+    box-shadow: 0 0 0 4px var(--bg-alt), 0 0 0 5px rgba(222, 214, 255, 0.85), 0 0 34px 6px rgba(176, 162, 240, 0.28);
+  }
+  @media (min-width: 900px) {
+    [data-variant='hall'] .people { max-width: 760px; margin: 0 auto; gap: 56px; }
+  }
+
+  [data-variant='hall'] .block--light {
+    --text: #2e1d1a; --muted: #5e4a45; --accent: #5b3f9a;
+    --card: #f1ecfb; --line: #cfc4ec;
+    background: linear-gradient(170deg, #e6dff8 0%, #d9d6f4 55%, #d2dff3 100%);
+    color: var(--text);
+  }
+
+  html[data-cover='hall'] .marquee--back { background: #f4ebe3; color: #2e1d1a; }
+  [data-variant='hall'] .marquee--back .marquee__track { animation-direction: reverse; }
+  html[data-cover='hall'] .marquee--back .marquee__item::after { color: #6a56a0; opacity: 1; }
+
+  .cta__mark { font-size: clamp(150px, 22vw, 210px); display: flex; justify-content: center; margin: 0 0 22px; }
+  /* в блоке записи голова чуть покачивается, будто подпевает */
+  .cta__mark .hero__disc { animation: sway 5s ease-in-out infinite; transform-origin: 50% 100%; }
+  @keyframes sway { 0%, 100% { transform: translateY(0.035em) rotate(-2deg); } 50% { transform: translateY(0.035em) rotate(2deg); } }
+  @media (prefers-reduced-motion: reduce) { .cta__mark .hero__disc { animation: none; } }
+
+  .reveal-on main .head, .reveal-on main .about__text, .reveal-on .person, .reveal-on .point, .reveal-on .cta__inner {
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal-on main .head:not(.is-in), .reveal-on main .about__text:not(.is-in), .reveal-on .person:not(.is-in),
+  .reveal-on .point:not(.is-in), .reveal-on .cta__inner:not(.is-in) { opacity: 0; transform: translateY(28px); }
+  .reveal-on .point:nth-child(2) { transition-delay: 0.08s; }
+  .reveal-on .point:nth-child(3) { transition-delay: 0.16s; }
+  .reveal-on .point:nth-child(4) { transition-delay: 0.24s; }
 
 
 
