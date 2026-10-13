@@ -892,11 +892,22 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   [data-variant='hall'] .cta__pattern.name-pattern {
     /* контур жирных букв: тонкая обводка, внутри пусто — изящнее заливки */
     z-index: -1; color: transparent; -webkit-text-stroke: 1px rgba(235, 223, 210, 0.16);
+    /* с разрядкой: у жирных букв вплотную контуры слипались */
+    letter-spacing: 0.1em; word-spacing: 0.35em; line-height: 1.12;
     -webkit-mask-image: radial-gradient(62% 58% at 50% 50%, transparent 50%, #000 100%);
     mask-image: radial-gradient(62% 58% at 50% 50%, transparent 50%, #000 100%);
   }
   [data-variant='hall'] .block--light .cta__pattern.name-pattern { -webkit-text-stroke-color: rgba(46, 29, 26, 0.16); }
   [data-variant='hall'] .hero .cta__pattern.name-pattern { z-index: 0; }
+
+  /* Адрес с картой — без коричневой заливки, тонкой рамкой: заливка была
+     другим коричневым, чем фон блока */
+  [data-variant='hall'] .place { background: transparent; border-color: rgba(235, 223, 210, 0.22); }
+
+  /* На телефоне «ХОР» ближе к подписи: над ним был большой просвет */
+  @media (max-width: 699px) {
+    html[data-cover='hall'] .hero { --ht: 178px; }
+  }
 
   /* Блоки уже: на широком экране строки и сетки не расползаются */
   [data-variant='hall'] .wrap { max-width: 1060px; }
