@@ -787,6 +787,35 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   html[data-cover='hall'] .marquee__item::after { color: #74202f; opacity: 0.8; }
 
   /*
+    Коричневый не плоский: на всех блоках то же зерно, что на обложке
+    (бархат, дерево, а не заливка), и едва заметные сливовые отсветы
+    по углам — коричневый будто отражает круг с головой, и слива
+    с коричневым становятся одной средой. Отсветы меняют угол от блока
+    к блоку. На светлой полосе — только зерно.
+  */
+  [data-variant='hall'] main > .block, [data-variant='hall'] .footer { position: relative; isolation: isolate; }
+  [data-variant='hall'] main > .block::before, [data-variant='hall'] main > .block::after,
+  [data-variant='hall'] .footer::after {
+    content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  }
+  [data-variant='hall'] main > .block::before {
+    background:
+      radial-gradient(55% 45% at 0% 0%, rgba(106, 86, 160, 0.2), transparent 70%),
+      radial-gradient(50% 40% at 100% 100%, rgba(116, 32, 47, 0.22), transparent 70%);
+  }
+  [data-variant='hall'] main > .block--alt::before {
+    background:
+      radial-gradient(55% 45% at 100% 0%, rgba(106, 86, 160, 0.2), transparent 70%),
+      radial-gradient(50% 40% at 0% 100%, rgba(116, 32, 47, 0.2), transparent 70%);
+  }
+  [data-variant='hall'] main > .block--light::before { display: none; }
+  [data-variant='hall'] main > .block::after, [data-variant='hall'] .footer::after {
+    opacity: 0.14; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  [data-variant='hall'] main > .block--light::after { opacity: 0.22; mix-blend-mode: multiply; }
+
+  /*
     Чтобы после яркой обложки страница не становилась скучной, её приёмы
     протянуты вниз (проба, 13.10.2026):
     — мотив круга: портреты хормейстеров в кругах с тем же кольцом света,
@@ -797,9 +826,20 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
       заканчивается одним героем;
     — заголовки мягко поднимаются при прокрутке.
   */
-  [data-variant='hall'] .about__photo { border-radius: 999px 999px 24px 24px; }
+  /* Фото хора — общий план шириной 2,36 к 1: в арке и в колонке рядом
+     с текстом его края обрезались вместе с людьми. Теперь оно под текстом
+     во всю ширину и в своих пропорциях — видно всех. На телефоне — от края
+     до края экрана. Текст на компьютере — в две колонки. */
+  [data-variant='hall'] .about { grid-template-columns: 1fr; gap: 40px; }
+  [data-variant='hall'] .about__photo { border-radius: 24px; }
+  [data-variant='hall'] .about__photo .zoom { height: auto; }
+  [data-variant='hall'] .about__photo img { height: auto; min-height: 0; aspect-ratio: 1280 / 543; object-position: 50% 50%; }
+  @media (max-width: 699px) {
+    [data-variant='hall'] .about__photo { margin-inline: -20px; border-radius: 0; }
+  }
   @media (min-width: 900px) {
-    [data-variant='hall'] .about__photo { border-radius: 320px 320px 24px 24px; }
+    [data-variant='hall'] .about__text .text { max-width: none; columns: 2; column-gap: 56px; }
+    [data-variant='hall'] .about__text .text p { break-inside: avoid; }
   }
   [data-variant='hall'] .people { gap: 28px 20px; }
   [data-variant='hall'] .person { text-align: center; }
