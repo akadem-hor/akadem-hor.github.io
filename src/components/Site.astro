@@ -199,6 +199,11 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   </head>
   <body>
     <header class="hero">
+      {проба && (
+        <div class="cta__pattern name-pattern name-pattern--hero" aria-hidden="true">
+          {Array.from({ length: 10 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
+        </div>
+      )}
       <div class="hero__art" aria-hidden="true">
         {/* «О» — залитый круг чуть больше «Х» и «Р», голова стоит в нём
             (правка дизайнера 10.10.2026). Для программ чтения слово — «ХОР». */}
@@ -246,7 +251,8 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
     </header>
 
     <main>
-      <section class="block">
+      <section class:list={['block', проба && 'block--light']}>
+        {проба && <span class="name-word name-word--about" aria-hidden="true">{обложка.название}</span>}
         <div class="wrap">
           {/* «О хоре»: текст и фото — две равные колонки одной высоты */}
           <div class="about">
@@ -300,6 +306,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
       }
 
       <section class:list={['block', проба && 'block--light']}>
+        {проба && <span class="name-word name-word--light" aria-hidden="true">{обложка.название}</span>}
         <div class="wrap">
           <div class="head">
             <div>
@@ -408,7 +415,8 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
 
       {
         галерея.снимки.length > 0 && (
-          <section class="block">
+          <section class:list={['block', проба && 'block--light']}>
+            {проба && <span class="name-word name-word--photos" aria-hidden="true">{обложка.название}</span>}
             <div class="wrap">
               <div class="head">
                 <div>
@@ -486,9 +494,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
 
     <footer class="footer">
       {проба && (
-        <div class="cta__pattern name-pattern" aria-hidden="true">
-          {Array.from({ length: 3 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
-        </div>
+        <span class="name-word name-word--footer" aria-hidden="true">{обложка.название}</span>
       )}
       <div class="wrap">
         <p class="label footer__name">{обложка.название}</p>
@@ -810,28 +816,21 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   html[data-cover='hall'] .marquee__item::after { color: #74202f; opacity: 0.8; }
 
   /*
-    Коричневый не плоский: на всех блоках то же зерно, что на обложке
-    (бархат, дерево, а не заливка), и едва заметные сливовые отсветы
-    по углам — коричневый будто отражает круг с головой, и слива
-    с коричневым становятся одной средой. Отсветы меняют угол от блока
-    к блоку. На светлой полосе — только зерно.
+    Блоки чередуются: тёмный, бежевый, тёмный… Тёмные — того же цвета,
+    что обложка (13.10.2026: похожий, но другой коричневый на стыке
+    обложки и «О хоре» выглядел ошибкой). Бежевые — «О хоре», «Кого мы
+    ждём», фото, вопросы. На всех блоках то же зерно, что на обложке.
   */
   [data-variant='hall'] main > .block, [data-variant='hall'] .footer { position: relative; isolation: isolate; }
   [data-variant='hall'] main > .block::before, [data-variant='hall'] main > .block::after,
   [data-variant='hall'] .footer::after {
     content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   }
-  [data-variant='hall'] main > .block::before {
-    background:
-      radial-gradient(55% 45% at 0% 0%, rgba(106, 86, 160, 0.2), transparent 70%),
-      radial-gradient(50% 40% at 100% 100%, rgba(116, 32, 47, 0.22), transparent 70%);
+  /* Тёмные блоки — ровно того же цвета, что обложка: тот же свет в центре
+     и те же края. Похожий, но другой коричневый на стыке выглядел ошибкой. */
+  [data-variant='hall'] main > .block:not(.block--light), [data-variant='hall'] .footer {
+    background: radial-gradient(110% 75% at 50% 46%, #4a1d2e 0%, #34201c 58%, #261712 100%);
   }
-  [data-variant='hall'] main > .block--alt::before {
-    background:
-      radial-gradient(55% 45% at 100% 0%, rgba(106, 86, 160, 0.2), transparent 70%),
-      radial-gradient(50% 40% at 0% 100%, rgba(116, 32, 47, 0.2), transparent 70%);
-  }
-  [data-variant='hall'] main > .block--light::before { display: none; }
   [data-variant='hall'] main > .block::after, [data-variant='hall'] .footer::after {
     opacity: 0.14; mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -846,7 +845,41 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
       страницы. С обложки убран — там и так много деталей.
   */
   [data-variant='hall'] .block--light { --btn-bg: #2e1d1a; --btn-text: #f4ebe3; }
-  [data-variant='hall'] .footer .name-pattern { z-index: -1; inset: -10px -20px; color: rgba(196, 182, 244, 0.06); }
+  /*
+    «ГОЛОСА» — сквозной мотив (13.10.2026). Слово хора в разных видах,
+    чтобы у блоков было больше общего:
+    — обложка: узор контуром, виден только по краям, за надписями пусто;
+    — «О хоре», «Кого мы ждём», фото: одно огромное слово контуром,
+      срезанное краем блока, — как и кнопки, контур, а не заливка;
+    — блок записи: сплошной узор (самое сильное место);
+    — подвал: одно слово во всю ширину, как подпись в конце.
+  */
+  [data-variant='hall'] main > .block { overflow: hidden; }
+  [data-variant='hall'] .name-pattern--hero {
+    z-index: 0; color: transparent; -webkit-text-stroke: 1px rgba(244, 235, 227, 0.1);
+    -webkit-mask-image: radial-gradient(60% 55% at 50% 50%, transparent 55%, #000 100%);
+    mask-image: radial-gradient(60% 55% at 50% 50%, transparent 55%, #000 100%);
+  }
+  .name-word {
+    position: absolute; z-index: -1; pointer-events: none; user-select: none; white-space: nowrap;
+    font-weight: 800; text-transform: uppercase; line-height: 0.8; letter-spacing: -0.02em;
+    font-size: clamp(7rem, 30vw, 24rem);
+    color: transparent; -webkit-text-stroke: 1.5px rgba(196, 182, 244, 0.16);
+  }
+  .name-word--about { top: 40px; right: -0.12em; }
+  .name-word--light { bottom: -0.12em; left: -0.06em; }
+  .block--light .name-word { -webkit-text-stroke-color: rgba(90, 63, 134, 0.18); }
+  /* под слово внизу светлой полосы — свободное место, чтобы оно не лезло под рамку */
+  [data-variant='hall'] .block:has(.name-word--light) { padding-bottom: clamp(120px, 30vw, 280px); }
+  .name-word--photos { top: 24px; left: -0.08em; }
+  [data-variant='hall'] .footer { padding-top: 40px; }
+  /* маленькое «ГОЛОСА» в подвале заменило большое слово */
+  [data-variant='hall'] .footer__name { display: none; }
+  .name-word--footer {
+    position: relative; display: block; z-index: auto; text-align: center; margin: 0 -0.04em 0.12em;
+    font-size: clamp(4rem, 21vw, 17rem); line-height: 0.85;
+    color: rgba(196, 182, 244, 0.1); -webkit-text-stroke: 0;
+  }
   [data-variant='hall'] .footer { overflow: hidden; }
 
   /* Кнопки без заливки — тонкий контур цвета текста, заливка при наведении */
@@ -919,7 +952,8 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   [data-variant='hall'] .person .zoom { border-radius: 50%; }
   [data-variant='hall'] .person img {
     aspect-ratio: 1; border-radius: 50%; object-position: 50% 20%;
-    box-shadow: 0 0 0 4px var(--bg-alt), 0 0 0 5px rgba(222, 214, 255, 0.85), 0 0 34px 6px rgba(176, 162, 240, 0.28);
+    outline: 1px solid rgba(222, 214, 255, 0.85); outline-offset: 4px;
+    box-shadow: 0 0 34px 6px rgba(176, 162, 240, 0.28);
   }
   @media (min-width: 900px) {
     [data-variant='hall'] .people { max-width: 760px; margin: 0 auto; gap: 56px; }
