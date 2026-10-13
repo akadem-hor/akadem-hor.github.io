@@ -25,9 +25,6 @@
 import '@fontsource/montserrat/cyrillic-400.css'
 import '@fontsource/montserrat/cyrillic-600.css'
 import '@fontsource/montserrat/cyrillic-800.css'
-// тонкое начертание — только для узора «ГОЛОСА» на пробе; браузер скачивает
-// файл, лишь когда на странице есть такой текст
-import '@fontsource/montserrat/cyrillic-200.css'
 import '@fontsource/montserrat/latin-400.css'
 import '@fontsource/montserrat/latin-600.css'
 import '@fontsource/montserrat/latin-800.css'
@@ -885,7 +882,7 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
 
   /*
     «ГОЛОСА» — узор из названия хора (13.10.2026). Один и тот же на каждом
-    блоке: тёмных, бежевых и бордовом — тонкие буквы (Montserrat 200), едва заметные,
+    блоке: тёмных, бежевых и бордовом — контур букв (обводка 1 px), едва заметный,
     видны только по краям, за текстом пусто. Как монограмма на ткани:
     общая фактура всей страницы. Лежит под содержимым, высоту блоков
     не меняет. Огромные одиночные слова контуром пробовали — выглядели
@@ -893,12 +890,12 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   */
   [data-variant='hall'] main > .block, [data-variant='hall'] .footer, [data-variant='hall'] .cta { overflow: hidden; isolation: isolate; }
   [data-variant='hall'] .cta__pattern.name-pattern {
-    z-index: -1; color: rgba(235, 223, 210, 0.13); -webkit-text-stroke: 0;
-    font-weight: 200; letter-spacing: 0.06em; /* тонкие буквы изящнее жирных */
+    /* контур жирных букв: тонкая обводка, внутри пусто — изящнее заливки */
+    z-index: -1; color: transparent; -webkit-text-stroke: 1px rgba(235, 223, 210, 0.16);
     -webkit-mask-image: radial-gradient(62% 58% at 50% 50%, transparent 50%, #000 100%);
     mask-image: radial-gradient(62% 58% at 50% 50%, transparent 50%, #000 100%);
   }
-  [data-variant='hall'] .block--light .cta__pattern.name-pattern { color: rgba(46, 29, 26, 0.11); }
+  [data-variant='hall'] .block--light .cta__pattern.name-pattern { -webkit-text-stroke-color: rgba(46, 29, 26, 0.16); }
   [data-variant='hall'] .hero .cta__pattern.name-pattern { z-index: 0; }
 
   /* Блоки уже: на широком экране строки и сетки не расползаются */
