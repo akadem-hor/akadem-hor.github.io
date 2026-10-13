@@ -707,9 +707,10 @@ const строка = ['Духовная музыка', 'Русская клас�
 
   /*
     «Концерт» — 70 % строгого, 30 % молодёжного (выбрана 13.10.2026).
-    Почти монохром в бордово-коричневом: как бархат и дерево концертного
-    зала — без чёрного и серого. Обложка темнее к краям, блоки ниже —
-    винные, через один чуть светлее, карточки ещё светлее.
+    Почти монохром в коричневом с бордо: как дерево и бархат концертного
+    зала — без чёрного и серого. Основа — шоколадно-коричневая (обложка
+    к краям, блоки ниже через один чуть светлее), бордо — в свете
+    в центре обложки, в круге с головой и в блоке записи.
     Холодный акцент — сиреневый и ледяной голубой из отблесков на голове
     и в очках. Тёплое винное и холодная сирень — контраст температуры
     при общем красно-фиолетовом корне, поэтому сочетаются и держат
@@ -718,20 +719,20 @@ const строка = ['Духовная музыка', 'Русская клас�
     стрип-клубом» был про них.
   */
   [data-variant='hall'] {
-    --bg: #3a171c; --bg-alt: #441b21; --card: #51232a; --line: #6a3a42;
-    --text: #f4e9e2; --muted: #d0b8b1;
+    --bg: #2e1d1a; --bg-alt: #36221e; --card: #432a26; --line: #5d3f39;
+    --text: #f4ebe3; --muted: #d2bdb0;
     --accent: #c4b6f4;
     --cta-bg: radial-gradient(90% 120% at 50% 0%, #74202f 0%, #4a1320 60%, #34101a 100%); --cta-text: #f4e9e2;
-    --btn-bg: #f4e9e2; --btn-text: #3a171c;
+    --btn-bg: #f4ebe3; --btn-text: #2e1d1a;
   }
   [data-variant='hall'] .btn--cta { background: var(--btn-bg); color: var(--btn-text); }
   [data-variant='hall'] .cta__pattern { color: rgba(196, 182, 244, 0.07); }
-  [data-variant='hall'] .sticky { background: rgba(58, 23, 28, 0.9); border-top: 1px solid var(--line); }
+  [data-variant='hall'] .sticky { background: rgba(46, 29, 26, 0.9); border-top: 1px solid var(--line); }
   /* Яндекс Карта своей тёмной схемы не даёт: светлую плитку переворачиваем
      в тёмную, цвета возвращаем поворотом оттенка и тонируем в тёплое */
   [data-variant='hall'] .place__map { filter: invert(0.88) hue-rotate(180deg) sepia(0.5) hue-rotate(-28deg) saturate(1.15) brightness(0.92); }
   html[data-cover='hall'] .hero {
-    background: radial-gradient(110% 75% at 50% 46%, #5a1a27 0%, #3a141a 55%, #2a0f13 100%);
+    background: radial-gradient(110% 75% at 50% 46%, #4e1c24 0%, #34201c 58%, #261712 100%);
   }
   html[data-cover='hall'] .hero__word { color: #f4e9e2; }
   html[data-cover='hall'] .hero__disc {
