@@ -46,13 +46,13 @@ const главное: Картинка[] = [
     размер: '1080 × 1350',
     куда: 'Обычная запись на стене. Можно повторять раз в месяц-два, чтобы новые люди видели время и цены.',
   },
-  {
-    файл: 'story.jpg',
-    скачать: 'вк-история-идёт-набор-1080x1920.jpg',
-    название: 'История',
-    размер: '1080 × 1920',
-    куда: 'С телефона в приложении ВК: кружок с плюсом → выбрать картинку из галереи → публиковать от имени сообщества. Висит сутки.',
-  },
+]
+
+// Истории — для Инстаграма (подходят и для ВК: размер тот же)
+const истории = [
+  { файл: 'story.jpg', скачать: 'история-идёт-набор-1080x1920.jpg', название: 'Идёт набор' },
+  { файл: 'story-kogda.jpg', скачать: 'история-когда-и-где-1080x1920.jpg', название: 'Когда и где' },
+  { файл: 'story-ceny.jpg', скачать: 'история-цены-1080x1920.jpg', название: 'Цены' },
 ]
 
 const меню = [
@@ -69,7 +69,7 @@ const меню = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="robots" content="noindex, nofollow" />
-    <title>Оформление ВКонтакте — хор</title>
+    <title>Картинки для соцсетей — хор</title>
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -126,7 +126,7 @@ const меню = [
     <div class="wrap">
       <nav class="nav" aria-label="Материалы для соцсетей">
         <a href="/rilsy/">Рилсы</a>
-        <span aria-current="page">Оформление ВК</span>
+        <span aria-current="page">Картинки ВК и истории</span>
       </nav>
       <section class="top">
         <h1>Оформление ВКонтакте</h1>
@@ -134,7 +134,8 @@ const меню = [
       </section>
       <div class="rule">
         <span><b>Сначала:</b> аватар, обложка и закреплённый пост «Идёт набор»</span>
-        <span><b>Потом:</b> кнопки меню и истории</span>
+        <span><b>Потом:</b> кнопки меню</span>
+        <span><b>Истории для Инстаграма</b> — в самом низу</span>
       </div>
 
       <section class="grid">
@@ -173,6 +174,23 @@ const меню = [
             и «Управление» → «Ссылки».
           </p>
         </article>
+      </section>
+
+      <section class="top" id="stories">
+        <h1>Истории для Инстаграма</h1>
+        <p>Размер 1080 × 1920. В Инстаграме: «+» → «История» → выбрать картинку из галереи. Важное стоит по центру, сверху и снизу его не закроют надписи и кнопки Инстаграма. Подходят и для историй ВК.</p>
+      </section>
+      <section class="grid">
+        {истории.map((и) => (
+          <article class="card">
+            <header class="ch">
+              <h2>{и.название}</h2>
+              <span class="chip">1080 × 1920</span>
+            </header>
+            <img src={`/vk/${и.файл}`} alt={`История «${и.название}»`} loading="lazy" />
+            <a class="dl" href={`/vk/${и.файл}`} download={и.скачать}>Скачать</a>
+          </article>
+        ))}
       </section>
 
       <p class="note">
