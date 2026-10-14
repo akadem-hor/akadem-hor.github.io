@@ -1,0 +1,184 @@
+---
+/**
+ * Картинки для оформления сообщества ВКонтакте — показать руководителю
+ * и скачать с телефона (14.10.2026). Стиль — светлый, как на главной.
+ * Название хора на картинках пока не пишем: «Академический любительский
+ * хор в Екатеринбурге».
+ *
+ * Закрыта от поисковиков, в карту сайта не входит, ссылок с сайта нет.
+ * Картинки — public/vk/ (исходники PNG — в папке «вк-оформление»
+ * рядом с сайтом).
+ */
+interface Картинка {
+  файл: string
+  скачать: string
+  название: string
+  размер: string
+  куда: string
+}
+
+const главное: Картинка[] = [
+  {
+    файл: 'cover.jpg',
+    скачать: 'вк-обложка-1920x768.jpg',
+    название: 'Обложка сообщества',
+    размер: '1920 × 768',
+    куда: '«Управление» → «Настройки» → «Обложка сообщества» → «Загрузить». На телефоне ВК обрезает края, поэтому всё важное стоит по центру.',
+  },
+  {
+    файл: 'avatar.jpg',
+    скачать: 'вк-аватар-1080x1080.jpg',
+    название: 'Аватар',
+    размер: '1080 × 1080',
+    куда: 'Наведите на фото сообщества → «Обновить фотографию». Кружок выделите так, чтобы голова была по центру.',
+  },
+  {
+    файл: 'post-nabor.jpg',
+    скачать: 'вк-пост-идёт-набор-1080x1350.jpg',
+    название: 'Пост «Идёт набор»',
+    размер: '1080 × 1350',
+    куда: 'Запись на стене с текстом про набор и ссылкой на анкету. После публикации: «…» → «Закрепить» — пост будет первым.',
+  },
+  {
+    файл: 'post-raspisanie.jpg',
+    скачать: 'вк-пост-расписание-1080x1350.jpg',
+    название: 'Пост «Расписание и цены»',
+    размер: '1080 × 1350',
+    куда: 'Обычная запись на стене. Можно повторять раз в месяц-два, чтобы новые люди видели время и цены.',
+  },
+  {
+    файл: 'story.jpg',
+    скачать: 'вк-история-идёт-набор-1080x1920.jpg',
+    название: 'История',
+    размер: '1080 × 1920',
+    куда: 'С телефона в приложении ВК: кружок с плюсом → выбрать картинку из галереи → публиковать от имени сообщества. Висит сутки.',
+  },
+]
+
+const меню = [
+  { файл: 'menu-1.jpg', скачать: 'вк-меню-1-о-хоре.jpg', название: 'О хоре' },
+  { файл: 'menu-2.jpg', скачать: 'вк-меню-2-записаться.jpg', название: 'Записаться' },
+  { файл: 'menu-3.jpg', скачать: 'вк-меню-3-расписание.jpg', название: 'Расписание' },
+  { файл: 'menu-4.jpg', скачать: 'вк-меню-4-концерты.jpg', название: 'Концерты' },
+  { файл: 'menu-5.jpg', скачать: 'вк-меню-5-вопросы.jpg', название: 'Вопросы' },
+]
+---
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Оформление ВКонтакте — хор</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&family=Golos+Text:wght@400;500&display=swap" />
+    <style is:global>
+      /* Как страница рилсов: шапка, затем карточки с картинкой, подсказкой и кнопкой */
+      :root {
+        --bg: #f6f4f8; --surface: #ffffff; --ink: #221a2b; --muted: #6a6175; --line: #e3dde9;
+        --plum: #6d2a63; --teal: #16766f; --chip: #efe7f2;
+        --display: 'Montserrat', system-ui, sans-serif; --body: 'Golos Text', system-ui, sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #15121a; --surface: #1f1a26; --ink: #efeaf3; --muted: #a59bb0; --line: #2f2838;
+          --plum: #d58bc6; --teal: #5fc4b8; --chip: #2c2234; color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body);
+        padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+        padding-block: 32px 56px;
+      }
+      img { display: block; max-width: 100%; height: auto; }
+      .wrap { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+      .nav { display: flex; gap: 8px; flex-wrap: wrap; font: 600 13px var(--display); text-transform: uppercase; letter-spacing: 0.06em; }
+      .nav a, .nav span { padding: 6px 12px; border-radius: 999px; text-decoration: none; color: var(--muted); background: var(--chip); }
+      .nav span { color: var(--surface); background: var(--plum); }
+      .top h1 { font: 800 clamp(28px, 5vw, 44px)/1.1 var(--display); letter-spacing: 0.01em; text-transform: uppercase; margin: 0; text-wrap: balance; }
+      .top p { margin: 8px 0 0; color: var(--muted); max-width: 64ch; }
+      .rule { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--muted); font-size: 14px; }
+      .rule b { color: var(--ink); font-weight: 500; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 20px; align-items: start; }
+      .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+      .card--wide { grid-column: 1 / -1; }
+      .card img { border-radius: 10px; width: 100%; }
+      .ch { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+      h2 { font: 800 18px/1.25 var(--display); margin: 0; text-wrap: balance; }
+      .chip { font: 600 11px var(--display); text-transform: uppercase; letter-spacing: 0.06em; background: var(--chip); color: var(--muted); padding: 3px 8px; border-radius: 999px; font-variant-numeric: tabular-nums; }
+      .where { margin: 0; font-size: 14px; color: var(--muted); }
+      .dl {
+        align-self: flex-start; font: 600 13px var(--display); text-decoration: none; color: var(--surface); background: var(--teal);
+        border-radius: 8px; padding: 9px 14px;
+      }
+      .dl:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+      .menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); gap: 12px; }
+      .menu figure { margin: 0; display: grid; gap: 8px; }
+      .menu figcaption { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; }
+      .menu .dl { padding: 6px 10px; font-size: 12px; }
+      .note { font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; max-width: 70ch; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="nav" aria-label="Материалы для соцсетей">
+        <a href="/rilsy/">Рилсы</a>
+        <span aria-current="page">Оформление ВК</span>
+      </nav>
+      <section class="top">
+        <h1>Оформление ВКонтакте</h1>
+        <p>Картинки для сообщества хора в стиле сайта. Под каждой — куда её ставить и кнопка «Скачать».</p>
+      </section>
+      <div class="rule">
+        <span><b>Сначала:</b> аватар, обложка и закреплённый пост «Идёт набор»</span>
+        <span><b>Потом:</b> кнопки меню и истории</span>
+      </div>
+
+      <section class="grid">
+        {главное.map((к, i) => (
+          <article class:list={['card', i === 0 && 'card--wide']}>
+            <header class="ch">
+              <h2>{к.название}</h2>
+              <span class="chip">{к.размер}</span>
+            </header>
+            <img src={`/vk/${к.файл}`} alt={к.название} loading={i < 2 ? 'eager' : 'lazy'} />
+            <p class="where">{к.куда}</p>
+            <a class="dl" href={`/vk/${к.файл}`} download={к.скачать}>Скачать</a>
+          </article>
+        ))}
+
+        <article class="card card--wide">
+          <header class="ch">
+            <h2>Кнопки меню</h2>
+            <span class="chip">376 × 256</span>
+          </header>
+          <div class="menu">
+            {меню.map((м) => (
+              <figure>
+                <img src={`/vk/${м.файл}`} alt={`Кнопка «${м.название}»`} loading="lazy" />
+                <figcaption>
+                  <span>{м.название}</span>
+                  <a class="dl" href={`/vk/${м.файл}`} download={м.скачать}>Скачать</a>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+          <p class="where">
+            «Управление» → «Меню» → «Новая ссылка»: название, ссылка и картинка. Добавляйте по порядку, с 1 по 5, —
+            тогда цвет плавно переходит с кнопки на кнопку. В меню ВК обычно принимает только ссылки внутри ВКонтакте:
+            на статью, альбом, видео или пост. Ссылку на сайт и анкету поставьте в «Управление» → «Кнопка действия»
+            и «Управление» → «Ссылки».
+          </p>
+        </article>
+      </section>
+
+      <p class="note">
+        На iPhone картинка по кнопке «Скачать» может просто открыться — тогда нажмите на неё и удерживайте,
+        затем «Сохранить в Фото».
+      </p>
+    </div>
+  </body>
+</html>

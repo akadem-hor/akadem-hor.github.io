@@ -14,7 +14,7 @@ export default defineConfig({
   site: content.сайт.адрес,
   // Пробные страницы оформления в карту сайта не попадают: поисковик принял
   // бы их за копии главной.
-  integrations: [sitemap({ filter: (page) => !page.includes('/proba') && !page.includes('/rilsy') })],
+  integrations: [sitemap({ filter: (page) => !page.includes('/proba') && !page.includes('/rilsy') && !page.includes('/vk/') })],
   // Старые пробы оформления (октябрь 2026) больше не нужны, ссылки на них
   // уже пересылали — ведём на главную. /proba/ снова занята текущей пробой.
   redirects: {

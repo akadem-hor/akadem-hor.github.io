@@ -148,6 +148,9 @@ const рилсы: Рилс[] = [
         padding-block: 32px 56px;
       }
       .wrap { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+      .nav { display: flex; gap: 8px; flex-wrap: wrap; font: 600 13px var(--display); text-transform: uppercase; letter-spacing: 0.06em; }
+      .nav a, .nav span { padding: 6px 12px; border-radius: 999px; text-decoration: none; color: var(--muted); background: var(--chip); }
+      .nav span { color: var(--surface); background: var(--plum); }
       .top h1 { font: 800 clamp(28px, 5vw, 44px)/1.1 var(--display); letter-spacing: 0.01em; text-transform: uppercase; margin: 0; text-wrap: balance; }
       .top p { margin: 8px 0 0; color: var(--muted); max-width: 62ch; }
       .rule { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--muted); font-size: 14px; }
@@ -169,6 +172,10 @@ const рилсы: Рилс[] = [
   </head>
   <body>
     <div class="wrap">
+      <nav class="nav" aria-label="Материалы для соцсетей">
+        <span aria-current="page">Рилсы</span>
+        <a href="/vk/">Оформление ВК</a>
+      </nav>
       <section class="top">
         <h1>Рилсы хора</h1>
         <p>Академический любительский хор, Екатеринбург. Девять готовых роликов в порядке публикации, с датами и подписями.</p>
