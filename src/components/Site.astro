@@ -28,6 +28,10 @@ import '@fontsource/montserrat/cyrillic-800.css'
 import '@fontsource/montserrat/latin-400.css'
 import '@fontsource/montserrat/latin-600.css'
 import '@fontsource/montserrat/latin-800.css'
+// знак рубля ₽ в ценах — у Montserrat он в наборе latin-ext; браузер скачает
+// этот маленький файл только ради ₽, без него знак рисовался чужим шрифтом
+import '@fontsource/montserrat/latin-ext-400.css'
+import '@fontsource/montserrat/latin-ext-600.css'
 import content from '../content.json'
 // Файлы шрифтов обложки — для предзагрузки: без неё страница сначала рисуется
 // запасным шрифтом, потом Montserrat, и «ХОР» с названием меняли размер —
