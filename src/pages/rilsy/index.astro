@@ -1,0 +1,222 @@
+---
+/**
+ * План публикаций в соцсетях: девять готовых рилсов с датами и подписями.
+ * Страница для руководителя хора — показать единый стиль роликов, подписи
+ * и сами видео (14.10.2026). Перенесена со страницы Claude, к которой у
+ * руководителя нет доступа. Закрыта от поисковиков, в карту сайта не входит,
+ * ссылок на неё с сайта нет.
+ *
+ * Видео и обложки — public/rilsy/v/. Чтобы добавить ролик, положите туда
+ * файлы и допишите блок в список ниже.
+ */
+interface Рилс {
+  дата: string
+  метки: { текст: string; закрепить?: boolean }[]
+  название: string
+  файл: string
+  подпись: string
+}
+
+const рилсы: Рилс[] = [
+  {
+    дата: 'Ср 14.10',
+    метки: [{ текст: 'Старт · 1 из 3' }, { текст: 'Закрепить', закрепить: true }],
+    название: 'Верхотурье',
+    файл: 'reels_verhoturye',
+    подпись: `Май, поезд, Верхотурье 🚂
+Ездили всем хором на областной конкурс хоров. Вышли на сцену и привезли диплом II степени. А на гала-концерте пели в Крестовоздвиженском соборе. Мурашки до сих пор.
+Между выступлениями гуляли по городу, водили хороводы. Настоящий мини-отпуск.
+
+Мы любительский академический хор из Екатеринбурга. Учим партии по нотам, выступаем на концертах и конкурсах, ездим в поездки.
+Сейчас идёт набор 🎶 Первая репетиция бесплатно.
+📍 Ленина, 97а · Пн и пт, 18:30
+Анкета — по ссылке в профиле 👆
+#хорекатеринбург #академическийхор #любительскийхор #верхотурье #хоровойконкурс`,
+  },
+  {
+    дата: 'Ср 14.10',
+    метки: [{ текст: 'Старт · 2 из 3' }, { текст: 'Закрепить', закрепить: true }],
+    название: 'Что мы поём',
+    файл: 'reels_repertuar_2025_26',
+    подпись: `Что мы поём 🎶 Несколько песен из репертуара прошлого сезона:
+«Уж как пал туман» (обр. А. Флярковского), «Без поры да без времени» и «Рассвет» П. И. Чайковского, «Что смолкнул веселья глас» П. И. Чайковского.
+Спасибо Концертному дому «Екатерининский» за сезон 2025–26 🤍
+А какую из этих песен вы знаете?
+Любительский академический хор, Екатеринбург. Пн и пт, 18:30, Ленина, 97а. Первая репетиция бесплатно, запись на akadem-hor.ru 👇
+#хорекатеринбург #академическийхор #любительскийхор #чайковский #хоровоепение`,
+  },
+  {
+    дата: 'Ср 14.10',
+    метки: [{ текст: 'Старт · 3 из 3' }, { текст: 'Закрепить', закрепить: true }],
+    название: 'Визитка',
+    файл: 'reels_vizitka',
+    подпись: `Любительский академический хор в Екатеринбурге 🎶
+Мы не профессионалы, но работаем всерьёз: выступаем на концертах и конкурсах в городе и области. Две репетиции в неделю — партии, разбор, работа над звуком. Каждый раз немного лучше, чем в прошлый.
+Музыка для нас — не профессия. Но и не просто хобби.
+Нужен слух, знание нот — плюс. Берём от 16 лет. Особенно ждём мужчин 👀
+📍 Ленина, 97а, ауд. 431 · Пн и пт, 18:30
+Первая репетиция бесплатно. Запись на akadem-hor.ru, ссылка в профиле.
+#хорекатеринбург #академическийхор #любительскийхор #хордлявзрослых #пениеекатеринбург`,
+  },
+  {
+    дата: 'Пт 16.10',
+    метки: [],
+    название: 'Ожидание / реальность',
+    файл: 'reels_ozhidanie_realnost',
+    подпись: `Академический хор в Екатеринбурге: как нас видят на концерте и как мы выглядим в понедельник вечером 😅
+Платья — по праздникам. Тапочки, ноты и работа — каждую неделю.
+А звучит так же красиво.
+Хочешь посмотреть на «реальность» вживую? Первая репетиция бесплатно, запись на akadem-hor.ru 👇
+#хорекатеринбург #академическийхор #любительскийхор #ожиданиереальность`,
+  },
+  {
+    дата: 'Вс 18.10',
+    метки: [{ текст: 'Концерт недели' }],
+    название: 'POV: ты поёшь в хоре',
+    файл: 'reels_pov',
+    подпись: `Вот так выглядит концерт, если стоишь не в зале, а в хоре 🎶
+Весь зал смотрит на нас. А мы — только на неё.
+Любительский академический хор, Екатеринбург. Пн и пт, Ленина, 97а.
+Хочешь встать на это место? Первая репетиция бесплатно, запись на akadem-hor.ru 👇
+#хорекатеринбург #академическийхор #любительскийхор #pov`,
+  },
+  {
+    дата: 'Ср 21.10',
+    метки: [],
+    название: 'Как нам говорят',
+    файл: 'reels_kak_nam_govoryat_v3',
+    подпись: `Что говорит хормейстер на репетиции и что из этого получается 🎶
+«Всё, что под лигой, заново проговаривайте гласные», «на вторую долю — крещендо!», «субито пиано!»… А в конце — «Хорошо шли, хорошо!»
+А вам знакомы такие замечания?
+Любительский академический хор, Екатеринбург. Пн и пт, 18:30, Ленина, 97а. Первая репетиция бесплатно, запись на akadem-hor.ru 👇
+#хорекатеринбург #академическийхор #любительскийхор #репетицияхора`,
+  },
+  {
+    дата: 'Пт 23.10',
+    метки: [],
+    название: 'Это мы',
+    файл: 'reels_eto_my_zvuk2',
+    подпись: `Любительский академический хор в Екатеринбурге 🎶
+Сейчас разучиваем «Ave maris stella» Эдварда Грига на три голоса. Поём по нотам, готовимся к концертам и конкурсам.
+Пн и пт, 18:30, Ленина, 97а. Первая репетиция бесплатно, запись на akadem-hor.ru 👇
+#хорекатеринбург #академическийхор #любительскийхор #григ #avemarisstella`,
+  },
+  {
+    дата: 'Вс 25.10',
+    метки: [{ текст: 'Концерт недели' }],
+    название: 'Невероятный Глиэр',
+    файл: 'reels_glier',
+    подпись: `15 мая, Малый зал Дома офицеров. Концерт «Легенды эпох. Невероятный Глиэр» 🎻
+Тогда наш хор выступал в составе Концертного дома «Екатерининский». Вместе с оркестром Концертного дома под управлением Сергея Царегородцева мы исполнили сюиту Глиэра «Времена года» для женского хора с оркестром. Хормейстер — Александра Подволоцкая.
+Запись с телефона из зала, но этот вечер нам слишком дорог, чтобы его не показать.
+А в конце — мы за кулисами, уже счастливые 🙌
+#хорекатеринбург #академическийхор #любительскийхор #глиэр #временагода #женскийхор #екатерининский`,
+  },
+  {
+    дата: 'Вс 1.11',
+    метки: [{ текст: 'Концерт недели' }],
+    название: 'Екатеринбургская весна',
+    файл: 'reels_ekb_vesna',
+    подпись: `2 мая мы выступали на IX Всероссийском конкурсе хоровой музыки «Екатеринбургская весна» 🎶
+А 4 мая — особая дата в нашем календаре: в этот день вручали дипломы конкурса.
+Да, мы — простой любительский хор — вышли на одну сцену с сильнейшими и достойно представили нашу творческую семью. Мы получили свою награду и безмерно благодарны жюри за честную оценку нашего труда и горячих сердец.
+#хорекатеринбург #академическийхор #любительскийхор #екатеринбургскаявесна #хоровойконкурс`,
+  },
+]
+---
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Рилсы хора «Голоса»</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&family=Golos+Text:wght@400;500&display=swap" />
+    <style is:global>
+      /* Лента программки: шапка, затем сетка карточек-роликов по датам */
+      :root {
+        --bg: #f6f4f8; --surface: #ffffff; --ink: #221a2b; --muted: #6a6175; --line: #e3dde9;
+        --plum: #6d2a63; --teal: #16766f; --chip: #efe7f2;
+        --display: 'Montserrat', system-ui, sans-serif; --body: 'Golos Text', system-ui, sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #15121a; --surface: #1f1a26; --ink: #efeaf3; --muted: #a59bb0; --line: #2f2838;
+          --plum: #d58bc6; --teal: #5fc4b8; --chip: #2c2234; color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body);
+        padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+        padding-block: 32px 56px;
+      }
+      .wrap { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+      .top h1 { font: 800 clamp(28px, 5vw, 44px)/1.1 var(--display); letter-spacing: 0.01em; text-transform: uppercase; margin: 0; text-wrap: balance; }
+      .top p { margin: 8px 0 0; color: var(--muted); max-width: 62ch; }
+      .rule { display: flex; flex-wrap: wrap; gap: 8px 20px; color: var(--muted); font-size: 14px; }
+      .rule b { color: var(--ink); font-weight: 500; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 20px; }
+      .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+      .ch { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+      .date { font: 800 15px var(--display); color: var(--plum); text-transform: uppercase; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+      .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+      .chip { font: 600 11px var(--display); text-transform: uppercase; letter-spacing: 0.06em; background: var(--chip); color: var(--muted); padding: 3px 8px; border-radius: 999px; }
+      .chip.pin { color: var(--teal); }
+      h2 { font: 800 18px/1.25 var(--display); margin: 0; text-wrap: balance; }
+      video { width: 100%; max-width: 100%; aspect-ratio: 9 / 16; background: #000; border-radius: 10px; display: block; }
+      details summary { cursor: pointer; color: var(--teal); font-weight: 500; }
+      .cap { white-space: pre-wrap; font: 14px/1.5 var(--body); margin: 8px 0; color: var(--ink); }
+      .copy { font: 600 13px var(--display); border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 8px; padding: 7px 12px; cursor: pointer; }
+      .copy:focus-visible, summary:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="top">
+        <h1>Рилсы хора</h1>
+        <p>Академический любительский хор, Екатеринбург. Девять готовых роликов в порядке публикации, с датами и подписями.</p>
+      </section>
+      <div class="rule">
+        <span><b>Ритм:</b> среда, пятница, воскресенье, вечером</span>
+        <span><b>Воскресенье:</b> концертный ролик</span>
+        <span><b>Ср 28.10:</b> подготовка к опере (в работе)</span>
+      </div>
+      <section class="grid">
+        {рилсы.map((р, i) => (
+          <article class="card" id={`r${i + 1}`}>
+            <header class="ch">
+              <span class="date">{р.дата}</span>
+              <div class="chips">
+                {р.метки.map((м) => <span class:list={['chip', м.закрепить && 'pin']}>{м.текст}</span>)}
+              </div>
+            </header>
+            <h2>{р.название}</h2>
+            <video controls playsinline preload="none" poster={`/rilsy/v/${р.файл}.jpg`} src={`/rilsy/v/${р.файл}.mp4`}></video>
+            <details>
+              <summary>Подпись к посту</summary>
+              <pre class="cap" id={`c${i + 1}`}>{р.подпись}</pre>
+              <button type="button" class="copy" data-t={`c${i + 1}`}>Скопировать подпись</button>
+            </details>
+          </article>
+        ))}
+      </section>
+    </div>
+    <script is:inline>
+      document.querySelectorAll('.copy').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var el = document.getElementById(b.dataset.t)
+          var done = function (t) { b.textContent = t; setTimeout(function () { b.textContent = 'Скопировать подпись' }, 2500) }
+          navigator.clipboard.writeText(el.textContent).then(function () { done('Скопировано') }, function () {
+            var r = document.createRange(); r.selectNodeContents(el)
+            var s = getSelection(); s.removeAllRanges(); s.addRange(r)
+            done('Выделено, нажмите «Копировать»')
+          })
+        })
+      })
+    </script>
+  </body>
+</html>
