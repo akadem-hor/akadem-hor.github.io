@@ -17,6 +17,9 @@ interface Рилс {
   подпись: string
 }
 
+// метка сборки в адресе файлов: после замены ролика телефон не покажет старый из кэша
+const сборка = Date.now().toString(36)
+
 const рилсы: Рилс[] = [
   {
     дата: 'Ср 14.10',
@@ -195,7 +198,7 @@ const рилсы: Рилс[] = [
               </div>
             </header>
             <h2>{р.название}</h2>
-            <video controls playsinline preload="none" poster={`/rilsy/v/${р.файл}.jpg`} src={`/rilsy/v/${р.файл}.mp4`}></video>
+            <video controls playsinline preload="none" poster={`/rilsy/v/${р.файл}.jpg?v=${сборка}`} src={`/rilsy/v/${р.файл}.mp4?v=${сборка}`}></video>
             <details>
               <summary>Подпись к посту</summary>
               <pre class="cap" id={`c${i + 1}`}>{р.подпись}</pre>
