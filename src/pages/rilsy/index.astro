@@ -27,6 +27,9 @@ const рилсы = данные.рилсы as Рилс[]
 
 // метка сборки в адресе файлов: после замены ролика телефон не покажет старый из кэша
 const сборка = Date.now().toString(36)
+// якорь карточки — по имени файла, а не по порядку: ссылка не съедет,
+// когда ролики переставят (reels_scena_orkestr_2glier → #scena_orkestr_2glier)
+const якорь = (файл: string) => файл.replace(/^reels_/, '')
 const v = (файл: string) => `/rilsy/v/${файл}?v=${сборка}`
 ---
 
@@ -72,6 +75,9 @@ const v = (файл: string) => `/rilsy/v/${файл}?v=${сборка}`
       .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
       .card--wide { grid-column: 1 / -1; }
       .card.is-done { opacity: 0.75; }
+      /* карточка, на которую ведёт ссылка с якорем, — с отступом сверху и подсвечена */
+      .card { scroll-margin-top: 16px; }
+      .card:target { border-color: var(--teal); box-shadow: 0 0 0 3px color-mix(in srgb, var(--teal) 35%, transparent); }
       .ch { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
       .date { font: 800 15px var(--display); color: var(--plum); text-transform: uppercase; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
       .chips { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -103,7 +109,7 @@ const v = (файл: string) => `/rilsy/v/${файл}?v=${сборка}`
       </div>
       <section class="grid">
         {рилсы.map((р, i) => (
-          <article class:list={['card', р.готово && 'is-done']} id={`r${i + 1}`}>
+          <article class:list={['card', р.готово && 'is-done']} id={якорь(р.файл)}>
             <header class="ch">
               <span class="date">{р.дата}</span>
               <div class="chips">
