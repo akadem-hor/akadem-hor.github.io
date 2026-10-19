@@ -17,6 +17,9 @@ interface Картинка {
   куда: string
 }
 
+// метка сборки в адресах: после обновления телефон не покажет старую картинку из кэша
+const сборка = Date.now().toString(36)
+
 const главное: Картинка[] = [
   {
     файл: 'cover.jpg',
@@ -145,9 +148,9 @@ const меню = [
               <h2>{к.название}</h2>
               <span class="chip">{к.размер}</span>
             </header>
-            <img src={`/vk/${к.файл}`} alt={к.название} loading={i < 2 ? 'eager' : 'lazy'} />
+            <img src={`/vk/${к.файл}?v=${сборка}`} alt={к.название} loading={i < 2 ? 'eager' : 'lazy'} />
             <p class="where">{к.куда}</p>
-            <a class="dl" href={`/vk/${к.файл}`} download={к.скачать}>Скачать</a>
+            <a class="dl" href={`/vk/${к.файл}?v=${сборка}`} download={к.скачать}>Скачать</a>
           </article>
         ))}
 
@@ -159,10 +162,10 @@ const меню = [
           <div class="menu">
             {меню.map((м) => (
               <figure>
-                <img src={`/vk/${м.файл}`} alt={`Кнопка «${м.название}»`} loading="lazy" />
+                <img src={`/vk/${м.файл}?v=${сборка}`} alt={`Кнопка «${м.название}»`} loading="lazy" />
                 <figcaption>
                   <span>{м.название}</span>
-                  <a class="dl" href={`/vk/${м.файл}`} download={м.скачать}>Скачать</a>
+                  <a class="dl" href={`/vk/${м.файл}?v=${сборка}`} download={м.скачать}>Скачать</a>
                 </figcaption>
               </figure>
             ))}
@@ -187,8 +190,8 @@ const меню = [
               <h2>{и.название}</h2>
               <span class="chip">1080 × 1920</span>
             </header>
-            <img src={`/vk/${и.файл}`} alt={`История «${и.название}»`} loading="lazy" />
-            <a class="dl" href={`/vk/${и.файл}`} download={и.скачать}>Скачать</a>
+            <img src={`/vk/${и.файл}?v=${сборка}`} alt={`История «${и.название}»`} loading="lazy" />
+            <a class="dl" href={`/vk/${и.файл}?v=${сборка}`} download={и.скачать}>Скачать</a>
           </article>
         ))}
       </section>
