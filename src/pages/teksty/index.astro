@@ -1,0 +1,200 @@
+---
+/**
+ * Готовые тексты для сообщества ВКонтакте (19.10.2026): описание
+ * сообщества, закреплённый пост «Идёт набор» и статьи для кнопок меню —
+ * «Расписание», «Вопросы», «О хоре». Факты — из content.json (тот же
+ * источник, что сайт), конкурсы и концерт с оркестром — из подписей
+ * к рилсам. Название хора пока не пишем.
+ *
+ * Если на сайте меняются цены, время или адрес — поправьте и здесь.
+ * Закрыта от поисковиков, в карту сайта не входит.
+ */
+import content from '../../content.json'
+
+const р = content.репетиции
+const анкета = content.заявка.ссылка_на_форму
+const время = р.расписание.map((с) => `${с.день} — ${с.время.replace(' — ', '–')}`).join('\n')
+const цены = р.стоимость.строки.map((с) => `${с.что} — ${с.цена}`).join('\n')
+
+const тексты = [
+  {
+    id: 'opisanie',
+    название: 'Описание сообщества',
+    куда: '«Управление» → «Настройки» → «Описание сообщества». Видно под названием группы.',
+    текст: `Любительский академический хор в Екатеринбурге. Поём классику в несколько голосов: духовную музыку, русскую и зарубежную классику, народные песни.
+
+Идёт набор — ждём всех от 16 лет, и мужчин, и женщин. Нужен слух и хотя бы начальное знание нот. Первая репетиция бесплатная.
+
+Пн и пт, 18:30 · проспект Ленина, 97а
+Сайт: akadem-hor.ru`,
+  },
+  {
+    id: 'nabor',
+    название: 'Пост «Идёт набор» — закрепить',
+    куда: 'Запись на стене с картинкой «Идёт набор». После публикации: «…» → «Закрепить». На него ведёт кнопка меню «Записаться».',
+    текст: `Идёт набор в академический любительский хор 🎶
+
+Поём классику в несколько голосов: духовную музыку, русскую и зарубежную классику, народные песни в академической обработке. Выступаем на концертах и конкурсах в Екатеринбурге и по области.
+
+Кого мы ждём:
+— всех от 16 лет, верхней границы возраста нет;
+— и мужчин, и женщин — какая партия ваша, определит хормейстер;
+— тех, у кого есть слух и хотя бы начальное знание нот.
+
+Первая репетиция бесплатная — приходите посмотреть, как всё устроено.
+
+📅 Понедельник и пятница, 18:30–20:30
+📍 Екатеринбург, проспект Ленина, 97а, аудитория 431
+
+Записаться — анкета, три поля, минута времени:
+${анкета}
+
+${content.заявка.после_заявки}`,
+  },
+  {
+    id: 'raspisanie',
+    название: 'Статья «Расписание и цены»',
+    куда: 'Новая статья. Заголовок — первая строка, слова «Когда», «Где», «Сколько стоит» сделайте подзаголовками. На статью ведёт кнопка «Расписание».',
+    текст: `Расписание, адрес и цены
+
+Когда
+${время}
+
+Где
+${р.адрес}.
+${р.как_добраться}
+Карта: ${р.ссылка_на_карту}
+
+Сколько стоит
+${цены}
+
+${р.стоимость.примечание}
+
+Записаться на первую репетицию: ${анкета}`,
+  },
+  {
+    id: 'voprosy',
+    название: 'Статья «Частые вопросы»',
+    куда: 'Новая статья. Каждый вопрос сделайте подзаголовком, ответ — обычным текстом под ним. На статью ведёт кнопка «Вопросы».',
+    текст: `Частые вопросы
+
+${content.вопросы.список.map((в) => `${в.вопрос}\n${в.ответ}`).join('\n\n')}
+
+${content.кого_ждём.прослушивание.заголовок}
+${content.кого_ждём.прослушивание.текст}
+
+Остались вопросы — напишите в сообщения сообщества.
+Записаться на первую репетицию: ${анкета}`,
+  },
+  {
+    id: 'o-hore',
+    название: 'Статья «О хоре»',
+    куда: 'Новая статья, добавьте 2–3 фото хора. «Кто нами руководит» и «Где мы выступали» — подзаголовки. На статью ведёт кнопка «О хоре».',
+    текст: `О хоре
+
+${content.о_хоре.абзацы.join('\n\n')}
+
+Кто нами руководит
+${content.хормейстеры.люди.map((ч) => `${ч.имя} — ${ч.должность.toLowerCase()}`).join('\n')}
+
+Где мы выступали
+— IX Всероссийский конкурс хоровой музыки «Екатеринбургская весна», 2026
+— XVII Областной конкурс академических хоров и ансамблей «Возрождение», Верхотурье, 2026 — диплом II степени
+— Концерт «Легенды эпох. Невероятный Глиэр», 15 мая 2026 года: сюита «Времена года» для женского хора с оркестром Концертного дома «Екатерининский»
+
+Идёт набор — первая репетиция бесплатная.
+Пн и пт, 18:30 · проспект Ленина, 97а
+Записаться: ${анкета}`,
+  },
+]
+---
+
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Тексты для ВК — хор</title>
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&family=Golos+Text:wght@400;500&display=swap" />
+    <style is:global>
+      /* Как страницы рилсов и картинок: шапка, затем карточки с текстом и кнопкой «Скопировать» */
+      :root {
+        --bg: #f6f4f8; --surface: #ffffff; --ink: #221a2b; --muted: #6a6175; --line: #e3dde9;
+        --plum: #6d2a63; --teal: #16766f; --chip: #efe7f2;
+        --display: 'Montserrat', system-ui, sans-serif; --body: 'Golos Text', system-ui, sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #15121a; --surface: #1f1a26; --ink: #efeaf3; --muted: #a59bb0; --line: #2f2838;
+          --plum: #d58bc6; --teal: #5fc4b8; --chip: #2c2234; color-scheme: dark;
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body);
+        padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+        padding-block: 32px 56px;
+      }
+      .wrap { max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+      .nav { display: flex; gap: 8px; flex-wrap: wrap; font: 600 13px var(--display); text-transform: uppercase; letter-spacing: 0.06em; }
+      .nav a, .nav span { padding: 6px 12px; border-radius: 999px; text-decoration: none; color: var(--muted); background: var(--chip); }
+      .nav span { color: var(--surface); background: var(--plum); }
+      .top h1 { font: 800 clamp(28px, 5vw, 44px)/1.1 var(--display); letter-spacing: 0.01em; text-transform: uppercase; margin: 0; text-wrap: balance; }
+      .top p { margin: 8px 0 0; color: var(--muted); max-width: 64ch; }
+      ol.order { margin: 0; padding-left: 22px; color: var(--muted); display: grid; gap: 4px; font-size: 15px; }
+      ol.order b { color: var(--ink); font-weight: 500; }
+      .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; scroll-margin-top: 16px; }
+      h2 { font: 800 19px/1.25 var(--display); margin: 0; text-wrap: balance; }
+      .where { margin: 0; font-size: 14px; color: var(--muted); }
+      .cap {
+        white-space: pre-wrap; overflow-wrap: anywhere; font: 15px/1.55 var(--body); margin: 0; color: var(--ink);
+        background: var(--bg); border-radius: 10px; padding: 14px 16px; max-height: 26em; overflow: auto;
+      }
+      .copy { align-self: flex-start; font: 600 13px var(--display); border: 0; background: var(--teal); color: var(--surface); border-radius: 8px; padding: 9px 14px; cursor: pointer; }
+      .copy:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <nav class="nav" aria-label="Материалы для соцсетей">
+        <a href="/rilsy/">Рилсы</a>
+        <a href="/vk/">Картинки ВК и истории</a>
+        <span aria-current="page">Тексты ВК</span>
+      </nav>
+      <section class="top">
+        <h1>Тексты для ВК</h1>
+        <p>Готовые тексты для сообщества: нажмите «Скопировать» и вставьте в ВК. Цены, время и адрес — те же, что на сайте.</p>
+      </section>
+      <ol class="order">
+        <li><b>Описание сообщества</b> — сразу.</li>
+        <li><b>Пост «Идёт набор»</b> с картинкой — опубликовать и закрепить.</li>
+        <li><b>Статьи «Расписание», «Вопросы»</b>, потом «О хоре» — опубликовать, скопировать ссылки.</li>
+        <li><b>Кнопки меню</b> — «Управление» → «Меню», в каждую вставить ссылку на пост или статью.</li>
+      </ol>
+      {тексты.map((т) => (
+        <article class="card" id={т.id}>
+          <h2>{т.название}</h2>
+          <p class="where">{т.куда}</p>
+          <pre class="cap" id={`t-${т.id}`}>{т.текст}</pre>
+          <button type="button" class="copy" data-t={`t-${т.id}`}>Скопировать</button>
+        </article>
+      ))}
+    </div>
+    <script is:inline>
+      document.querySelectorAll('.copy').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var el = document.getElementById(b.dataset.t)
+          var done = function (t) { b.textContent = t; setTimeout(function () { b.textContent = 'Скопировать' }, 2500) }
+          navigator.clipboard.writeText(el.textContent).then(function () { done('Скопировано') }, function () {
+            var r = document.createRange(); r.selectNodeContents(el)
+            var s = getSelection(); s.removeAllRanges(); s.addRange(r)
+            done('Выделено, нажмите «Копировать»')
+          })
+        })
+      })
+    </script>
+  </body>
+</html>
