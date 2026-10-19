@@ -101,7 +101,9 @@ const schema = {
     streetAddress: content.репетиции.адрес,
   },
   ...(content.контакты.телефон_для_ссылки && { telephone: content.контакты.телефон_для_ссылки }),
-  ...(content.сайт.карточка_на_картах && { sameAs: [content.сайт.карточка_на_картах], hasMap: content.сайт.карточка_на_картах }),
+  // sameAs: карточка на картах и группа ВКонтакте — официальные страницы хора
+  sameAs: [content.сайт.карточка_на_картах, content.контакты.вконтакте].filter(Boolean),
+  ...(content.сайт.карточка_на_картах && { hasMap: content.сайт.карточка_на_картах }),
 }
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -486,6 +488,10 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
           <p class="cta__text">{контакты.вступление}</p>
           <a class="btn btn--cta" href={заявка.ссылка_на_форму} {...цель} data-goal="prihod">{заявка.текст_кнопки}</a>
           {заявка.после_заявки && <p class="cta__promise">{заявка.после_заявки}</p>}
+          {/* группа ВК — рядом с записью: кто не готов заполнять анкету, может сначала посмотреть на хор там */}
+          {контакты.вконтакте && (
+            <p class="cta__social">Новости, фото и видео с концертов — <a href={контакты.вконтакте} target="_blank" rel="noopener">в нашей группе ВКонтакте</a></p>
+          )}
         </div>
       </section>
 
@@ -537,6 +543,9 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
       <div class="wrap">
         <p class="label footer__name">{обложка.название}</p>
         <p class="footer__kind">{контакты.подпись}</p>
+        {контакты.вконтакте && (
+          <p class="footer__links"><a href={контакты.вконтакте} target="_blank" rel="noopener">ВКонтакте</a></p>
+        )}
       </div>
     </footer>
 
@@ -1199,6 +1208,10 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
   .footer { padding: 48px 0 120px; border-top: 1px solid var(--line); }
   .footer__name { font-size: 1rem; color: var(--text); margin-bottom: 6px; }
   .footer__kind { margin: 0; color: var(--muted); font-size: 0.9rem; }
+  .footer__links { margin: 12px 0 0; font-size: 0.9rem; }
+  .footer__links a { color: var(--text); font-weight: 600; text-underline-offset: 3px; }
+  .cta__social { max-width: 520px; margin: 14px auto 0; font-size: 0.95rem; }
+  .cta__social a { color: inherit; font-weight: 600; text-underline-offset: 3px; }
 
   @media (min-width: 768px) {
     .block { padding: 112px 0; }
