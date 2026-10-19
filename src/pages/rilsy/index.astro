@@ -8,7 +8,9 @@
  *
  * Данные — src/data/rilsy.json (собирается из страницы Claude), видео
  * и обложки — public/rilsy/v/. «_full» — полная версия ролика для
- * публикации, её можно скачать кнопкой под видео.
+ * публикации, её можно скачать кнопкой под видео. Обложку и аватарку ВК
+ * со страницы Claude здесь не показываем (19.10.2026) — оформление ВК
+ * на странице /vk/.
  */
 import данные from '../../data/rilsy.json'
 
@@ -82,11 +84,6 @@ const v = (файл: string) => `/rilsy/v/${файл}?v=${сборка}`
       .cap { white-space: pre-wrap; font: 14px/1.5 var(--body); margin: 8px 0; color: var(--ink); }
       .copy, .dl { font: 600 13px var(--display); border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 8px; padding: 7px 12px; cursor: pointer; text-decoration: none; align-self: flex-start; }
       .copy:focus-visible, .dl:focus-visible, summary:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
-      .vk { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
-      .vk figure { margin: 0; display: grid; gap: 8px; }
-      .vk .cover { flex: 1 1 420px; min-width: 0; }
-      .vk .cover img { border-radius: 8px; width: 100%; }
-      .vk .avatar img { width: 160px; border-radius: 50%; }
       .muted { margin: 0; font-size: 14px; color: var(--muted); }
       .muted a { color: var(--teal); }
     </style>
@@ -105,26 +102,6 @@ const v = (файл: string) => `/rilsy/v/${файл}?v=${сборка}`
         {данные.rule.map(([к, ч]) => <span><b>{к}</b> {ч}</span>)}
       </div>
       <section class="grid">
-        {данные.vk && (
-          <article class="card card--wide" id="vk">
-            <header class="ch">
-              <span class="date">ВКонтакте</span>
-              <div class="chips"><span class="chip">Оформление</span></div>
-            </header>
-            <h2>Обложка и аватарка для группы ВК</h2>
-            <div class="vk">
-              <figure class="cover">
-                <img src={v('vk_oblozhka_1920x768.jpg')} alt="Обложка ВК: логотип ХОР и две строки текста" />
-                <a class="dl" href={v('vk_oblozhka_1920x768.jpg')} download="vk_oblozhka_1920x768.jpg">⬇️ Скачать обложку</a>
-              </figure>
-              <figure class="avatar">
-                <img src={v('vk_avatar_800.jpg')} alt="Аватарка ВК: статуя в очках" />
-                <a class="dl" href={v('vk_avatar_800.jpg')} download="vk_avatar_800.jpg">⬇️ Скачать аватарку</a>
-              </figure>
-            </div>
-            <p class="muted">Кнопки меню, посты и истории в том же спокойном стиле — на странице <a href="/vk/">«Картинки ВК и истории»</a>.</p>
-          </article>
-        )}
         {рилсы.map((р, i) => (
           <article class:list={['card', р.готово && 'is-done']} id={`r${i + 1}`}>
             <header class="ch">
