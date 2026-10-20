@@ -1,0 +1,87 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Картинки для соцсетей — генератор</title>
+<body style="margin:0;background:#444">
+<script>
+// Генератор картинок для ВК и историй (canvas). Открывать через локальный
+// сервер из корня репозитория: python -m http.server 8765, затем
+// http://localhost:8765/tools/vk-art/ и в консоли await make('menuExtra').
+// Шрифт — Montserrat из node_modules, бюст — public/images/bust.webp.
+// Первая версия жила во временной папке Claude и пропала; восстановлено
+// 20.10.2026 — пока здесь кнопка «Выступления» и общие функции.
+const F = '../../node_modules/@fontsource/montserrat/files/'
+const fonts = [
+  ['800', 'cyrillic'], ['800', 'latin'], ['800', 'latin-ext'],
+  ['600', 'cyrillic'], ['600', 'latin'], ['600', 'latin-ext'],
+  ['400', 'cyrillic'], ['400', 'latin'], ['400', 'latin-ext'],
+]
+const RANGE = { cyrillic: 'U+0400-045F', latin: 'U+0000-00FF,U+2000-206F', 'latin-ext': 'U+20AD-20C0' }
+// яркий стиль — градиент главной; спокойный — по макетам дизайнера
+const GRAY = '#3d3d44', INK = '#111111', TEAL = '#19f0d4'
+const NAVY = '#18212f', SOFT = '#5f6673'
+let bust
+async function boot() {
+  if (bust) return
+  for (const [wt, set] of fonts) {
+    const f = new FontFace('M', `url(${F}montserrat-${set}-${wt}-normal.woff2)`, { weight: wt, unicodeRange: RANGE[set] })
+    await f.load(); document.fonts.add(f)
+  }
+  bust = new Image(); bust.src = '../../public/images/bust.webp'; await bust.decode()
+}
+function canvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c }
+const out = (c) => c.toDataURL('image/png')
+// градиент обложки сайта 172°; shift/span — кусок общей полосы (для кнопок меню)
+function hero(x, w, h, shiftX = 0, spanW = w) {
+  const a = 172 * Math.PI / 180, dx = Math.sin(a), dy = -Math.cos(a)
+  const len = Math.abs(spanW * dx) + Math.abs(h * dy), cx = spanW / 2 - shiftX, cy = h / 2
+  const g = x.createLinearGradient(cx - dx * len / 2, cy - dy * len / 2, cx + dx * len / 2, cy + dy * len / 2)
+  g.addColorStop(0, '#ff2fd8'); g.addColorStop(0.45, '#8f6bff'); g.addColorStop(1, '#19f0d4')
+  x.fillStyle = g; x.fillRect(0, 0, w, h)
+}
+function grain(x, w, h, amount = 16) {
+  const d = x.getImageData(0, 0, w, h), p = d.data
+  for (let i = 0; i < p.length; i += 4) { const n = (Math.random() - 0.5) * amount; p[i] += n; p[i + 1] += n; p[i + 2] += n }
+  x.putImageData(d, 0, 0)
+}
+// круг с бюстом: макушка над кругом, плечи обрезаны кругом — как на сайте
+function disc(x, cx, cy, d, fill) {
+  x.save(); x.fillStyle = fill; x.beginPath(); x.arc(cx, cy, d / 2, 0, Math.PI * 2); x.fill(); x.restore()
+  const left = cx - d / 2, top = cy - d / 2, wrapTop = top - 0.08 * d
+  x.save(); x.beginPath(); x.rect(left, wrapTop, d, cy - wrapTop); x.arc(cx, cy, d / 2, 0, Math.PI * 2); x.clip()
+  const iw = 0.79 * d, ih = iw * 1000 / 695
+  x.drawImage(bust, left + 0.036 * d, wrapTop + 0.025 * 1.08 * d, iw, ih); x.restore()
+}
+function spaced(x, text, px, y, spacing, align = 'center') {
+  const chars = [...text], ws = chars.map((c) => x.measureText(c).width)
+  const total = ws.reduce((a, b) => a + b, 0) + spacing * (chars.length - 1)
+  let p = align === 'center' ? px - total / 2 : px
+  x.save(); x.textAlign = 'left'; chars.forEach((c, i) => { x.fillText(c, p, y); p += ws[i] + spacing }); x.restore()
+  return total
+}
+
+// ── Кнопка меню 376×256 «Выступления». Первые пять уже могли загрузить в ВК,
+//    поэтому фон шестой продолжает пятую, а не перерисовывает полосу:
+//    спокойный серый идёт обратно к светлому, яркий повторяет конец полосы.
+function menuTile(title, sub, calm) {
+  const W = 376, H = 256, c = canvas(W, H), x = c.getContext('2d')
+  if (calm) {
+    const g = x.createLinearGradient(0, 0, W, 0); g.addColorStop(0, '#d9dce1'); g.addColorStop(1, '#e4e6ea')
+    x.fillStyle = g; x.fillRect(0, 0, W, H)
+  } else hero(x, W, H, 4 * W, W * 5)
+  disc(x, W - 70, 76, 92, calm ? NAVY : GRAY)
+  x.fillStyle = calm ? SOFT : '#fff'; x.font = '600 12px M'; x.textBaseline = 'alphabetic'
+  ;['АКАДЕМИЧЕСКИЙ', 'ЛЮБИТЕЛЬСКИЙ ХОР', 'В ЕКАТЕРИНБУРГЕ'].forEach((t, k) => spaced(x, t, 26, 42 + k * 18, 12 * 0.2, 'left'))
+  x.textAlign = 'left'
+  x.fillStyle = calm ? NAVY : INK; x.font = '800 34px M'; x.fillText(title, 26, 196)
+  x.fillStyle = calm ? SOFT : INK; x.font = '600 16px M'; x.fillText(sub, 26, 226)
+  if (!calm) grain(x, W, H)
+  return out(c)
+}
+const JOBS = {
+  menuExtra: () => ({
+    'спокойное-меню-6-выступления': menuTile('ВЫСТУПЛЕНИЯ', 'концерты и конкурсы', true),
+    'яркое-меню-6-выступления': menuTile('ВЫСТУПЛЕНИЯ', 'концерты и конкурсы', false),
+  }),
+}
+window.make = async (job) => { await boot(); return JOBS[job]() }
+</script>
