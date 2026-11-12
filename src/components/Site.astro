@@ -66,7 +66,7 @@ interface Props {
 }
 const { проба = false } = Astro.props
 
-const { сайт, заявка, обложка, о_хоре, хормейстеры, кого_ждём, репетиции, галерея, вопросы, контакты } =
+const { сайт, заявка, обложка, о_хоре, хормейстеры, кого_ждём, репетиции, видео, галерея, вопросы, контакты } =
   сТипографикой(content)
 
 const внешняя = !заявка.ссылка_на_форму.startsWith('#')
@@ -140,8 +140,8 @@ const строка = ['Духовная музыка', 'Русская клас�
 // Подписи над заголовками. На пробе они добавляют смысл, а не повторяют
 // заголовок («01 — О хоре» над «О хоре»)
 const подпись = проба
-  ? ['01 — Кто мы', '02 — Хормейстеры', '03 — Набор', '04 — Расписание и цены', '05 — Как это выглядит', '06 — Если сомневаетесь']
-  : ['01 — О хоре', '02 — Хормейстеры', '03 — Набор', '04 — Репетиции', '05 — Фото', '06 — Вопросы']
+  ? ['01 — Кто мы', '02 — Хормейстеры', '03 — Набор', '04 — Расписание и цены', '05 — Как это выглядит', '06 — Если сомневаетесь', '05 — Послушать']
+  : ['01 — О хоре', '02 — Хормейстеры', '03 — Набор', '04 — Репетиции', '06 — Фото', '07 — Вопросы', '05 — Видео']
 const строка2 = ['Нужен слух', 'Ноты — хотя бы немного', 'С 16 лет', 'Два вечера в неделю', 'Первая репетиция бесплатно']
 ---
 
@@ -446,9 +446,42 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
         </div>
       </section>
 
+      {/* Видео — клипы хора во ВКонтакте: обложка из нашего кадра, по нажатию клип
+          открывается в ВК (свой плеер на сайте не нужен). Пустой список — блока нет. */}
+      {
+        видео.записи.length > 0 && (
+          <section class:list={['block', проба && 'block--light']}>
+            <div class="wrap">
+              <div class="head">
+                <div>
+                  <p class="label">{подпись[6]}</p>
+                  <h2 class="title">{видео.заголовок}</h2>
+                </div>
+                {видео.вступление && <p class="head__lead">{видео.вступление}</p>}
+              </div>
+              <ul class="videos">
+                {видео.записи.map((запись) => (
+                  <li>
+                    <a class="video" href={запись.ссылка} target="_blank" rel="noopener">
+                      <span class="video__cover">
+                        <img src={запись.обложка} alt="" width="600" height="800" loading="lazy" />
+                        <span class="video__play" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z" /></svg></span>
+                      </span>
+                      <span class="video__name">{запись.название}</span>
+                      {запись.где_когда && <span class="video__meta">{запись.где_когда}</span>}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <p class="videos__note">Видео откроются во ВКонтакте</p>
+            </div>
+          </section>
+        )
+      }
+
       {
         галерея.снимки.length > 0 && (
-          <section class:list={['block', проба && 'block--light']}>
+          <section class:list={['block', 'block--alt', проба && 'block--light']}>
             {проба && (
               <div class="cta__pattern name-pattern" aria-hidden="true">
                 {Array.from({ length: 24 }, () => <span>{обложка.название} {обложка.название} {обложка.название}</span>)}
@@ -1196,6 +1229,23 @@ const строка2 = ['Нужен слух', 'Ноты — хотя бы нем
 
   /* Снимки — три равных на компьютере; на телефоне первый широкий, два под ним.
      Без растяжения: снимки 960–1280 px, крупнее их не показываем. */
+  /* Видео: вертикальные обложки 3:4, на телефоне по две в ряд, на ПК — четыре */
+  .videos { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 20px 12px; }
+  @media (min-width: 900px) { .videos { grid-template-columns: repeat(4, 1fr); gap: 24px 20px; } }
+  .video { display: grid; gap: 4px; color: inherit; text-decoration: none; }
+  .video__cover { position: relative; display: block; border-radius: 16px; overflow: hidden; margin-bottom: 8px; }
+  .video__cover img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+  .video__play {
+    position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%;
+    display: grid; place-items: center; background: rgba(255, 255, 255, 0.92); color: #17171c;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  }
+  .video__play svg { width: 26px; height: 26px; margin-left: 3px; fill: currentColor; }
+  .video:hover .video__play, .video:focus-visible .video__play { background: #fff; }
+  .video__name { font-weight: 600; font-size: 1rem; line-height: 1.3; }
+  .video__meta { color: var(--muted); font-size: 0.9rem; line-height: 1.35; }
+  .videos__note { margin: 24px 0 0; color: var(--muted); font-size: 0.9rem; }
+
   .gallery { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .gallery li:first-child { grid-column: 1 / -1; }
   .gallery img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 16px; }
